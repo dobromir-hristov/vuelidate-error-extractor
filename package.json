@@ -1,0 +1,87 @@
+{
+  "name": "vuelidate-error-extractor",
+  "description": "Helps showing vuelidate error messages from translation files.",
+  "version": "0.0.0",
+  "author": {
+    "name": "Dobromir Hristov",
+    "email": "dobri@digital-cult.com"
+  },
+  "bugs": {
+    "url": "https://github.com/dobromir-hristov/vuelidate-error-extractor/issues"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-eslint": "^7.1.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-istanbul": "^3.1.2",
+    "babel-polyfill": "6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "buble": "^0.14.0",
+    "chai": "^4.0.2",
+    "conventional-changelog-cli": "^1.2.0",
+    "conventional-github-releaser": "^1.1.3",
+    "eslint": "^3.14.1",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-vue-libs": "^1.2.0",
+    "html-webpack-plugin": "^2.19.0",
+    "karma": "^1.4.1",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.2",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.2",
+    "mocha": "^3.2.0",
+    "mocha-loader": "^1.1.1",
+    "power-assert": "^1.4.2",
+    "rollup": "^0.36.4",
+    "rollup-plugin-buble": "^0.14.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-vue": "^2.4.0",
+    "uglify-js": "^2.7.5",
+    "vue": "^2.1.10",
+    "vue-i18n": "^7.0.5",
+    "vue-loader": "^13.0.1",
+    "vuelidate": "^0.5.0",
+    "webpack": "^2.2.0",
+    "webpack-dev-server": "^2.2.1"
+  },
+  "files": [
+    "dist/vuelidate-error-extractor.js",
+    "dist/vuelidate-error-extractor.min.js",
+    "dist/vuelidate-error-extractor.common.js",
+    "src"
+  ],
+  "homepage": "https://github.com/dobromir-hristov/vuelidate-error-extractor#readme",
+  "main": "dist/vuelidate-error-extractor.common.js",
+  "module": "dist/vuelidate-error-extractor.esm.js",
+  "unpkg": "dist/vuelidate-error-extractor.js",
+  "keywords": [
+    "plugin",
+    "vue",
+    "vuejs"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dobromir-hristov/vuelidate-error-extractor.git"
+  },
+  "scripts": {
+    "build": "node config/build.js",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
+    "release": "conventional-github-releaser -p angular",
+    "clean": "rm -rf coverage && rm -rf dist/*.js* && rm ./*.log",
+    "dev": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --content-base ./test/unit/ --config config/webpack.dev.conf.js",
+    "lint": "eslint src test config",
+    "test": "npm run lint && npm run test:cover",
+    "test:cover": "SET BABEL_ENV=test & karma start config/karma.cover.conf.js",
+    "test:unit": "SET BABEL_ENV=test & karma start config/karma.unit.conf.js"
+  }
+}
