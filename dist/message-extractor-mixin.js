@@ -3,7 +3,13 @@
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */
-import template from 'string-template';
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('string-template')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'string-template'], factory) :
+  (factory((global.VuelidateErrorExtractorMixin = global.VuelidateErrorExtractorMixin || {}),global.template));
+}(this, (function (exports,template) { 'use strict';
+
+template = 'default' in template ? template['default'] : template;
 
 /**
  * Return the proper validation object
@@ -94,58 +100,8 @@ var messageExtractorMixin = {
   }
 };
 
-var FoundationElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{error: _vm.validator.$error}},[_vm._t("label",[(_vm.label)?_c('label',{class:{'is-invalid-label': _vm.validator.$error}},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"form-error is-visible"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',{attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
-  mixins: [messageExtractorMixin]
-};
+exports['default'] = messageExtractorMixin;
 
-var BooststrapElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{'has-error': _vm.validator.$error, 'has-success':(!_vm.validator.$error && _vm.validator.$dirty)}},[_vm._t("label",[(_vm.label)?_c('label',[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"help-block"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
-  mixins: [messageExtractorMixin]
-};
+Object.defineProperty(exports, '__esModule', { value: true });
 
-var laravel = {
-  minLength: {
-    validationKey: 'min.string',
-    params: [
-      {
-        vue: 'min',
-        ext: 'min'
-      }
-    ]
-  },
-  sameAs: {
-    validationKey: 'same',
-    params: [
-      {
-        vue: 'eq',
-        ext: 'other'
-      }
-    ]
-  }
-};
-
-var index = {
-  laravel: laravel
-};
-
-function plugin (Vue, options) {
-  if ( options === void 0 ) options = {};
-
-  Vue.prototype.$vuelidateErrorExtractor = {
-    i18n: options.i18n || false,
-    messages: options.messages || {},
-    validationKeys: options.validationKeys || {}
-  };
-  if (typeof options.template === 'undefined') {
-    console.error('[vuelidate-message-extractor warn]: No template component provided in vuelidate-error-extractor options. Please provide a template using Vue.use(vuelidateMessageExtractor, { template: yourImportedType })');
-  } else {
-    options.name = options.name || 'formGroup';
-    Vue.component(options.name, options.template);
-  }
-}
-
-var elements = {
-  foundation: FoundationElement,
-  bootstrap: BooststrapElement
-};
-
-export { elements, messageExtractorMixin as extractorMixin, index as configs };export default plugin;
+})));

@@ -1,15 +1,20 @@
-import FoundationElement from './messageExtractorFoundation6.vue'
-import BooststrapElement from './messageExtractorBootstrap.vue'
+import FoundationElement from './templates/foundation6.vue'
+import BooststrapElement from './templates/bootstrap.vue'
 import extractorMixin from './message-extractor-mixin'
 import configs from './config/index.js'
 
 function plugin (Vue, options = {}) {
-  if (!options.type) {
-    FoundationElement.mixins.push(configs.laravel)
-    options.type = FoundationElement
+  Vue.prototype.$vuelidateErrorExtractor = {
+    i18n: options.i18n || false,
+    messages: options.messages || {},
+    validationKeys: options.validationKeys || {}
   }
-  options.name = options.name || 'formGroup'
-  Vue.component(options.name, options.type)
+  if (typeof options.template === 'undefined') {
+    console.error('[vuelidate-message-extractor warn]: No template component provided in vuelidate-error-extractor options. Please provide a template using Vue.use(vuelidateMessageExtractor, { template: yourImportedType })')
+  } else {
+    options.name = options.name || 'formGroup'
+    Vue.component(options.name, options.template)
+  }
 }
 
 export default plugin

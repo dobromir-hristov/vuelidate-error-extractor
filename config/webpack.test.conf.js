@@ -1,9 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './test/dev-app.js',
+  entry: 'mocha-loader!./test/unit/index.js',
   output: {
     path: path.resolve(__dirname, '/test/unit'),
     filename: 'tests.js',
@@ -27,10 +26,6 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'My App',
-      template: './test/dev-index.html'
-    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"development"'

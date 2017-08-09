@@ -30,6 +30,7 @@ describe('Test extractor', () => {
   describe('formGroup element', () => {
     it('should mount', done => {
       nextTick(() => {
+        console.log(vm.$el)
         expect(vm.$el.querySelector('.form-group')).to.exist
       }).then(done)
     })
@@ -55,8 +56,8 @@ describe('Test extractor', () => {
       vm.$v.$touch()
       vm.text = ''
       nextTick(() => {
-        expect(vm.$el.querySelectorAll('.form-error__element').length).to.equal(1)
-        expect(vm.$el.querySelector('.form-error__text').dataset.validationAttr).to.equal('required')
+        expect(vm.$el.querySelector('.form-error').childNodes.length).to.equal(1)
+        expect(vm.$el.querySelector('.form-error').childNodes[0].dataset.validationAttr).to.equal('required')
       }).then(done)
     })
   })

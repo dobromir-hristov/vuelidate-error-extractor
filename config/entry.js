@@ -3,16 +3,18 @@ const buble = require('rollup-plugin-buble')
 const banner = require('./banner')
 const pack = require('../package.json')
 const vue = require('rollup-plugin-vue')
-
+const path = require('path')
 
 function toUpper (_, c) {
   return c ? c.toUpperCase() : ''
 }
 
 const classifyRE = /(?:^|[-_\/])(\w)/g
+
 function classify (str) {
   return str.replace(classifyRE, toUpper)
 }
+
 const moduleName = classify(pack.name)
 
 const entries = {
@@ -43,6 +45,30 @@ const entries = {
     env: 'development',
     moduleName,
     banner
+  },
+  mixin: {
+    entry: 'src/message-extractor-mixin.js',
+    dest: `dist/message-extractor-mixin.js`,
+    format: 'umd',
+    env: 'development',
+    moduleName: moduleName + 'Mixin',
+    banner
+  },
+  foundationUmd: {
+    entry: 'src/templates/foundation6.vue',
+    dest: `dist/templates/foundation6.min.js`,
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'FoundationTemplate',
+    banner
+  },
+  bootstrapUmd: {
+    entry: 'src/templates/bootstrap.vue',
+    dest: `dist/templates/bootstrap.min.js`,
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'BootstrapTemplate',
+    banner
   }
 }
 
@@ -52,12 +78,13 @@ function genConfig (opts) {
     dest: opts.dest,
     format: opts.format,
     banner: opts.banner,
-    moduleName,
+    moduleName: opts.moduleName || moduleName,
     exports: 'named',
     plugins: [
       vue(),
       buble()
-    ]
+    ],
+    external: opts.external
   }
 
   const replacePluginOptions = { '__VERSION__': pack.version }
