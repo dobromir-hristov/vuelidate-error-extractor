@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v0.0.0 
+ * vuelidate-error-extractor v0.0.1-alpha.0 
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */

@@ -1,7 +1,7 @@
 {
   "name": "vuelidate-error-extractor",
   "description": "Helps showing vuelidate error messages from translation files.",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "author": {
     "name": "Dobromir Hristov",
     "email": "dobri@digital-cult.com"
@@ -45,7 +45,6 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-vue": "^2.4.0",
-    "string-template": "^1.0.0",
     "uglify-js": "^2.7.5",
     "vue": "^2.4.2",
     "vue-i18n": "^7.1.1",
@@ -66,6 +65,7 @@
   ],
   "homepage": "https://github.com/dobromir-hristov/vuelidate-error-extractor#readme",
   "main": "dist/vuelidate-error-extractor.common.js",
+  "browser": "dist/vuelidate-error-extractor.js",
   "module": "dist/vuelidate-error-extractor.esm.js",
   "unpkg": "dist/vuelidate-error-extractor.js",
   "keywords": [
@@ -86,9 +86,9 @@
     "url": "git+https://github.com/dobromir-hristov/vuelidate-error-extractor.git"
   },
   "scripts": {
-    "build": "node config/build.js",
+    "build": "node config/build.js && npm run docs:build",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
-    "release": "conventional-github-releaser -p angular",
+    "release": "standard-version -a",
     "clean": "rm -rf coverage && rm -rf dist/*.js* && rm ./*.log",
     "docs:serve": "gitbook serve ./gitbook",
     "docs:build": "node config/version.js && gitbook build ./gitbook ./docs",
@@ -100,5 +100,15 @@
     "test:unit": "SET BABEL_ENV=test & karma start config/karma.unit.conf.js"
   },
   "dependencies": {
+    "string-template": "^1.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^2.4.2",
+    "vuelidate": "^0.5.0"
+  },
+  "standard-version": {
+    "scripts": {
+      "postchangelog": "npm run build && git add -A"
+    }
   }
 }
