@@ -213,7 +213,7 @@
 </thead>
 <tbody>
 <tr>
-<td> type</td>
+<td> template</td>
 <td>Vue Component</td>
 <td>required</td>
 <td>The vue component to use. Should implement the <code>message-extractor-mixin</code></td>
@@ -228,13 +228,13 @@
 <td> i18n</td>
 <td>String</td>
 <td>optional</td>
-<td>Forces the plugin to use the <a href="https://github.com/kazupon/vue-i18n" target="_blank">vue-i18n</a> package to show translated messages. Must be set to the translation object&apos;s name as its used when getting the messages. E.x. <code>$t(&apos;validations.required&apos;)</code> where <em>validations</em> is the value of i18n. See <a href="advanced.html#i18n">Advanced</a></td>
+<td>Forces the plugin to use the <a href="https://github.com/kazupon/vue-i18n" target="_blank">vue-i18n</a> package to show translated messages. Must be set to the translation object&apos;s name as its used when getting the messages. E.g. <code>$t(&apos;validations.required&apos;)</code> where <em>validations</em> is the value of i18n. See <a href="advanced.html#i18n">Advanced</a></td>
 </tr>
 <tr>
 <td> validationKeys</td>
 <td>Object</td>
 <td>optional</td>
-<td>Allows to remap some of the keys and their properties. E.x. in Laravel&apos;s <code>same</code> validation rule, <code>other</code> is used to name the other field to compare, where as Vuelidate uses <code>eq</code>. <a href="advanced.html#validation-keys">Using Validation Keys</a></td>
+<td>Allows to remap some of the keys and their properties. E.g. in Laravel&apos;s <code>same</code> validation rule, <code>other</code> is used to name the other field to compare, where as Vuelidate uses <code>eq</code>. <a href="advanced.html#validation-keys">Using Validation Keys</a></td>
 </tr>
 <tr>
 <td> name</td>
@@ -265,7 +265,7 @@
 <td> validator</td>
 <td>Vuelidate object</td>
 <td>required</td>
-<td>The vuelidate object to pass for each input element. E.x. for the <code>test</code> data property you will have to pass <code>:validator = &quot;$v.test&quot;</code>.</td>
+<td>The vuelidate object to pass for each input element. E.g. for the <code>test</code> data property you will have to pass <code>:validator = &quot;$v.test&quot;</code>.</td>
 </tr>
 <tr>
 <td> messages</td>
@@ -324,7 +324,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options","level":"1.3","depth":1,"next":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"previous":{"title":"Installation","level":"1.2","depth":1,"path":"installation.md","ref":"installation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-08-09T19:36:04.153Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T10:16:34.400Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Options","level":"1.3","depth":1,"next":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"previous":{"title":"Installation","level":"1.2","depth":1,"path":"installation.md","ref":"installation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-08-10T18:56:28.488Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T20:13:25.953Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

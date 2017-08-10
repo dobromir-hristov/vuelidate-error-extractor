@@ -198,9 +198,83 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="i18n">i18n</h1>
-<p>Using vuelidate-error-extractor with vue-i18n</p>
+<p>Vuelidate-error-extractor can be used with vue-18n to provide translated error messages.</p>
+<p>To enable the i18n mode, you have to pass a string containing the top structure of your validation messages. 
+E.g.
+If your validations are coming from Laravel</p>
+<pre><code class="lang-js">{
+  en: {
+    validation:{
+      required: <span class="hljs-string">&apos;The {attribute} field is required&apos;</span>,
+      email: <span class="hljs-string">&apos;The {attribte} field contains an invalid email address&apos;</span>
+    }
+  },
+  de: {
+    ...
+  }
+}
+</code></pre>
+<p>Then when initializing your plugin you have to set up like this:</p>
+<pre><code class="lang-js">Vue.use(VuelidateErrorExtractor, {
+  tempalate,
+  messages,
+  i18n: <span class="hljs-string">&apos;validation&apos;</span> <span class="hljs-comment">// Where validation is the key under which all validation messages are contained. Can be deeper nested if needed.</span>
+})
+</code></pre>
+<p>Now <strong>vuelidate-error-extractor</strong> will use <code>$t(&apos;validation.required&apos;)</code> to output a required error message for the current language.</p>
 <h2 id="validation-keys">Validation keys</h2>
+<p>Validation keys is a special hatch that lets you map more complex error messages to vuelidate&apos;s simpler tree structure.
+E.g.
+Laravel uses deeper  structures for some of it&apos;s validation messages. </p>
+<pre><code class="lang-php">[
+    <span class="hljs-string">&apos;min&apos;</span> =&gt; [
+        <span class="hljs-string">&apos;numeric&apos;</span> =&gt; <span class="hljs-string">&apos;The :attribute must be at least :min.&apos;</span>,
+        <span class="hljs-string">&apos;file&apos;</span>    =&gt; <span class="hljs-string">&apos;The :attribute must be at least :min kilobytes.&apos;</span>,
+        <span class="hljs-string">&apos;string&apos;</span>  =&gt; <span class="hljs-string">&apos;The :attribute must be at least :min characters.&apos;</span>,
+        <span class="hljs-string">&apos;array&apos;</span>   =&gt; <span class="hljs-string">&apos;The :attribute must have at least :min items.&apos;</span>,
+    ],
+]
+</code></pre>
+<p>We are forced to use strange validation rule names like <code>min.string</code> or easy way around this is to map the differences with the validationKeys option.</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> validationKeys = {
+  minLength: { <span class="hljs-comment">// Validation rule name in vuelidate</span>
+    validationKey: <span class="hljs-string">&apos;min.string&apos;</span>, <span class="hljs-comment">// Validation key inside our deep messages object, Laravel shown here.</span>
+    params: [
+      {
+        vue: <span class="hljs-string">&apos;min&apos;</span>, <span class="hljs-comment">// Vuelidate param name</span>
+        ext: <span class="hljs-string">&apos;min&apos;</span> <span class="hljs-comment">// Messages param name</span>
+      }
+    ]
+  },
+  sameAs: {
+    validationKey: <span class="hljs-string">&apos;same&apos;</span>,
+    params: [
+      {
+        vue: <span class="hljs-string">&apos;eq&apos;</span>,
+        ext: <span class="hljs-string">&apos;other&apos;</span>
+      }
+    ]
+  }
+}
+Vue.use(VuelidateMessageExtractor, {
+  template,
+  i18n: <span class="hljs-string">&apos;validation&apos;</span>,
+  validationKeys
+})
+</code></pre>
+<p>This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel.</p>
 <h2 id="validator-params">Validator Params</h2>
+<p>This is another escape hatch for those moments where you need to provide a parameter which applies only for the current component.
+A really good example is the <code>same</code> validation. Laravel implements this via <code>same</code> message, where as Vuelidate has a <code>sameAs</code> rule. Even if we call ours <code>same:sameAs(&apos;password&apos;)</code> the parameter names don&apos;t match as vuelidate uses <code>eq</code> and laravel <code>other</code>.
+To solve our issue, we just provide a small map with the params we want to provide:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">form-group</span> 
+  <span class="hljs-attr">:validator</span>=<span class="hljs-string">&quot;$v.password_confirm&quot;</span> 
+  <span class="hljs-attr">:label</span>=<span class="hljs-string">&quot;$(&apos;auth.password_confirm&apos;)&quot;</span> 
+  <span class="hljs-attr">:validatorParams</span>=<span class="hljs-string">&quot;{ other: $t(&apos;auth.password&apos;) }&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;password_confirm&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form-group</span>&gt;</span>
+</code></pre>
+<p>Now if we have used <code>validationKeys</code> as well we get <code>The :attribute and :other must match.</code>  transformed to <code>The Password Confirmation and Password must match.</code></p>
 
                                 
                                 </section>
@@ -240,7 +314,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Advanced","level":"1.5","depth":1,"previous":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"advanced.md","mtime":"2017-08-09T19:36:11.649Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T10:16:34.400Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Advanced","level":"1.5","depth":1,"previous":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"advanced.md","mtime":"2017-08-10T19:51:07.548Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T20:13:25.953Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -199,7 +199,131 @@
     
                                 <section class="normal markdown-section">
                                 
-                                
+                                <h1 id="creating-your-own-templates">Creating your own templates</h1>
+<p>If you have a custom template that you want to provide (and you most probably do), then we have made it as easy as it can be.</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;custom-element&quot;</span> <span class="hljs-attr">:class</span>=<span class="hljs-string">&quot;{error: validator.$error}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">slot</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;errors&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;validator.$error&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;error&quot;</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;error in activeErrors&quot;</span>&gt;</span>{{ getErrorMessage(error.validationKey, error.params) }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-keyword">import</span> {extractorMixin} <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;vuelidate-error-extractor&apos;</span>
+
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    mixins: [extractorMixin]
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>And this is it. You can extend is as much as want, as long as you implement the <code>extractorMixin</code>.</p>
+<h2 id="extractormixin">extractorMixin</h2>
+<p>The <code>extractorMixin</code> is a vue element that provides a few convenient methods and variables for your custom templates.</p>
+<h3 id="methods">Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getErrorMessage({String} key, {Object} properties)</td>
+<td>String</td>
+<td>Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="computed-properties">Computed properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>errors</td>
+<td>Object</td>
+<td>Shows all the available validation messages for the field. This is a property that is updated every time the <code>validator</code> prop is updated, basically when an error state changes. </td>
+</tr>
+<tr>
+<td>activeErrors</td>
+<td>Object</td>
+<td>Filters the <code>errors</code> object and shows only the active errors.</td>
+</tr>
+<tr>
+<td>mergedMessages</td>
+<td>Object</td>
+<td>Merges both the messages prop and the globally defined ones on init.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>errors</code> object has a structure like:</p>
+<pre><code class="lang-js">[
+  {
+    $params:{<span class="hljs-built_in">Object</span>},
+    hasError:<span class="hljs-literal">false</span>,
+    params:{
+      attribute:<span class="hljs-string">&quot;Username&quot;</span>,
+    },
+    validationKey:<span class="hljs-string">&quot;required&quot;</span>
+  },
+  {
+     $params:{<span class="hljs-built_in">Object</span>},
+     hasError:<span class="hljs-literal">true</span>,
+     params:{
+       attribute:<span class="hljs-string">&quot;Username&quot;</span>,
+       min: <span class="hljs-string">&quot;5&quot;</span>
+     },
+     validationKey:<span class="hljs-string">&quot;minLength&quot;</span>
+  }
+]
+</code></pre>
+<p>Active errors is the same, with only the ones where <code>hasError</code> is set to true. </p>
+<h2 id="props">Props</h2>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> label</td>
+<td>String</td>
+<td>optional</td>
+<td>The label to use inside the template. Gets assigned to the <code>:attribute</code> property as well.</td>
+</tr>
+<tr>
+<td> validator</td>
+<td>Vuelidate object</td>
+<td>required</td>
+<td>The vuelidate object to pass for each input element. E.g. for the <code>test</code> data property you will have to pass <code>:validator = &quot;$v.test&quot;</code>.</td>
+</tr>
+<tr>
+<td> messages</td>
+<td>Object</td>
+<td>optional</td>
+<td>The local messages to override the globally provided ones during initialization. This comes in handy when you need to override or its a single use case message. <strong>Does not work with i18n mode!</strong></td>
+</tr>
+<tr>
+<td> validatorParams</td>
+<td>Object</td>
+<td>optional</td>
+<td>Optional parameters to override or provide to the validation message. Mostly used to provide additional values like in the <code>other</code> property in laravel&apos;s <code>same</code> validation. <a href="advanced.html#validator-params">Validator Params</a></td>
+</tr>
+</tbody>
+</table>
+
                                 
                                 </section>
                             
@@ -242,7 +366,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Custom Templates","level":"1.4","depth":1,"next":{"title":"Advanced","level":"1.5","depth":1,"path":"advanced.md","ref":"advanced.md","articles":[]},"previous":{"title":"Options","level":"1.3","depth":1,"path":"options.md","ref":"options.md","articles":[]},"dir":"neutral"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"custom_templates.md","mtime":"2017-08-09T16:28:14.865Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T10:16:34.400Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Custom Templates","level":"1.4","depth":1,"next":{"title":"Advanced","level":"1.5","depth":1,"path":"advanced.md","ref":"advanced.md","articles":[]},"previous":{"title":"Options","level":"1.3","depth":1,"path":"options.md","ref":"options.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"custom_templates.md","mtime":"2017-08-10T19:18:31.061Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T20:13:25.953Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

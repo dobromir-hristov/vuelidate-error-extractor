@@ -1,7 +1,7 @@
 {
   "name": "vuelidate-error-extractor",
   "description": "Helps showing vuelidate error messages from translation files.",
-  "version": "0.0.1-alpha.0",
+  "version": "1.0.0",
   "author": {
     "name": "Dobromir Hristov",
     "email": "dobri@digital-cult.com"
