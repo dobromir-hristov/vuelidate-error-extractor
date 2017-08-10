@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import vuelidate from 'vuelidate'
 import VueI18n from 'vue-i18n'
-import vuelidateErrorExtractor, { elements, configs } from '../dist/vuelidate-error-extractor.esm'
+import vuelidateErrorExtractor, { templates, configs } from '../dist/vuelidate-error-extractor.esm'
 import testElement from './dev/testElement.vue'
 
 Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
-  template: elements.foundation,
+  template: templates.foundation,
   i18n: 'validations',
   messages: { required: 'The {attribute} field is required' },
   validationKeys: configs.laravel

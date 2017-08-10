@@ -180,9 +180,9 @@ function plugin (Vue, options) {
   }
 }
 
-var elements = {
+var templates = {
   foundation: FoundationElement,
   bootstrap: BooststrapElement
 };
 
-export { elements, messageExtractorMixin as extractorMixin, index$1 as configs };export default plugin;
+export { templates, messageExtractorMixin as extractorMixin, index$1 as configs };export default plugin;

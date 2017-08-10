@@ -19,7 +19,7 @@ function plugin (Vue, options = {}) {
 
 export default plugin
 
-export const elements = {
+export const templates = {
   foundation: FoundationElement,
   bootstrap: BooststrapElement
 }

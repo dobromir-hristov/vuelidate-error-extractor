@@ -186,13 +186,13 @@ function plugin (Vue, options) {
   }
 }
 
-var elements = {
+var templates = {
   foundation: FoundationElement,
   bootstrap: BooststrapElement
 };
 
 exports['default'] = plugin;
-exports.elements = elements;
+exports.templates = templates;
 exports.extractorMixin = messageExtractorMixin;
 exports.configs = index$1;
 
