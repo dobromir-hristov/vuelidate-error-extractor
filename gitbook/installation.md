@@ -32,11 +32,48 @@ Now you can use it in your components
 
 [unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like https://unpkg.com/vuelidate-error-extractor@0.0.1-alpha.0/dist/vuelidate-error-extractor.js
 
-
 ```html
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://unpkg.com/vuelidate@0.5.0/dist/vuelidate.min.js"></script>
+<script src="https://unpkg.com/vuelidate@0.5.0/dist/validators.min.js"></script>
 <script src="https://unpkg.com/vuelidate-error-extractor/dist/vuelidate-error-extractor.js"></script>
 ```
+
+```js
+  Vue.use(vuelidate.default)
+  
+  Vue.use(VuelidateErrorExtractor.default, {
+    template: VuelidateErrorExtractor.elements.foundation,
+    messages: {
+      required: 'Field is required'
+    }
+  })
+  
+  const vueInstance = new Vue({
+    el: '#app',
+    data () {
+      return {
+        test: ''
+      }
+    },
+    validations: {
+      test: {
+        required: validators.required
+      }
+    }
+  })
+```
+
+Inside your component
+
+```html
+  <form-group :validator="$v.test" label="Test Field">
+    <input type="text" v-model="test" @input="$v.test.$touch()">
+  </form-group>
+```
+
+<p data-height="265" data-theme-id="0" data-slug-hash="OjgVNx" data-default-tab="js,result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor in Browser" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/OjgVNx/">Vuelidate-error-extractor in Browser</a> by Dobromir (<a href="https://codepen.io/dobromir">@dobromir</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 This is the absolute minimum to use the plugin. 
 
