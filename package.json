@@ -41,18 +41,19 @@
     "power-assert": "^1.4.2",
     "rollup": "^0.36.4",
     "rollup-plugin-buble": "^0.14.0",
+    "rollup-plugin-commonjs": "^8.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-vue": "^2.4.0",
     "string-template": "^1.0.0",
     "uglify-js": "^2.7.5",
-    "vue-loader": "^13.0.1",
+    "vue": "^2.4.2",
+    "vue-i18n": "^7.1.1",
+    "vue-template-compiler": "^2.4.2",
+    "vuelidate": "^0.5.0",
+    "vue-loader": "^13.0.4",
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.2.1"
-  },
-  "peerDependencies": {
-    "vue": "^2.1.10",
-    "vuelidate": "^0.5.0",
-    "vue-i18n": "^7.0.5"
   },
   "files": [
     "dist/vuelidate-error-extractor.js",
@@ -89,11 +90,15 @@
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
     "release": "conventional-github-releaser -p angular",
     "clean": "rm -rf coverage && rm -rf dist/*.js* && rm ./*.log",
-    "dev": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --content-base ./test/unit/ --config config/webpack.dev.conf.js",
+    "docs:serve": "gitbook serve ./gitbook",
+    "docs:build": "node config/version.js && gitbook build ./gitbook ./docs",
+    "dev": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --config config/webpack.dev.conf.js",
     "dev:test": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --content-base ./test/unit/ --config config/webpack.test.conf.js",
     "lint": "eslint src test config",
     "test": "npm run lint && npm run test:cover",
     "test:cover": "SET BABEL_ENV=test & karma start config/karma.cover.conf.js",
     "test:unit": "SET BABEL_ENV=test & karma start config/karma.unit.conf.js"
+  },
+  "dependencies": {
   }
 }

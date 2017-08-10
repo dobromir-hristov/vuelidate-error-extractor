@@ -1,0 +1,24 @@
+{
+  "root": "./",
+  "plugins": [
+    "edit-link",
+    "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git",
+    "-fontsettings",
+    "github"
+  ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/dobromir-hristov/vuelidate-error-extractor/"
+    }
+  },
+  "links": {
+    "sharing": {
+      "facebook": false,
+      "twitter": false
+    }
+  }
+}

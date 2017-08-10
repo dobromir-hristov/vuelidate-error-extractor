@@ -3,7 +3,44 @@
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */
-import template from 'string-template';
+var nargs = /\{([0-9a-zA-Z_]+)\}/g;
+
+var index = template;
+
+function template(string) {
+    var arguments$1 = arguments;
+
+    var args;
+
+    if (arguments.length === 2 && typeof arguments[1] === "object") {
+        args = arguments[1];
+    } else {
+        args = new Array(arguments.length - 1);
+        for (var i = 1; i < arguments.length; ++i) {
+            args[i - 1] = arguments$1[i];
+        }
+    }
+
+    if (!args || !args.hasOwnProperty) {
+        args = {};
+    }
+
+    return string.replace(nargs, function replaceArg(match, i, index) {
+        var result;
+
+        if (string[index - 1] === "{" &&
+            string[index + match.length] === "}") {
+            return i
+        } else {
+            result = args.hasOwnProperty(i) ? args[i] : null;
+            if (result === null || result === undefined) {
+                return ""
+            }
+
+            return result
+        }
+    })
+}
 
 /**
  * Return the proper validation object
@@ -43,7 +80,7 @@ var messageExtractorMixin = {
           });
           return getValidationObject.call(this$1, _$vKeys[key].validationKey, key, params)
         } else if (_$vParams[key] && Object.keys(_$vParams[key]).length) { // If the current validator key has params at all
-          // We haven't defined a validation in our validationKeys setting so we try to map the params.
+          // We haven't defined a validation in our validationKeys setting so we try to map the Vuelidate params.
           Object.keys(_$vParams[key]).filter(function (k) { return k !== 'type'; }).forEach(function (k) {
             params[k] = _$vParams[key][k];
           });
@@ -64,7 +101,7 @@ var messageExtractorMixin = {
   },
   methods: {
     getErrorMessage: function getErrorMessage (key, properties) {
-      return this.$vuelidateErrorExtractor.i18n ? this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties) : template(this.mergedMessages[key], properties)
+      return this.$vuelidateErrorExtractor.i18n ? this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties) : index(this.mergedMessages[key], properties)
     }
   },
   props: {
@@ -123,7 +160,7 @@ var laravel = {
   }
 };
 
-var index = {
+var index$1 = {
   laravel: laravel
 };
 
@@ -148,4 +185,4 @@ var elements = {
   bootstrap: BooststrapElement
 };
 
-export { elements, messageExtractorMixin as extractorMixin, index as configs };export default plugin;
+export { elements, messageExtractorMixin as extractorMixin, index$1 as configs };export default plugin;

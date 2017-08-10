@@ -1,0 +1,367 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Options · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-theme-vuejs/vue.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="custom_templates.html" />
+    
+    
+    <link rel="prev" href="installation.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="installation.html">
+            
+                <a href="installation.html">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="options.html">
+            
+                <a href="options.html">
+            
+                    
+                    Options
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="custom_templates.html">
+            
+                <a href="custom_templates.html">
+            
+                    
+                    Custom Templates
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="advanced.html">
+            
+                <a href="advanced.html">
+            
+                    
+                    Advanced
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Options</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="available-options">Available options</h1>
+<h2 id="initialization-options">Initialization Options</h2>
+<p>The available options that you can set when initializing the plugin are:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> type</td>
+<td>Vue Component</td>
+<td>required</td>
+<td>The vue component to use. Should implement the <code>message-extractor-mixin</code></td>
+</tr>
+<tr>
+<td> messages</td>
+<td>Object</td>
+<td>optional</td>
+<td>The messages from which to extract each validation rule message. It is optional only if not using i18n feature</td>
+</tr>
+<tr>
+<td> i18n</td>
+<td>String</td>
+<td>optional</td>
+<td>Forces the plugin to use the <a href="https://github.com/kazupon/vue-i18n" target="_blank">vue-i18n</a> package to show translated messages. Must be set to the translation object&apos;s name as its used when getting the messages. E.x. <code>$t(&apos;validations.required&apos;)</code> where <em>validations</em> is the value of i18n. See <a href="advanced.html#i18n">Advanced</a></td>
+</tr>
+<tr>
+<td> validationKeys</td>
+<td>Object</td>
+<td>optional</td>
+<td>Allows to remap some of the keys and their properties. E.x. in Laravel&apos;s <code>same</code> validation rule, <code>other</code> is used to name the other field to compare, where as Vuelidate uses <code>eq</code>. <a href="advanced.html#validation-keys">Using Validation Keys</a></td>
+</tr>
+<tr>
+<td> name</td>
+<td>String</td>
+<td>option</td>
+<td>The name under which to register the component. Defaults to <strong>formGroup</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="component-props">Component Props</h2>
+<table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> label</td>
+<td>String</td>
+<td>optional</td>
+<td>The label to use inside the template. Gets assigned to the <code>:attribute</code> property as well.</td>
+</tr>
+<tr>
+<td> validator</td>
+<td>Vuelidate object</td>
+<td>required</td>
+<td>The vuelidate object to pass for each input element. E.x. for the <code>test</code> data property you will have to pass <code>:validator = &quot;$v.test&quot;</code>.</td>
+</tr>
+<tr>
+<td> messages</td>
+<td>Object</td>
+<td>optional</td>
+<td>The local messages to override the globally provided ones during initialization. This comes in handy when you need to override or its a single use case message. <strong>Does not work with i18n mode!</strong></td>
+</tr>
+<tr>
+<td> validatorParams</td>
+<td>Object</td>
+<td>optional</td>
+<td>Optional parameters to override or provide to the validation message. Mostly used to provide additional values like in the <code>other</code> property in laravel&apos;s <code>same</code> validation. <a href="advanced.html#validator-params">Validator Params</a></td>
+</tr>
+</tbody>
+</table>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="installation.html" class="navigation navigation-prev " aria-label="Previous page: Installation">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="custom_templates.html" class="navigation navigation-next " aria-label="Next page: Custom Templates">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Options","level":"1.3","depth":1,"next":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"previous":{"title":"Installation","level":"1.2","depth":1,"path":"installation.md","ref":"installation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-vuejs":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-08-09T19:36:04.153Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-10T06:45:41.273Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

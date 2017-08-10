@@ -4,6 +4,8 @@ const banner = require('./banner')
 const pack = require('../package.json')
 const vue = require('rollup-plugin-vue')
 const path = require('path')
+const node = require('rollup-plugin-node-resolve')
+const commonjs = require('rollup-plugin-commonjs')
 
 function toUpper (_, c) {
   return c ? c.toUpperCase() : ''
@@ -82,9 +84,15 @@ function genConfig (opts) {
     exports: 'named',
     plugins: [
       vue(),
-      buble()
-    ],
-    external: opts.external
+      buble(),
+      node({
+        module: true
+      }),
+      commonjs({
+        namedExports: { 'node_modules/string-template/index.js': ['template'] }  // Default: undefined
+      })
+    ]
+    // external: opts.external
   }
 
   const replacePluginOptions = { '__VERSION__': pack.version }

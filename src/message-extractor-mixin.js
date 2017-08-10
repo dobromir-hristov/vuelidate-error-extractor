@@ -33,7 +33,7 @@ export default {
           })
           return getValidationObject.call(this, _$vKeys[key].validationKey, key, params)
         } else if (_$vParams[key] && Object.keys(_$vParams[key]).length) { // If the current validator key has params at all
-          // We haven't defined a validation in our validationKeys setting so we try to map the params.
+          // We haven't defined a validation in our validationKeys setting so we try to map the Vuelidate params.
           Object.keys(_$vParams[key]).filter(k => k !== 'type').forEach(k => {
             params[k] = _$vParams[key][k]
           })
