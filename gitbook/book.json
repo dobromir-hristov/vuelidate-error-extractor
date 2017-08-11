@@ -4,9 +4,13 @@
     "edit-link",
     "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git",
     "-fontsettings",
-    "github"
+    "github",
+    "ga"
   ],
   "pluginsConfig": {
+    "ga": {
+      "token": "UA-29425482-9"
+    },
     "edit-link": {
       "base": "https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook",
       "label": "Edit This Page"
