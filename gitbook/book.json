@@ -38,6 +38,10 @@
           "content": "Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"
         },
         {
+          "name": "twitter:image",
+          "content": "https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"
+        },
+        {
           "property": "og:url",
           "content": "https://dobromir-hristov.github.io/vuelidate-error-extractor/"
         },
@@ -48,6 +52,10 @@
         {
           "property": "og:description",
           "content": "Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"
+        },
+        {
+          "property": "og:image",
+          "content": "https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"
         }
       ]
     }
