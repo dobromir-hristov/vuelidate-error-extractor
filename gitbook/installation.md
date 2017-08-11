@@ -5,6 +5,9 @@ Vuelidate-error-extractor can be used with bundlers like Webpack/Rollup or in th
 > We will be using ES6 syntax for all of our examples
 
 ## Using Bundlers
+```
+npm i vuelidate-error-extractor -S
+```
 
 ```js
 import Vue from 'vue'

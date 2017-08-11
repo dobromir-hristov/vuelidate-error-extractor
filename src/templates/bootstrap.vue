@@ -2,7 +2,7 @@
   <div class="form-group"
        :class="{'has-error': validator.$error, 'has-success':(!validator.$error && validator.$dirty)}">
     <slot name="label">
-      <label v-if="label">{{ label }} {{ errors ? '*' : '' }}</label>
+      <label class="control-label" v-if="label">{{ label }} {{ errors ? '*' : '' }}</label>
     </slot>
     <slot></slot>
     <slot name="errors">

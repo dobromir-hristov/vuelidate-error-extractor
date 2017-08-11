@@ -87,3 +87,17 @@ To solve our issue, we just provide a small map with the params we want to provi
 </form-group>
 ```
 Now if we have used `validationKeys` as well we get `The :attribute and :other must match.`  transformed to `The Password Confirmation and Password must match.`
+
+## Usage with other plugins
+
+You can of course use **vuelidate-error-extractor** with pretty much any input you want.
+Lets try with [multiselect](http://monterail.github.io/vue-multiselect/)
+
+```html
+  <form-group :validator="$v.sports" label="Favourite Sports">
+    <multiselect v-model='sports' :options='sports_array' @input='$v.sports.$touch()'></multiselect>
+  </form-group> 
+```
+
+<p data-height="400" data-theme-id="0" data-slug-hash="PKjxvr" data-default-tab="result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor with Multiselect" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/PKjxvr/">Vuelidate-error-extractor with Multiselect</a> by Dobromir (<a href="https://codepen.io/dobromir">@dobromir</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
