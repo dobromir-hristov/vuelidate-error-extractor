@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v1.0.1 
+ * vuelidate-error-extractor v1.0.2 
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -139,7 +139,7 @@ var FoundationElement = {render: function(){var _vm=this;var _h=_vm.$createEleme
   mixins: [messageExtractorMixin]
 };
 
-var BooststrapElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{'has-error': _vm.validator.$error, 'has-success':(!_vm.validator.$error && _vm.validator.$dirty)}},[_vm._t("label",[(_vm.label)?_c('label',[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"help-block"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
+var BooststrapElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{'has-error': _vm.validator.$error, 'has-success':(!_vm.validator.$error && _vm.validator.$dirty)}},[_vm._t("label",[(_vm.label)?_c('label',{staticClass:"control-label"},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"help-block"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
   mixins: [messageExtractorMixin]
 };
 
