@@ -30,7 +30,7 @@ The `extractorMixin` is a vue element that provides a few convenient methods and
 
 Method | Returns | Description
     --- | --- | --- |
-`getErrorMessage({String} key, {Object} properties)` | String | Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.
+`getErrorMessage ({String} key, {Object} properties)` | String | Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.
 
 ### Computed properties
 

@@ -5,7 +5,8 @@
     "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git",
     "-fontsettings",
     "github",
-    "ga"
+    "ga",
+    "meta"
   ],
   "pluginsConfig": {
     "ga": {
@@ -17,6 +18,26 @@
     },
     "github": {
       "url": "https://github.com/dobromir-hristov/vuelidate-error-extractor/"
+    },
+    "meta": {
+      "data": [
+        {
+          "name": "twitter:card",
+          "content": "summary"
+        },
+        {
+          "name": "twitter:site",
+          "content": "@d_m_hristov"
+        },
+        {
+          "name": "twitter:title",
+          "content": "Error message extractor helper for Vuelidate"
+        },
+        {
+          "name": "twitter:description",
+          "content": "Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"
+        }
+      ]
     }
   },
   "links": {
