@@ -31,10 +31,22 @@
         },
         {
           "name": "twitter:title",
-          "content": "Error message extractor helper for Vuelidate"
+          "content": "Error message extractor helper for Vuelidate using VueJS 2.4"
         },
         {
           "name": "twitter:description",
+          "content": "Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"
+        },
+        {
+          "property": "og:url",
+          "content": "https://dobromir-hristov.github.io/vuelidate-error-extractor/"
+        },
+        {
+          "property": "og:title",
+          "content": "Error message extractor helper for Vuelidate using VueJS 2.4"
+        },
+        {
+          "property": "og:description",
           "content": "Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"
         }
       ]
