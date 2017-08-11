@@ -1,7 +1,7 @@
 # Creating your own templates
 
 If you have a custom template that you want to provide (and you most probably do), then we have made it as easy as it can be.
-
+{% raw %}
 ```html
 <template>
   <div class="custom-element" :class="{error: validator.$error}">
@@ -19,6 +19,7 @@ If you have a custom template that you want to provide (and you most probably do
   }
 </script>
 ```
+{% endraw %}
 
 And this is it. You can extend is as much as want, as long as you implement the `extractorMixin`.
 
@@ -30,7 +31,7 @@ The `extractorMixin` is a vue element that provides a few convenient methods and
 
 Method | Returns | Description
     --- | --- | --- |
-`getErrorMessage ({String} key, {Object} properties)` | String | Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.
+`getErrorMessage({String} key, {Object} properties)` | String | Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.
 
 ### Computed properties
 
