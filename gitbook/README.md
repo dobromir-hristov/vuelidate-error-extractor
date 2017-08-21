@@ -6,7 +6,7 @@
 
 **Vuelidate-error-extractor** eases the pain of showing vuelidate error messages in your Vue components. Highly configurable, it can be tailored to your needs. 
 
-By registering a `form-group` component, **vuelidate-error-extractor** automatically shows all the errors for each input. The plugin can be configured to work with Foundation and Bootstrap, as well as custom templates provided by the user.
+By registering a `form-group` component, **vuelidate-error-extractor** automatically shows all the errors for each input. The plugin can be configured to work with [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms), as well as custom templates provided by the user.
 
 The plugin is also able to work as a standalone component or in tandem with [vue-i18n](https://github.com/kazupon/vue-i18n).
 

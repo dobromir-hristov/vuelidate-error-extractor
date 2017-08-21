@@ -91,6 +91,6 @@ You can create your own templates, see [Custom Template](custom_templates.md)
 **Vuelidate-error-extractor** exports a few things, but you can import them separately from their files if your bundles include more than you use (dont get tree shaken).
 
  - default - The default export installs the plugin in Vue.
- - templates - The different templates that we provide. Currently Foundation and Bootstrap. E.g. `import {templates} from 'vuelidate-error-extractor'` then use `{template: templates.foundation6}` when initializing the plugin.
+ - templates - The different templates that we provide. Currently Foundation 6 and Bootstrap 3. E.g. `import {templates} from 'vuelidate-error-extractor'` then use `{template: templates.foundation6}` when initializing the plugin.
  - extractorMixin - The mixin it self. Useful when doing your own [Custom Template](custom_templates.md).
  - configs - The configs to use for mapping your validation rules to another system's messages, like Laravel's. [Using Validation Keys](./advanced.md#validation-keys)
