@@ -21,6 +21,21 @@ If you have a custom template that you want to provide (and you most probably do
 ```
 {% endraw %}
 
+Now we need to import our newly created template and supply it to the init function.
+
+```js
+import customFormGroup from './components/form/formGroup.vue'
+import Vue from 'vue'
+import vuelidate from 'vuelidate'
+import vuelidateErrorExtractor from 'vuelidate-error-extractor'
+
+Vue.use(vuelidate)
+Vue.use(vuelidateErrorExtractor, {
+  template: customFormGroup,
+  messages,
+})
+```
+
 And this is it. You can extend is as much as want, as long as you implement the `extractorMixin`.
 
 ## extractorMixin
