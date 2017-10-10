@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v1.1.0 
+ * vuelidate-error-extractor v1.2.0 
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -8,6 +8,8 @@
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (factory((global.VuelidateErrorExtractor = global.VuelidateErrorExtractor || {})));
 }(this, (function (exports) { 'use strict';
+
+var idDev = "development" === 'development';
 
 /**
  * Deeply fetch dot notated strings from object.
@@ -20,8 +22,22 @@
 function get (string, object, fallback) {
   if ( fallback === void 0 ) fallback = '';
 
-  var result = string.split('.').reduce(function (obj, current) { return obj[current]; }, object);
-  return typeof result === 'undefined' ? fallback : result
+  if (typeof string !== 'string') {
+    idDev && console.warn(("Expected a string in the first argument, got " + (typeof string)));
+    return fallback
+  }
+
+  if (typeof object !== 'object') {
+    idDev && console.warn(("Expected an Object/Array in the second argument, got " + (typeof object)));
+    return fallback
+  }
+
+  try {
+    return string.split('.').reduce(function (obj, current) { return obj[current] || ''; }, object)
+  } catch (err) {
+    idDev && console.warn(("[vuelidate-error-extractor]: " + err));
+    return fallback
+  }
 }
 
 /**
@@ -40,7 +56,7 @@ function template (template, object) {
   }
   var regx = /{(.*?)}/g;
 
-  return template.replace(regx, function (_, key) { return (get(key, object) || ''); })
+  return template.replace(regx, function (_, key) { return get(key, object) || ''; })
 }
 
 /**
@@ -103,7 +119,7 @@ var messageExtractorMixin = {
       return this.activeErrors.length ? this.activeErrors[0] : ''
     },
     firstErrorMessage: function firstErrorMessage () {
-      return this.getErrorMessage(this.firstError.validationKey, this.firstError.params)
+      return this.hasErrors ? this.getErrorMessage(this.firstError.validationKey, this.firstError.params) : ''
     },
     hasErrors: function hasErrors () {
       return this.validator.$error
@@ -117,9 +133,8 @@ var messageExtractorMixin = {
       return this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties)
     },
     getPlainMessage: function getPlainMessage (key, properties) {
-      var msg = get(key, this.mergedMessages);
-      if (msg === '') {
-        "development" === 'development' && console.warn(("[vuelidate-error-extractor]: Key " + key + " is not present in error messages"));
+      var msg = get(key, this.mergedMessages, false);
+      if (!msg) {
         return key
       }
       return template(msg, properties)
