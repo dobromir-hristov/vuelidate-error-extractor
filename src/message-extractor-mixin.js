@@ -29,7 +29,7 @@ export default {
       })
     },
     activeErrors () {
-      return this.errors.filter(error => !error.hasError)
+      return this.errors.filter(error => error.hasError)
     },
     mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)

@@ -70,7 +70,7 @@ function getValidationObject (validationKey, key, params) {
 
   return {
     validationKey: validationKey,
-    hasError: this.validator[key],
+    hasError: !this.validator[key],
     $params: this.validator.$params[key],
     // Add the label for the :attribute parameter that is used in most Laravel validations
     params: Object.assign({}, { attribute: this.label, label: this.label }, params, this.validatorParams)
@@ -108,7 +108,7 @@ var messageExtractorMixin = {
       })
     },
     activeErrors: function activeErrors () {
-      return this.errors.filter(function (error) { return !error.hasError; })
+      return this.errors.filter(function (error) { return error.hasError; })
     },
     mergedMessages: function mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
@@ -169,7 +169,7 @@ var messageExtractorMixin = {
   }
 };
 
-var foundation6 = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{error: _vm.hasErrors}},[_vm._t("label",[(_vm.label)?_c('label',{class:{'is-invalid-label': _vm.hasErrors}},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default",[_vm._t("errors",[(_vm.hasErrors)?_c('div',{staticClass:"form-error is-visible"},[(_vm.showSingleError)?_c('span',{attrs:{"data-validation-attr":_vm.firstError.validationKey}},[_vm._v(_vm._s(_vm.firstErrorMessage))]):_vm._e(),(!_vm.showSingleError)?_vm._l((_vm.activeErrors),function(error){return _c('span',{key:error.validationKey,attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])}):_vm._e()],2):_vm._e()],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],2)},staticRenderFns: [],
+var foundation6 = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{error: _vm.hasErrors}},[_vm._t("label",[(_vm.label)?_c('label',{class:{'is-invalid-label': _vm.hasErrors}},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default",null,{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage}),_vm._t("errors",[_c('div',{staticClass:"form-error is-visible"},[(_vm.showSingleError)?_c('span',{attrs:{"data-validation-attr":_vm.firstError.validationKey}},[_vm._v(_vm._s(_vm.firstErrorMessage))]):_vm._e(),(!_vm.showSingleError)?_vm._l((_vm.activeErrors),function(error){return _c('span',{key:error.validationKey,attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])}):_vm._e()],2)],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],2)},staticRenderFns: [],
   mixins: [messageExtractorMixin]
 };
 

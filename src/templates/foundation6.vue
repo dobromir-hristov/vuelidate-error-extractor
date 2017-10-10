@@ -8,7 +8,7 @@
     <slot :errors="activeErrors"
           :has-errors="hasErrors"
           :first-error-message="firstErrorMessage"
-    />
+    ></slot>
     <slot name="errors"
           :errors="activeErrors"
           :has-errors="hasErrors"

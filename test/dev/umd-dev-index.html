@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>vuelidate-error-extractor tests</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.1/css/foundation.min.css">
+</head>
+<body>
+<div class="grid-container grid-container-padded">
+  <div class="grid-x grid-padding-x">
+    <div class="cell">
+      <div id="app">
+        <form-group :validator="$v.test" label="Test Field" show-single-error>
+          <input type="text" v-model="test" @input="$v.test.$touch()">
+        </form-group>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.0/vue.js"></script>
+<script src="https://unpkg.com/vuelidate@0.5.0/dist/vuelidate.min.js"></script>
+<script src="https://unpkg.com/vuelidate@0.5.0/dist/validators.min.js"></script>
+<script src="../../dist/vuelidate-error-extractor.js"></script>
+<script>
+  Vue.use(vuelidate.default)
+
+  Vue.use(VuelidateErrorExtractor.default, {
+    template: VuelidateErrorExtractor.templates.foundation6,
+    messages: {
+      required: 'Field {attribute} is required',
+      minLength: 'Field must be 5 symbols'
+    }
+  })
+
+  const vueInstance = new Vue({
+    el: '#app',
+    data () {
+      return {
+        test: ''
+      }
+    },
+    validations: {
+      test: {
+        required: validators.required,
+        minLength: validators.minLength(5)
+      }
+    }
+  })
+</script>
+</body>
+</html>

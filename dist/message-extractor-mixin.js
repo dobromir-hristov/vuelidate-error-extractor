@@ -72,7 +72,7 @@ function getValidationObject (validationKey, key, params) {
 
   return {
     validationKey: validationKey,
-    hasError: this.validator[key],
+    hasError: !this.validator[key],
     $params: this.validator.$params[key],
     // Add the label for the :attribute parameter that is used in most Laravel validations
     params: Object.assign({}, { attribute: this.label, label: this.label }, params, this.validatorParams)
@@ -110,7 +110,7 @@ var messageExtractorMixin = {
       })
     },
     activeErrors: function activeErrors () {
-      return this.errors.filter(function (error) { return !error.hasError; })
+      return this.errors.filter(function (error) { return error.hasError; })
     },
     mergedMessages: function mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
