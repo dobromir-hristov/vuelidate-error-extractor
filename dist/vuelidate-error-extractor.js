@@ -4,48 +4,43 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.VuelidateErrorExtractor = global.VuelidateErrorExtractor || {})));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (factory((global.VuelidateErrorExtractor = global.VuelidateErrorExtractor || {})));
 }(this, (function (exports) { 'use strict';
 
-var nargs = /\{([0-9a-zA-Z_]+)\}/g;
+/**
+ * Deeply fetch dot notated strings from object.
+ * Has fallback if value does not exist
+ * @param {String} string - Dot notated string
+ * @param {Object} object - Object to traverse
+ * @param {*} fallback - Fallback value
+ * @return {*}
+ */
+function get (string, object, fallback) {
+  if ( fallback === void 0 ) fallback = '';
 
-var index = template;
+  var result = string.split('.').reduce(function (obj, current) { return obj[current]; }, object);
+  return typeof result === 'undefined' ? fallback : result
+}
 
-function template(string) {
-    var arguments$1 = arguments;
+/**
+ * Replace dot notated strings in curly braces for values
+ * @param {String} template - Template to search
+ * @param {Object} object - Object with data to traverse
+ * @return {string}
+ */
+function template (template, object) {
+  if (typeof template !== 'string') {
+    throw new TypeError(("Expected a string in the first argument, got " + (typeof template)))
+  }
 
-    var args;
+  if (typeof object !== 'object') {
+    throw new TypeError(("Expected an Object/Array in the second argument, got " + (typeof object)))
+  }
+  var regx = /{(.*?)}/g;
 
-    if (arguments.length === 2 && typeof arguments[1] === "object") {
-        args = arguments[1];
-    } else {
-        args = new Array(arguments.length - 1);
-        for (var i = 1; i < arguments.length; ++i) {
-            args[i - 1] = arguments$1[i];
-        }
-    }
-
-    if (!args || !args.hasOwnProperty) {
-        args = {};
-    }
-
-    return string.replace(nargs, function replaceArg(match, i, index) {
-        var result;
-
-        if (string[index - 1] === "{" &&
-            string[index + match.length] === "}") {
-            return i
-        } else {
-            result = args.hasOwnProperty(i) ? args[i] : null;
-            if (result === null || result === undefined) {
-                return ""
-            }
-
-            return result
-        }
-    })
+  return template.replace(regx, function (_, key) { return (get(key, object) || ''); })
 }
 
 /**
@@ -64,7 +59,7 @@ function getValidationObject (validationKey, key, params) {
     hasError: this.validator[key],
     $params: this.validator.$params[key],
     // Add the label for the :attribute parameter that is used in most Laravel validations
-    params: Object.assign({}, { attribute: this.label }, params, this.validatorParams)
+    params: Object.assign({}, { attribute: this.label, label: this.label }, params, this.validatorParams)
   }
 }
 
@@ -81,7 +76,7 @@ var messageExtractorMixin = {
         // Check of we have defined our validation in the settings
         if (typeof _$vKeys !== 'undefined' && _$vKeys.hasOwnProperty(key)) {
           _$vKeys[key].params.forEach(function (param) {
-            // If we have passed a value for some of parameters use it, else use the one from Vuelidate.
+            // Use the extra supplied data via validator-params prop or use the one from vuelidate
             params[param.ext] = this$1.validatorParams[param.other] || _$vParams[key][param.vue];
           });
           return getValidationObject.call(this$1, _$vKeys[key].validationKey, key, params)
@@ -103,11 +98,31 @@ var messageExtractorMixin = {
     },
     mergedMessages: function mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
+    },
+    firstError: function firstError () {
+      return this.activeErrors.length ? this.activeErrors[0] : ''
+    },
+    firstErrorMessage: function firstErrorMessage () {
+      return this.getErrorMessage(this.firstError.validationKey, this.firstError.params)
+    },
+    hasErrors: function hasErrors () {
+      return this.validator.$error
     }
   },
   methods: {
     getErrorMessage: function getErrorMessage (key, properties) {
-      return this.$vuelidateErrorExtractor.i18n ? this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties) : index(this.mergedMessages[key], properties)
+      return this.$vuelidateErrorExtractor.i18n ? this.getI18nMessage(key, properties) : this.getPlainMessage(key, properties)
+    },
+    getI18nMessage: function getI18nMessage (key, properties) {
+      return this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties)
+    },
+    getPlainMessage: function getPlainMessage (key, properties) {
+      var msg = get(key, this.mergedMessages);
+      if (msg === '') {
+        "development" === 'development' && console.warn(("[vuelidate-error-extractor]: Key " + key + " is not present in error messages"));
+        return key
+      }
+      return template(msg, properties)
     }
   },
   props: {
@@ -133,16 +148,25 @@ var messageExtractorMixin = {
     messages: {
       type: Object,
       default: function () { return ({}); }
+    },
+    showSingleError: {
+      type: Boolean,
+      default: false
     }
   }
 };
 
-var FoundationElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{error: _vm.validator.$error}},[_vm._t("label",[(_vm.label)?_c('label',{class:{'is-invalid-label': _vm.validator.$error}},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"form-error is-visible"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',{attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
+var foundation6 = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{error: _vm.hasErrors}},[_vm._t("label",[(_vm.label)?_c('label',{class:{'is-invalid-label': _vm.hasErrors}},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default",[_vm._t("errors",[(_vm.hasErrors)?_c('div',{staticClass:"form-error is-visible"},[(_vm.showSingleError)?_c('span',{attrs:{"data-validation-attr":_vm.firstError.validationKey}},[_vm._v(_vm._s(_vm.firstErrorMessage))]):_vm._e(),(!_vm.showSingleError)?_vm._l((_vm.activeErrors),function(error){return _c('span',{key:error.validationKey,attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])}):_vm._e()],2):_vm._e()],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],2)},staticRenderFns: [],
   mixins: [messageExtractorMixin]
 };
 
-var BooststrapElement = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{'has-error': _vm.validator.$error, 'has-success':(!_vm.validator.$error && _vm.validator.$dirty)}},[_vm._t("label",[(_vm.label)?_c('label',{staticClass:"control-label"},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default"),_vm._t("errors",[(_vm.validator.$error)?_c('div',{staticClass:"help-block"},[_vm._l((_vm.activeErrors),function(error){return [_c('span',[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])]})],2):_vm._e()])],2)},staticRenderFns: [],
+var bootstrap3 = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"form-group",class:{'has-error': _vm.hasErrors, 'has-success':(!_vm.hasErrors && _vm.validator.$dirty)}},[_vm._t("label",[(_vm.label)?_c('label',{staticClass:"control-label"},[_vm._v(_vm._s(_vm.label)+" "+_vm._s(_vm.errors ? '*' : ''))]):_vm._e()]),_vm._t("default",[_vm._t("errors",[(_vm.hasErrors)?_c('div',{staticClass:"help-block"},[(_vm.showSingleError)?_c('span',{attrs:{"data-validation-attr":_vm.firstError.validationKey}},[_vm._v(_vm._s(_vm.firstErrorMessage))]):_vm._e(),(!_vm.showSingleError)?_vm._l((_vm.activeErrors),function(error){return _c('span',{key:error.validationKey,attrs:{"data-validation-attr":error.validationKey}},[_vm._v(_vm._s(_vm.getErrorMessage(error.validationKey, error.params)))])}):_vm._e()],2):_vm._e()],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],{errors:_vm.activeErrors,hasErrors:_vm.hasErrors,firstErrorMessage:_vm.firstErrorMessage})],2)},staticRenderFns: [],
   mixins: [messageExtractorMixin]
+};
+
+var index = {
+  foundation6: foundation6,
+  bootstrap3: bootstrap3
 };
 
 var laravel = {
@@ -186,15 +210,10 @@ function plugin (Vue, options) {
   }
 }
 
-var templates = {
-  foundation: FoundationElement,
-  bootstrap: BooststrapElement
-};
-
 exports['default'] = plugin;
-exports.templates = templates;
 exports.extractorMixin = messageExtractorMixin;
 exports.configs = index$1;
+exports.templates = index;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

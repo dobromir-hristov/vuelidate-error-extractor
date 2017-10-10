@@ -1,19 +1,27 @@
 import Vue from 'vue'
 import vuelidate from 'vuelidate'
 import VueI18n from 'vue-i18n'
-import vuelidateErrorExtractor, { templates, configs } from '../dist/vuelidate-error-extractor.esm'
-import testElement from './dev/testElement.vue'
+import vuelidateErrorExtractor, { templates, configs } from '../../src/index'
+import testElement from './testElement.vue'
+
+const messages = {
+  required: 'The {attribute} field is required',
+  min: {
+    string: 'The {attribute} field must be at least {min} characters.'
+  },
+  deep: 'The deeply nested value {deeply.nested.value}'
+}
 
 Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
-  template: templates.foundation,
+  template: templates.foundation6,
   i18n: 'validations',
-  messages: { required: 'The {attribute} field is required' },
+  messages,
   validationKeys: configs.laravel
 })
 Vue.use(VueI18n)
 
-const messages = {
+const i18nMessages = {
   en: {
     validations: {
       required: 'The {attribute} field is required!',
@@ -32,7 +40,7 @@ const messages = {
 // Create VueI18n instance with options
 const i18n = new VueI18n({
   locale: 'en', // set locale
-  messages // set locale messages
+  messages: i18nMessages // set locale messages
 })
 
 new Vue({

@@ -50,7 +50,7 @@ const entries = {
   },
   mixin: {
     entry: 'src/message-extractor-mixin.js',
-    dest: `dist/message-extractor-mixin.js`,
+    dest: 'dist/message-extractor-mixin.js',
     format: 'umd',
     env: 'development',
     moduleName: moduleName + 'Mixin',
@@ -61,15 +61,15 @@ const entries = {
     dest: `dist/templates/foundation6.min.js`,
     format: 'umd',
     env: 'production',
-    moduleName: moduleName + 'FoundationTemplate',
+    moduleName: moduleName + 'Foundation6Template',
     banner
   },
   bootstrapUmd: {
-    entry: 'src/templates/bootstrap.vue',
-    dest: `dist/templates/bootstrap.min.js`,
+    entry: 'src/templates/bootstrap3.vue',
+    dest: `dist/templates/bootstrap3.min.js`,
     format: 'umd',
     env: 'production',
-    moduleName: moduleName + 'BootstrapTemplate',
+    moduleName: moduleName + 'Bootstrap3Template',
     banner
   }
 }
@@ -84,15 +84,13 @@ function genConfig (opts) {
     exports: 'named',
     plugins: [
       vue(),
-      buble(),
+      buble({
+        transforms: { dangerousForOf: true }
+      }),
       node({
         module: true
-      }),
-      commonjs({
-        namedExports: { 'node_modules/string-template/index.js': ['template'] }  // Default: undefined
       })
     ]
-    // external: opts.external
   }
 
   const replacePluginOptions = { '__VERSION__': pack.version }

@@ -1,5 +1,4 @@
-import FoundationElement from './templates/foundation6.vue'
-import BooststrapElement from './templates/bootstrap.vue'
+import templates from './templates'
 import extractorMixin from './message-extractor-mixin'
 import configs from './config/index.js'
 
@@ -19,9 +18,4 @@ function plugin (Vue, options = {}) {
 
 export default plugin
 
-export const templates = {
-  foundation: FoundationElement,
-  bootstrap: BooststrapElement
-}
-
-export { extractorMixin, configs }
+export { extractorMixin, configs, templates }

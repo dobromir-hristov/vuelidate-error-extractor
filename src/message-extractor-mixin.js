@@ -1,21 +1,4 @@
-import template from 'string-template'
-
-/**
- * Return the proper validation object
- * @param {String} validationKey - Key by which we will get the translation
- * @param {String} key - Key to get the error status from
- * @param {Object} params - All the extra params that will be merged with the Given validatorParams prop.
- * @return {Object}
- */
-function getValidationObject (validationKey, key = validationKey, params = {}) {
-  return {
-    validationKey,
-    hasError: this.validator[key],
-    $params: this.validator.$params[key],
-    // Add the label for the :attribute parameter that is used in most Laravel validations
-    params: Object.assign({}, { attribute: this.label }, params, this.validatorParams)
-  }
-}
+import { template, get, getValidationObject } from './utils'
 
 export default {
   computed: {
@@ -28,7 +11,7 @@ export default {
         // Check of we have defined our validation in the settings
         if (typeof _$vKeys !== 'undefined' && _$vKeys.hasOwnProperty(key)) {
           _$vKeys[key].params.forEach(param => {
-            // If we have passed a value for some of parameters use it, else use the one from Vuelidate.
+            // Use the extra supplied data via validator-params prop or use the one from vuelidate
             params[param.ext] = this.validatorParams[param.other] || _$vParams[key][param.vue]
           })
           return getValidationObject.call(this, _$vKeys[key].validationKey, key, params)
@@ -50,11 +33,31 @@ export default {
     },
     mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
+    },
+    firstError () {
+      return this.activeErrors.length ? this.activeErrors[0] : ''
+    },
+    firstErrorMessage () {
+      return this.getErrorMessage(this.firstError.validationKey, this.firstError.params)
+    },
+    hasErrors () {
+      return this.validator.$error
     }
   },
   methods: {
     getErrorMessage (key, properties) {
-      return this.$vuelidateErrorExtractor.i18n ? this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties) : template(this.mergedMessages[key], properties)
+      return this.$vuelidateErrorExtractor.i18n ? this.getI18nMessage(key, properties) : this.getPlainMessage(key, properties)
+    },
+    getI18nMessage (key, properties) {
+      return this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties)
+    },
+    getPlainMessage (key, properties) {
+      const msg = get(key, this.mergedMessages)
+      if (msg === '') {
+        process.env.NODE_ENV === 'development' && console.warn(`[vuelidate-error-extractor]: Key ${key} is not present in error messages`)
+        return key
+      }
+      return template(msg, properties)
     }
   },
   props: {
@@ -80,6 +83,10 @@ export default {
     messages: {
       type: Object,
       default: () => ({})
+    },
+    showSingleError: {
+      type: Boolean,
+      default: false
     }
   }
 }

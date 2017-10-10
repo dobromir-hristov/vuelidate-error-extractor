@@ -94,14 +94,9 @@
     "docs:build": "node config/version.js && gitbook build ./gitbook ./docs",
     "dev": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --config config/webpack.dev.conf.js",
     "dev:test": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --content-base ./test/unit/ --config config/webpack.test.conf.js",
-    "lint": "eslint src test config",
-    "test": "npm run lint && npm run test:cover",
-    "test:cover": "SET BABEL_ENV=test & karma start config/karma.cover.conf.js",
-    "test:unit": "SET BABEL_ENV=test & karma start config/karma.unit.conf.js"
+    "lint": "eslint src test config"
   },
-  "dependencies": {
-    "string-template": "^1.0.0"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "vue": "^2.4.2",
     "vuelidate": "^0.5.0"

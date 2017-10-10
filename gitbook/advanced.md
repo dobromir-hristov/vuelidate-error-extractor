@@ -5,8 +5,9 @@ Vuelidate-error-extractor can be used with vue-18n to provide translated error m
 To enable the i18n mode, you have to pass a string containing the top structure of your validation messages. 
 E.g.
 If your validations are coming from Laravel
+{% raw %}
 ```js
-{
+const message = {
   en: {
     validation:{
       required: 'The {attribute} field is required',
@@ -14,14 +15,16 @@ If your validations are coming from Laravel
     }
   },
   de: {
-    ...
+    // ...
   }
 }
 ```
+{% endraw %}
+
 Then when initializing your plugin you have to set up like this:
 ```js
 Vue.use(VuelidateErrorExtractor, {
-  tempalate,
+  template,
   messages,
   i18n: 'validation' // Where validation is the key under which all validation messages are contained. Can be deeper nested if needed.
 })
@@ -58,12 +61,13 @@ const validationKeys = {
     validationKey: 'same',
     params: [
       {
-        vue: 'eq',
-        ext: 'other'
+        vue: 'eq', // Vuelidate uses eq for other value 
+        ext: 'other' // Laravel uses other
       }
     ]
   }
 }
+
 Vue.use(VuelidateMessageExtractor, {
   template,
   i18n: 'validation',
@@ -71,7 +75,7 @@ Vue.use(VuelidateMessageExtractor, {
 })
 
 ```
-This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel.
+This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel, or messing with your own rules.
 
 ## Validator Params
 
@@ -91,7 +95,9 @@ Now if we have used `validationKeys` as well we get `The :attribute and :other m
 ## Usage with other plugins
 
 You can of course use **vuelidate-error-extractor** with pretty much any input you want.
-Lets try with [multiselect](http://monterail.github.io/vue-multiselect/)
+
+### Usage with Multiselect
+Lets try with [Multiselect](http://monterail.github.io/vue-multiselect/)
 
 ```html
   <form-group :validator="$v.sports" label="Favourite Sports">
@@ -101,3 +107,34 @@ Lets try with [multiselect](http://monterail.github.io/vue-multiselect/)
 
 <p data-height="400" data-theme-id="0" data-slug-hash="PKjxvr" data-default-tab="result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor with Multiselect" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/PKjxvr/">Vuelidate-error-extractor with Multiselect</a> by Dobromir (<a href="https://codepen.io/dobromir">@dobromir</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+### Usage with quasar
+
+You could use it with [Quasar](http://quasar-framework.org/components/input.html) as well, because we support scoped slots, we can make use of them.
+
+We can create a new simple component to use with Quasar inputs.
+
+```html
+<!--form-group.vue-->
+<template>
+  <div class="form-group"
+         :class="{error: hasErrors}">
+    <slot :errors="activeErrors"
+          :has-errors="hasErrors"
+          :first-error-message="firstErrorMessage"
+          :label="label"
+    />
+  </div>
+</template>
+```
+
+Pass scoped props to quasar's q-input
+```html
+  <form-group>
+    <template scope="prop">
+      <q-input v-model="text" 
+               :error="prop.hasErrors" 
+               :float-label="prop.hasErrors ? prop.firstErrorMessage : 'Everything fine now'" />
+    </template>
+  </form-group>
+```
