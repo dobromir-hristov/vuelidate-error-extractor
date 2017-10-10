@@ -224,7 +224,7 @@
 <p>To enable the i18n mode, you have to pass a string containing the top structure of your validation messages. 
 E.g.
 If your validations are coming from Laravel</p>
-<pre><code class="lang-js">{
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> message = {
   en: {
     validation:{
       required: <span class="hljs-string">&apos;The {attribute} field is required&apos;</span>,
@@ -232,13 +232,13 @@ If your validations are coming from Laravel</p>
     }
   },
   de: {
-    ...
+    <span class="hljs-comment">// ...</span>
   }
 }
 </code></pre>
 <p>Then when initializing your plugin you have to set up like this:</p>
 <pre><code class="lang-js">Vue.use(VuelidateErrorExtractor, {
-  tempalate,
+  template,
   messages,
   i18n: <span class="hljs-string">&apos;validation&apos;</span> <span class="hljs-comment">// Where validation is the key under which all validation messages are contained. Can be deeper nested if needed.</span>
 })
@@ -272,19 +272,20 @@ Laravel uses deeper  structures for some of it&apos;s validation messages. </p>
     validationKey: <span class="hljs-string">&apos;same&apos;</span>,
     params: [
       {
-        vue: <span class="hljs-string">&apos;eq&apos;</span>,
-        ext: <span class="hljs-string">&apos;other&apos;</span>
+        vue: <span class="hljs-string">&apos;eq&apos;</span>, <span class="hljs-comment">// Vuelidate uses eq for other value </span>
+        ext: <span class="hljs-string">&apos;other&apos;</span> <span class="hljs-comment">// Laravel uses other</span>
       }
     ]
   }
 }
+
 Vue.use(VuelidateMessageExtractor, {
   template,
   i18n: <span class="hljs-string">&apos;validation&apos;</span>,
   validationKeys
 })
 </code></pre>
-<p>This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel.</p>
+<p>This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel, or messing with your own rules.</p>
 <h2 id="validator-params">Validator Params</h2>
 <p>This is another escape hatch for those moments where you need to provide a parameter which applies only for the current component.
 A really good example is the <code>same</code> validation. Laravel implements this via <code>same</code> message, where as Vuelidate has a <code>sameAs</code> rule. Even if we call ours <code>same:sameAs(&apos;password&apos;)</code> the parameter names don&apos;t match as vuelidate uses <code>eq</code> and laravel <code>other</code>.
@@ -298,14 +299,40 @@ To solve our issue, we just provide a small map with the params we want to provi
 </code></pre>
 <p>Now if we have used <code>validationKeys</code> as well we get <code>The :attribute and :other must match.</code>  transformed to <code>The Password Confirmation and Password must match.</code></p>
 <h2 id="usage-with-other-plugins">Usage with other plugins</h2>
-<p>You can of course use <strong>vuelidate-error-extractor</strong> with pretty much any input you want.
-Lets try with <a href="http://monterail.github.io/vue-multiselect/" target="_blank">multiselect</a></p>
+<p>You can of course use <strong>vuelidate-error-extractor</strong> with pretty much any input you want.</p>
+<h3 id="usage-with-multiselect">Usage with Multiselect</h3>
+<p>Lets try with <a href="http://monterail.github.io/vue-multiselect/" target="_blank">Multiselect</a></p>
 <pre><code class="lang-html">  <span class="hljs-tag">&lt;<span class="hljs-name">form-group</span> <span class="hljs-attr">:validator</span>=<span class="hljs-string">&quot;$v.sports&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Favourite Sports&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">multiselect</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&apos;sports&apos;</span> <span class="hljs-attr">:options</span>=<span class="hljs-string">&apos;sports_array&apos;</span> @<span class="hljs-attr">input</span>=<span class="hljs-string">&apos;$v.sports.$touch()&apos;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">multiselect</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">form-group</span>&gt;</span>
 </code></pre>
 <p></p><p data-height="400" data-theme-id="0" data-slug-hash="PKjxvr" data-default-tab="result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor with Multiselect" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/PKjxvr/" target="_blank">Vuelidate-error-extractor with Multiselect</a> by Dobromir (<a href="https://codepen.io/dobromir" target="_blank">@dobromir</a>) on <a href="https://codepen.io" target="_blank">CodePen</a>.</p><p></p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+<h3 id="usage-with-quasar">Usage with quasar</h3>
+<p>You could use it with <a href="http://quasar-framework.org/components/input.html" target="_blank">Quasar</a> as well, because we support scoped slots, we can make use of them.</p>
+<p>We can create a new simple component to use with Quasar inputs.</p>
+<pre><code class="lang-html"><span class="hljs-comment">&lt;!--form-group.vue--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;form-group&quot;</span>
+         <span class="hljs-attr">:class</span>=<span class="hljs-string">&quot;{error: hasErrors}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">slot</span> <span class="hljs-attr">:errors</span>=<span class="hljs-string">&quot;activeErrors&quot;</span>
+          <span class="hljs-attr">:has-errors</span>=<span class="hljs-string">&quot;hasErrors&quot;</span>
+          <span class="hljs-attr">:first-error-message</span>=<span class="hljs-string">&quot;firstErrorMessage&quot;</span>
+          <span class="hljs-attr">:label</span>=<span class="hljs-string">&quot;label&quot;</span>
+    /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+<p>Pass scoped props to quasar&apos;s q-input</p>
+<pre><code class="lang-html">  <span class="hljs-tag">&lt;<span class="hljs-name">form-group</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;prop&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">q-input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;text&quot;</span> 
+               <span class="hljs-attr">:error</span>=<span class="hljs-string">&quot;prop.hasErrors&quot;</span> 
+               <span class="hljs-attr">:float-label</span>=<span class="hljs-string">&quot;prop.hasErrors ? prop.firstErrorMessage : &apos;Everything fine now&apos;&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">form-group</span>&gt;</span>
+</code></pre>
 
                                 
                                 </section>
@@ -345,7 +372,7 @@ Lets try with <a href="http://monterail.github.io/vue-multiselect/" target="_bla
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Advanced","level":"1.5","depth":1,"previous":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"advanced.md","mtime":"2017-08-11T09:56:51.631Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-21T16:38:47.750Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Advanced","level":"1.5","depth":1,"previous":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"advanced.md","mtime":"2017-10-10T20:32:07.108Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-10T20:36:29.414Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
