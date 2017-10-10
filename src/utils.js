@@ -1,3 +1,5 @@
+const idDev = process.env.NODE_ENV === 'development'
+
 /**
  * Deeply fetch dot notated strings from object.
  * Has fallback if value does not exist
@@ -7,8 +9,22 @@
  * @return {*}
  */
 export function get (string, object, fallback = '') {
-  const result = string.split('.').reduce((obj, current) => obj[current], object)
-  return typeof result === 'undefined' ? fallback : result
+  if (typeof string !== 'string') {
+    idDev && console.warn(`Expected a string in the first argument, got ${typeof string}`)
+    return fallback
+  }
+
+  if (typeof object !== 'object') {
+    idDev && console.warn(`Expected an Object/Array in the second argument, got ${typeof object}`)
+    return fallback
+  }
+
+  try {
+    return string.split('.').reduce((obj, current) => obj[current] || '', object)
+  } catch (err) {
+    idDev && console.warn(`[vuelidate-error-extractor]: ${err}`)
+    return fallback
+  }
 }
 
 /**
@@ -27,7 +43,7 @@ export function template (template, object) {
   }
   const regx = /{(.*?)}/g
 
-  return template.replace(regx, (_, key) => (get(key, object) || ''))
+  return template.replace(regx, (_, key) => get(key, object) || '')
 }
 
 /**

@@ -5,11 +5,11 @@ import vuelidateErrorExtractor, { templates, configs } from '../../src/index'
 import testElement from './testElement.vue'
 
 const messages = {
-  required: 'The {attribute} field is required',
+  required: 'The field is required',
   min: {
     string: 'The {attribute} field must be at least {min} characters.'
   },
-  deep: 'The deeply nested value {deeply.nested.value}'
+  // deep: 'The deeply nested value {deeply.nested.value}'
 }
 
 Vue.use(vuelidate)

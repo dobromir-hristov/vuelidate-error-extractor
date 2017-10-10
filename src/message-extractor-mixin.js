@@ -38,7 +38,7 @@ export default {
       return this.activeErrors.length ? this.activeErrors[0] : ''
     },
     firstErrorMessage () {
-      return this.getErrorMessage(this.firstError.validationKey, this.firstError.params)
+      return this.hasErrors ? this.getErrorMessage(this.firstError.validationKey, this.firstError.params) : ''
     },
     hasErrors () {
       return this.validator.$error
@@ -52,9 +52,8 @@ export default {
       return this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, properties)
     },
     getPlainMessage (key, properties) {
-      const msg = get(key, this.mergedMessages)
-      if (msg === '') {
-        process.env.NODE_ENV === 'development' && console.warn(`[vuelidate-error-extractor]: Key ${key} is not present in error messages`)
+      const msg = get(key, this.mergedMessages, false)
+      if (!msg) {
         return key
       }
       return template(msg, properties)
