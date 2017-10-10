@@ -244,7 +244,7 @@
 <td> messages</td>
 <td>Object</td>
 <td>optional</td>
-<td>The messages from which to extract each validation rule message. It is optional only if not using i18n feature</td>
+<td>The messages from which to extract each validation rule message. It is not needed if you use i18n</td>
 </tr>
 <tr>
 <td> i18n</td>
@@ -281,19 +281,19 @@
 <td> label</td>
 <td>String</td>
 <td>optional</td>
-<td>The label to use inside the template. Gets assigned to the <code>:attribute</code> property as well.</td>
+<td>The label to use inside the template. Gets assigned to the <code>:attribute</code> and <code>:label</code> properties as well.</td>
 </tr>
 <tr>
 <td> validator</td>
 <td>Vuelidate object</td>
 <td>required</td>
-<td>The vuelidate object to pass for each input element. E.g. for the <code>test</code> data property you will have to pass <code>:validator = &quot;$v.test&quot;</code>.</td>
+<td>The vuelidate object to pass for each input element. E.g. for the <code>username</code> data property you will have to pass <code>&lt;form-group :validator=&quot;$v.username&quot;&gt;</code>.</td>
 </tr>
 <tr>
 <td> messages</td>
 <td>Object</td>
 <td>optional</td>
-<td>The local messages to override the globally provided ones during initialization. This comes in handy when you need to override or its a single use case message. <strong>Does not work with i18n mode!</strong></td>
+<td>A collection of local error messages that have precedence over the global ones. This comes in handy when you need to override or set a single use case message. <strong>Does not work with i18n mode!</strong></td>
 </tr>
 <tr>
 <td> validatorParams</td>
@@ -346,7 +346,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Options","level":"1.3","depth":1,"next":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"previous":{"title":"Installation","level":"1.2","depth":1,"path":"installation.md","ref":"installation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-08-10T20:14:09.419Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-21T16:38:47.750Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Options","level":"1.3","depth":1,"next":{"title":"Custom Templates","level":"1.4","depth":1,"path":"custom_templates.md","ref":"custom_templates.md","articles":[]},"previous":{"title":"Installation","level":"1.2","depth":1,"path":"installation.md","ref":"installation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"options.md","mtime":"2017-10-10T19:07:56.201Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-10T20:36:29.414Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

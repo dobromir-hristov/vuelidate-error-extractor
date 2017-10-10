@@ -239,9 +239,21 @@
   }
 </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
+<p>Now we need to import our newly created template and supply it to the init function.</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> customFormGroup <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./components/form/formGroup.vue&apos;</span>
+<span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;vue&apos;</span>
+<span class="hljs-keyword">import</span> vuelidate <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;vuelidate&apos;</span>
+<span class="hljs-keyword">import</span> vuelidateErrorExtractor <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;vuelidate-error-extractor&apos;</span>
+
+Vue.use(vuelidate)
+Vue.use(vuelidateErrorExtractor, {
+  template: customFormGroup,
+  messages,
+})
+</code></pre>
 <p>And this is it. You can extend is as much as want, as long as you implement the <code>extractorMixin</code>.</p>
 <h2 id="extractormixin">extractorMixin</h2>
-<p>The <code>extractorMixin</code> is a vue element that provides a few convenient methods and variables for your custom templates.</p>
+<p>The <code>extractorMixin</code> is a vue mixin that provides a few convenient methods and variables for your custom templates.</p>
 <h3 id="methods">Methods</h3>
 <table>
 <thead>
@@ -257,8 +269,22 @@
 <td>String</td>
 <td>Gets the error message for the current key. Can be passed an object with additional properties for the validation message. If i18n is set, it will return the translation string, skipping the messages prop.</td>
 </tr>
+<tr>
+<td><code>getI18nMessage({String} key, {Object} properties)</code></td>
+<td>String</td>
+<td>Gets the u18n error message</td>
+</tr>
+<tr>
+<td><code>getPlainMessage({String} key, {Object} properties)</code></td>
+<td>String</td>
+<td>Gets the plain error message</td>
+</tr>
 </tbody>
 </table>
+<blockquote>
+<p>Note that you can use deep objects and access them via &apos;Error message is {deeply.nested.obj.value}&apos;
+Nested messages are also supported</p>
+</blockquote>
 <h3 id="computed-properties">Computed properties</h3>
 <table>
 <thead>
@@ -284,6 +310,21 @@
 <td>Object</td>
 <td>Merges both the messages prop and the globally defined ones on init.</td>
 </tr>
+<tr>
+<td>firstError</td>
+<td>Object</td>
+<td>Convenience method to return the first error object</td>
+</tr>
+<tr>
+<td>firstErrorMessage</td>
+<td>String</td>
+<td>Convenience method to return the first error message</td>
+</tr>
+<tr>
+<td>hasErrors</td>
+<td>Boolean</td>
+<td>If we have errors. </td>
+</tr>
 </tbody>
 </table>
 <p>The <code>errors</code> object has a structure like:</p>
@@ -293,6 +334,7 @@
     hasError:<span class="hljs-literal">false</span>,
     params:{
       attribute:<span class="hljs-string">&quot;Username&quot;</span>,
+      label: <span class="hljs-string">&quot;Username&quot;</span>
     },
     validationKey:<span class="hljs-string">&quot;required&quot;</span>
   },
@@ -301,9 +343,10 @@
      hasError:<span class="hljs-literal">true</span>,
      params:{
        attribute:<span class="hljs-string">&quot;Username&quot;</span>,
+       label:<span class="hljs-string">&quot;Username&quot;</span>,
        min: <span class="hljs-string">&quot;5&quot;</span>
      },
-     validationKey:<span class="hljs-string">&quot;minLength&quot;</span>
+     validationKey:<span class="hljs-string">&quot;minLength&quot;</span> <span class="hljs-comment">// could be deep dot notation - min.string</span>
   }
 ]
 </code></pre>
@@ -342,6 +385,12 @@
 <td>Object</td>
 <td>optional</td>
 <td>Optional parameters to override or provide to the validation message. Mostly used to provide additional values like in the <code>other</code> property in laravel&apos;s <code>same</code> validation. <a href="advanced.html#validator-params">Validator Params</a></td>
+</tr>
+<tr>
+<td> showSingleError</td>
+<td>Boolean</td>
+<td>optional</td>
+<td>Whether to show only a the first active error or all of them.</td>
 </tr>
 </tbody>
 </table>
@@ -388,7 +437,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Custom Templates","level":"1.4","depth":1,"next":{"title":"Advanced","level":"1.5","depth":1,"path":"advanced.md","ref":"advanced.md","articles":[]},"previous":{"title":"Options","level":"1.3","depth":1,"path":"options.md","ref":"options.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"custom_templates.md","mtime":"2017-08-11T10:57:25.473Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-08-21T16:38:47.750Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Custom Templates","level":"1.4","depth":1,"next":{"title":"Advanced","level":"1.5","depth":1,"path":"advanced.md","ref":"advanced.md","articles":[]},"previous":{"title":"Options","level":"1.3","depth":1,"path":"options.md","ref":"options.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git","-fontsettings","github","ga","meta"],"root":"./","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dobromir-hristov/vuelidate-error-extractor/"},"meta":{"content":"","data":[{"name":"twitter:card","content":"summary"},{"name":"twitter:site","content":"@d_m_hristov"},{"name":"twitter:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"name":"twitter:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"name":"twitter:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"},{"property":"og:url","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/"},{"property":"og:title","content":"Error message extractor helper for Vuelidate using VueJS 2.4"},{"property":"og:description","content":"Vuelidate-error-extractor removes the repetition of showing vuelidate error messages. Works for Bootstrap3 and Foundation6"},{"property":"og:image","content":"https://dobromir-hristov.github.io/vuelidate-error-extractor/vue-logo.png"}],"name":""},"search":{},"theme-vuejs":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"highlight":{},"ga":{"configuration":"auto","token":"UA-29425482-9"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/dobromir-hristov/vuelidate-error-extractor/tree/master/gitbook"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sharing":{"facebook":false,"twitter":false}},"gitbook":"*"},"file":{"path":"custom_templates.md","mtime":"2017-10-10T20:07:27.152Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-10T20:36:29.414Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

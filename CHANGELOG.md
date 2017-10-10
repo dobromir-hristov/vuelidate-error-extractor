@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v1.0.3...v1.1.0) (2017-10-10)
+
+
+### Features
+
+* support nested parameter dot notation and nested messages. ([4db24ee](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/4db24ee))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v1.0.1...v1.0.3) (2017-08-11)
 
