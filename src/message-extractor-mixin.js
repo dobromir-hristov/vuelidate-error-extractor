@@ -54,12 +54,12 @@ export default {
     getPlainMessage (key, properties) {
       const msg = get(key, this.mergedMessages, false)
       if (!msg) {
-        const matchingKeys = Object.keys(this.mergedMessages).filter(function (messageKey) {
-          return new RegExp(messageKey).test(key)
+        const matchingConfigs = this.$vuelidateErrorExtractor.genericMessages.filter(function (config) {
+          return config.regexp.test(key)
         })
 
-        if (matchingKeys.length) {
-          return template(this.mergedMessages[matchingKeys[0]], properties)
+        if (matchingConfigs.length) {
+          return template(this.mergedMessages[matchingConfigs[0].message], properties)
         } else {
           return key
         }

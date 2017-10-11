@@ -10,9 +10,12 @@ Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
   template: templates.foundation6,
   messages: {
-    required: '{attribute} is required',
-    '.+': '{attribute} has an error'
-  }
+    required: '{attribute} is required'
+  },
+  genericMessages: [{
+    regexp: /.+/,
+    message: '{attribute} has an error'
+  }]
 })
 
 window.Vue = Vue
