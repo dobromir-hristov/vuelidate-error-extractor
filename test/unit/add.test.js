@@ -1,8 +1,11 @@
 import Vue from 'vue'
-import { required } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 import VueI18n from 'vue-i18n'
+import chai from 'chai'
 
-describe('Test extractor', () => {
+const expect = chai.expect
+
+describe('Test extractor with vue-i18n', () => {
   let vm
   const messages = {
     en: {
@@ -22,7 +25,9 @@ describe('Test extractor', () => {
       template: '<div><form-group :validator="$v.text" label="text"><input class="__input" v-model="text"/></form-group></div>',
       data: { text: 'stuff' },
       validations: {
-        text: { required }
+        text: {
+          required
+        }
       }
     }).$mount()
   })
@@ -52,12 +57,62 @@ describe('Test extractor', () => {
       }).then(done)
     })
 
+    it('should have correct error message', done => {
+      vm.$v.$touch()
+      vm.text = ''
+      nextTick(() => {
+        expect(vm.$el.querySelector('.form-error').textContent).to.equal('Field text is required')
+      }).then(done)
+    })
+
     it('should have 1 error message for required', done => {
       vm.$v.$touch()
       vm.text = ''
       nextTick(() => {
-        expect(vm.$el.querySelector('.form-error').childNodes.length).to.equal(1)
-        expect(vm.$el.querySelector('.form-error').childNodes[0].dataset.validationAttr).to.equal('required')
+        expect(vm.$el.querySelector('.form-error').childNodes.length).to.equal(2)
+        expect(vm.$el.querySelector('.form-error').childNodes[1].dataset.validationAttr).to.equal('required')
+      }).then(done)
+    })
+  })
+})
+
+describe('Test extractor without vue-i18n', () => {
+  let vm
+
+  beforeEach(() => {
+    vm = new Vue({
+      template: '<div><form-group :validator="$v.text" label="text"><input class="__input" v-model="text"/></form-group></div>',
+      data: { text: 'stuff' },
+      validations: {
+        text: {
+          required,
+          foo: minLength(3)
+        }
+      }
+    }).$mount()
+  })
+
+  describe('formGroup element', () => {
+    it('should mount', done => {
+      nextTick(() => {
+        console.log(vm.$el)
+        expect(vm.$el.querySelector('.form-group')).to.exist
+      }).then(done)
+    })
+
+    it('should match regexp keys if no direct message found', done => {
+      vm.$v.$touch()
+      vm.text = ''
+      nextTick(() => {
+        expect(vm.$el.querySelector('.form-error').textContent).to.equal('text is required')
+      }).then(done)
+    })
+
+    it('should match regexp keys if no direct message found', done => {
+      vm.$v.$touch()
+      vm.text = 'ab'
+      nextTick(() => {
+        expect(vm.$el.querySelector('.form-error').textContent).to.equal('text has an error')
       }).then(done)
     })
   })

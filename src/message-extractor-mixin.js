@@ -54,7 +54,15 @@ export default {
     getPlainMessage (key, properties) {
       const msg = get(key, this.mergedMessages, false)
       if (!msg) {
-        return key
+        const matchingKeys = Object.keys(this.mergedMessages).filter(function (messageKey) {
+          return new RegExp(messageKey).test(key)
+        })
+
+        if (matchingKeys.length) {
+          return template(this.mergedMessages[matchingKeys[0]], properties)
+        } else {
+          return key
+        }
       }
       return template(msg, properties)
     }
