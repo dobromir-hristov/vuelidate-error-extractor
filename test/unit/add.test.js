@@ -57,14 +57,6 @@ describe('Test extractor with vue-i18n', () => {
       }).then(done)
     })
 
-    it('should have correct error message', done => {
-      vm.$v.$touch()
-      vm.text = ''
-      nextTick(() => {
-        expect(vm.$el.querySelector('.form-error').textContent).to.equal('Field text is required')
-      }).then(done)
-    })
-
     it('should have 1 error message for required', done => {
       vm.$v.$touch()
       vm.text = ''

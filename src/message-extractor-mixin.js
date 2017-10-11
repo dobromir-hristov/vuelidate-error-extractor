@@ -59,7 +59,7 @@ export default {
         })
 
         if (matchingConfigs.length) {
-          return template(this.mergedMessages[matchingConfigs[0].message], properties)
+          return template(matchingConfigs[0].message, properties)
         } else {
           return key
         }
