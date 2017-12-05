@@ -59,6 +59,6 @@ export function getValidationObject (validationKey, key = validationKey, params 
     hasError: !this.validator[key],
     $params: this.validator.$params[key],
     // Add the label for the :attribute parameter that is used in most Laravel validations
-    params: Object.assign({}, { attribute: this.label, label: this.label }, params, this.validatorParams)
+    params: Object.assign({}, { attribute: this.attribute || this.label, label: this.label }, params, this.validatorParams)
   }
 }

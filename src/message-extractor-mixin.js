@@ -60,7 +60,8 @@ export default {
     }
   },
   props: {
-    label: String,
+    label: { type: String, default: '' },
+    attribute: { type: String, default: '' },
     validator: {
       type: Object,
       default: () => ({
