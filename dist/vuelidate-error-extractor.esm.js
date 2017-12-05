@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v1.2.1 
+ * vuelidate-error-extractor v1.3.0 
  * (c) 2017 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -69,7 +69,7 @@ function getValidationObject (validationKey, key, params) {
     hasError: !this.validator[key],
     $params: this.validator.$params[key],
     // Add the label for the :attribute parameter that is used in most Laravel validations
-    params: Object.assign({}, { attribute: this.label, label: this.label }, params, this.validatorParams)
+    params: Object.assign({}, { attribute: this.attribute || this.label, label: this.label }, params, this.validatorParams)
   }
 }
 
@@ -135,7 +135,8 @@ var messageExtractorMixin = {
     }
   },
   props: {
-    label: String,
+    label: { type: String, default: '' },
+    attribute: { type: String, default: '' },
     validator: {
       type: Object,
       default: function () { return ({
