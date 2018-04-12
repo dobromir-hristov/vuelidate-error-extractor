@@ -8,7 +8,14 @@ Vue.use(VueI18n)
 Vue.config.productionTip = false
 Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
-  template: templates.foundation6
+  template: templates.foundation6,
+  messages: {
+    required: '{attribute} is required'
+  },
+  genericMessages: [{
+    regexp: /.+/,
+    message: '{attribute} has an error'
+  }]
 })
 
 window.Vue = Vue

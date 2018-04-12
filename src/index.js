@@ -6,6 +6,7 @@ function plugin (Vue, options = {}) {
   Vue.prototype.$vuelidateErrorExtractor = {
     i18n: options.i18n || false,
     messages: options.messages || {},
+    genericMessages: options.genericMessages || [],
     validationKeys: options.validationKeys || {}
   }
   if (typeof options.template === 'undefined') {
