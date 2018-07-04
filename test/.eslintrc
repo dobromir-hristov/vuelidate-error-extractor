@@ -1,13 +1,11 @@
 {
   "env": {
-    "browser": true,
-    "mocha": true
+    "jest/globals": true
   },
-  "globals": {
-    "waitForUpdate": true,
-    "nextTick": true,
-    "delay": true,
-    "assert": true,
-    "Vue": true
-  }
+  "plugins": [
+    "jest"
+  ],
+  "extends": [
+    "plugin:jest/recommended"
+  ]
 }

@@ -1,21 +1,25 @@
 import templates from './templates'
-import extractorMixin from './message-extractor-mixin'
+import singleErrorExtractorMixin from './single-error-extractor-mixin'
+import multiErrorExtractorMixin from './multi-error-extractor-mixin'
 import configs from './config/index.js'
 
-function plugin (Vue, options = {}) {
-  Vue.prototype.$vuelidateErrorExtractor = {
-    i18n: options.i18n || false,
-    messages: options.messages || {},
-    validationKeys: options.validationKeys || {}
+function plugin (Vue, opts = {}) {
+  const options = {
+    i18n: opts.i18n || false,
+    messages: opts.messages || {},
+    validationKeys: opts.validationKeys || {},
+    attributes: opts.attributes || {}
   }
-  if (typeof options.template === 'undefined') {
-    console.error('[vuelidate-message-extractor warn]: No template component provided in vuelidate-error-extractor options. Please provide a template using Vue.use(vuelidateMessageExtractor, { template: yourImportedType })')
-  } else {
-    options.name = options.name || 'formGroup'
-    Vue.component(options.name, options.template)
+  if (typeof options.i18n !== 'string' && options.i18n !== false) {
+    throw Error(`[vuelidate-error-extractor] options.i18n should be false or a string, ${options.i18n} given.`)
+  }
+  Vue.prototype.$vuelidateErrorExtractor = options
+  if (typeof opts.template !== 'undefined') {
+    const name = opts.name || 'formGroup'
+    Vue.component(name, opts.template)
   }
 }
 
 export default plugin
 
-export { extractorMixin, configs, templates }
+export { singleErrorExtractorMixin, multiErrorExtractorMixin, configs, templates }

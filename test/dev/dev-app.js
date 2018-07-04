@@ -2,24 +2,31 @@ import Vue from 'vue'
 import vuelidate from 'vuelidate'
 import VueI18n from 'vue-i18n'
 import vuelidateErrorExtractor, { templates, configs } from '../../src/index'
-import testElement from './testElement.vue'
+import testForm from './testForm.vue'
 
 const messages = {
-  required: 'The field is required'
+  required: 'The {attribute} field is required',
   // min: {
   //   string: 'The {attribute} field must be at least {min} characters.'
   // }
+  minLength: '{attribute} field must be at least {min} chars.',
+  deeply: {
+    nested: {
+      email: '{ attribute } is not a valid email.'
+    }
+  },
+  maxLength: '{attribute} field must be maximum {max} chars.'
   // deep: 'The deeply nested value {deeply.nested.value}'
 }
 
 Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
-  template: templates.foundation6,
+  template: templates.singleErrorExtractor.foundation6,
   // i18n: 'validations',
   messages
   // validationKeys: configs.laravel
 })
-Vue.use(VueI18n)
+// Vue.use(VueI18n)
 //
 // const i18nMessages = {
 //   en: {
@@ -45,8 +52,6 @@ Vue.use(VueI18n)
 
 new Vue({
   el: '#app',
-  components: {
-    testElement
-  }
+  render: h => h(testForm)
   // i18n
 })

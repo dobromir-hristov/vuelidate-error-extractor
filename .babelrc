@@ -18,11 +18,8 @@
   ],
   "env": {
     "test": {
-      "plugins": [
-        "istanbul"
-      ],
       "presets": [
-        "power-assert"
+        ["env", { "targets": { "node": 8 }}]
       ]
     }
   }

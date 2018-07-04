@@ -48,25 +48,57 @@ const entries = {
     moduleName,
     banner
   },
-  mixin: {
+  messageExtractorMixin: {
     entry: 'src/message-extractor-mixin.js',
-    dest: 'dist/message-extractor-mixin.js',
+    dest: 'dist/message-extractor-mixin.min.js',
     format: 'umd',
-    env: 'development',
-    moduleName: moduleName + 'Mixin',
+    env: 'production',
+    moduleName: moduleName + 'ExtractorMixin',
     banner
   },
-  foundationUmd: {
-    entry: 'src/templates/foundation6.vue',
-    dest: `dist/templates/foundation6.min.js`,
+  foundationExtractor: {
+    entry: 'src/templates/message-extractor/foundation6.vue',
+    dest: `dist/templates/message-extractor/foundation6.min.js`,
     format: 'umd',
     env: 'production',
     moduleName: moduleName + 'Foundation6Template',
     banner
   },
-  bootstrapUmd: {
-    entry: 'src/templates/bootstrap3.vue',
-    dest: `dist/templates/bootstrap3.min.js`,
+  bootstrapExtractor: {
+    entry: 'src/templates/message-extractor/bootstrap3.vue',
+    dest: `dist/templates/message-extractor/bootstrap3.min.js`,
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'Bootstrap3Template',
+    banner
+  },
+  multiMessageExtractorMixin: {
+    entry: 'src/multi-message-extractor-mixin.js',
+    dest: 'dist/multi-message-extractor-mixin.min.js',
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'multiMessageExtractorMixin',
+    banner
+  },
+  baseFlatExtractor: {
+    entry: 'src/templates/multi-message-extractor/baseFlatErrorExtractor.vue',
+    dest: `dist/templates/multi-message-extractor/baseFlatErrorExtractor.min.js`,
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'baseFlatErrorExtractor',
+    banner
+  },
+  foundationFlatExtractor: {
+    entry: 'src/templates/multi-message-extractor/foundation6.vue',
+    dest: `dist/templates/multi-message-extractor/foundation6.min.js`,
+    format: 'umd',
+    env: 'production',
+    moduleName: moduleName + 'Foundation6Template',
+    banner
+  },
+  bootstrapFlatExtractorUmd: {
+    entry: 'src/templates/multi-message-extractor/bootstrap3.vue',
+    dest: `dist/templates/multi-message-extractor/bootstrap3.min.js`,
     format: 'umd',
     env: 'production',
     moduleName: moduleName + 'Bootstrap3Template',

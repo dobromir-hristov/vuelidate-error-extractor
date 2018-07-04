@@ -11,19 +11,19 @@ module.exports = {
   },
   module: {
     rules: [
-     {
-      test: /\.vue$/,
-      loader: 'vue-loader'
-    },{
-      test: /\.js$/,
-      exclude: /node_modules|vue\/dist/,
-      loader: 'babel-loader'
-    }]
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }, {
+        test: /\.js$/,
+        exclude: /node_modules|vue\/dist/,
+        loader: 'babel-loader'
+      }]
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: [
@@ -36,6 +36,5 @@ module.exports = {
         NODE_ENV: '"development"'
       }
     })
-  ],
-  devtool: '#eval-source-map'
+  ]
 }

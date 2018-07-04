@@ -1,8 +1,8 @@
 <template>
   <div class="form-group"
-       :class="{error: hasErrors}">
+       :class="{'has-error': hasErrors, 'has-success':(!hasErrors && validator.$dirty)}">
     <slot name="label">
-      <label :class="{'is-invalid-label': hasErrors}"
+      <label class="control-label"
              v-if="label">{{ label }} {{ errors ? '*' : '' }}</label>
     </slot>
     <slot :errors="activeErrors"
@@ -13,7 +13,7 @@
           :errors="activeErrors"
           :has-errors="hasErrors"
           :first-error-message="firstErrorMessage">
-      <div class="form-error is-visible" v-if="hasErrors">
+      <div class="help-block" v-if="hasErrors">
         <span v-if="showSingleError"
               :data-validation-attr="firstError.validationKey">
           {{ firstErrorMessage }}
@@ -30,9 +30,9 @@
   </div>
 </template>
 <script>
-  import messageExtractorMixin from '../message-extractor-mixin'
+import singleErrorExtractorMixin from '../../single-error-extractor-mixin'
 
-  export default {
-    mixins: [messageExtractorMixin]
-  }
+export default {
+  mixins: [singleErrorExtractorMixin]
+}
 </script>
