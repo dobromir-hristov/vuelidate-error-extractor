@@ -23,7 +23,15 @@ Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
   template: templates.singleErrorExtractor.foundation6,
   // i18n: 'validations',
-  messages
+  messages,
+  attributes: {
+    first_name: 'First Name',
+    last_name: 'Last Name',
+    email: 'Email',
+    'address.street': 'Street',
+    'address.city': 'City',
+    'address.postal': 'Postal Code'
+  }
   // validationKeys: configs.laravel
 })
 // Vue.use(VueI18n)

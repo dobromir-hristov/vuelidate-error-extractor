@@ -1,24 +1,30 @@
 import { shallowMount } from '@vue/test-utils'
 import errorsMixin from '@/base-errors-mixin.js'
+import _merge from 'lodash.merge'
 
-describe('errors-mixin', () => {
+const $t = jest.fn()
+
+function createWrapper (override) {
+  return shallowMount({ template: '<div/>' }, _merge({}, {
+    mixins: [errorsMixin],
+    propsData: {
+      messages: { some_key: 'Some message with {attribute}' }
+    },
+    computed: {
+      errors: () => ([{ validationKey: 'some_key', $dirty: true, hasError: true, params: { attribute: 'someField' } }])
+    },
+    mocks: {
+      $vuelidateErrorExtractor: { i18n: false, attributes: {}, messages: {} },
+      $t
+    }
+  }, override))
+}
+
+describe('base-errors-mixin', () => {
   let wrapper
-  const $t = jest.fn()
   beforeEach(() => {
     jest.clearAllMocks()
-    wrapper = shallowMount({ template: '<div/>' }, {
-      mixins: [errorsMixin],
-      propsData: {
-        messages: { some_key: 'Some message with { attribute }' }
-      },
-      computed: {
-        errors: () => ([{ validationKey: 'some_key', $dirty: true, hasError: true, params: { attribute: 'someField' } }])
-      },
-      mocks: {
-        $vuelidateErrorExtractor: { i18n: false },
-        $t
-      }
-    })
+    wrapper = createWrapper()
   })
 
   it('determines the proper message getter', () => {

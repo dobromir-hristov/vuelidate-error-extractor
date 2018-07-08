@@ -1,4 +1,5 @@
 import baseMultiErrorExtractor from '@/templates/multi-error-extractor/baseMultiErrorExtractor'
+import formWrapper from '@/templates/form-wrapper.js'
 import { required, minLength, email, maxLength } from 'vuelidate/lib/validators'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuelidate from 'vuelidate'
@@ -24,8 +25,8 @@ function createWrapper (opts = {}) {
     messages: i18nMessages // set locale messages
   })
   const component = _merge({
-    template: '<div><multi-errors :validator="$v.form" :attributes="localAttributes"/></div>',
-    components: { multiErrors: baseMultiErrorExtractor },
+    template: '<div><form-wrapper :validator="$v.form"><multi-errors/></form-wrapper></div>',
+    components: { multiErrors: baseMultiErrorExtractor, formWrapper },
     data: () => ({
       form: {
         first_name: '',
@@ -47,7 +48,7 @@ function createWrapper (opts = {}) {
         address: {
           street: { required, minLength: minLength(5) },
           city: { required, minLength: minLength(5) },
-          postal: { required }
+          postal: { required, minLength: minLength(5) }
         }
       }
     }
@@ -65,7 +66,8 @@ function createWrapper (opts = {}) {
             last_name: 'Last Name',
             email: 'Email',
             'address.street': 'Street',
-            'address.city': 'City'
+            'address.city': 'City',
+            'address.postal': 'Postal'
           }
         }
       }
@@ -79,11 +81,22 @@ describe('baseMultiErrorExtractor', () => {
     jest.clearAllMocks()
   })
 
-  it('Displays a list of errors in the dom', () => {
+  /* Skipping this test because vue-test-utils renders it wrong for some reason. */
+  it('Displays a list of errors in the dom using the injected validator', () => {
     wrapper = createWrapper()
     wrapper.vm.$v.form.$touch()
-    // expect(wrapper.find(baseMultiErrorExtractor).vm.validator).toEqual({})
-    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrors).toEqual({})
     expect(wrapper.element).toMatchSnapshot()
+    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(5)
+  })
+
+  it('displays a list of errors in the dom using local validator', () => {
+    wrapper = createWrapper({
+      componentOpts: {
+        template: '<div><multi-errors :validator="$v.form"/></div>'
+      }
+    })
+    wrapper.vm.$v.form.$touch()
+    expect(wrapper.element).toMatchSnapshot()
+    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(5)
   })
 })

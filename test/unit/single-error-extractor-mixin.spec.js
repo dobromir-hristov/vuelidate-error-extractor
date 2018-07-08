@@ -1,4 +1,5 @@
 import SingleErrorExtractorMixin from '@/single-error-extractor-mixin'
+import FormWrapper from '@/templates/form-wrapper'
 import { required, minLength, email } from 'vuelidate/lib/validators'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuelidate from 'vuelidate'
@@ -29,29 +30,29 @@ function createWrapper (opts = {}) {
     locale: 'en', // set locale
     messages: i18nMessages // set locale messages
   })
-  const component = _merge({
+  const component = _merge({}, {
     template: '<div><form-element :validator="$v.text" label="Label"/></div>',
-    components: { formElement },
+    components: { formElement, FormWrapper },
     data: () => ({ text: '' }),
     validations: {
       text: { required, minLength: minLength(10), email }
     }
   }, componentOpts)
-  return mount(
-    component, _merge({}, {
-      i18n,
-      localVue,
-      mocks: {
-        $vuelidateErrorExtractor: {
-          validationKeys: {},
-          i18n: 'validation'
-        }
+  const mountOptions = _merge({}, {
+    i18n,
+    localVue,
+    mocks: {
+      $vuelidateErrorExtractor: {
+        validationKeys: {},
+        i18n: 'validation',
+        attributes: {}
       }
-    }, mountOpts)
-  )
+    }
+  }, mountOpts)
+  return mount(component, mountOptions)
 }
 
-describe('message-extractor-mixin', () => {
+describe('single-error-extractor-mixin', () => {
   describe('using i18n', () => {
     let wrapper
 
@@ -138,7 +139,10 @@ describe('message-extractor-mixin', () => {
           mocks: {
             $vuelidateErrorExtractor: {
               i18n: false,
-              messages: i18nMessages.en.validation
+              messages: i18nMessages.en.validation,
+              attributes: {
+                text: 'Text override'
+              }
             }
           }
         }
@@ -166,6 +170,29 @@ describe('message-extractor-mixin', () => {
       })
       wrapper.vm.$v.$touch()
       expect(component.vm.activeErrorMessages).toContain('You must fill in the Label field')
+    })
+
+    it('uses the globally provided attributes as attribute prop', () => {
+      wrapper = createWrapper({
+        componentOpts: { template: '<div><form-element :validator="$v.text" label="Label" attribute="text"/></div>' },
+        mountOpts: {
+          mocks: {
+            $vuelidateErrorExtractor: {
+              i18n: false,
+              messages: i18nMessages.en.validation,
+              attributes: {
+                text: 'Text override'
+              }
+            }
+          }
+        }
+      })
+      wrapper.vm.$v.$touch()
+      wrapper.setData({
+        text: ''
+      })
+      const component = wrapper.find(formElement)
+      expect(component.vm.activeErrorMessages).toContain('Field Text override is required')
     })
   })
 
@@ -217,6 +244,29 @@ describe('message-extractor-mixin', () => {
         // required uses the standard one
         'Field Label is not a valid email address.'
       ])
+    })
+  })
+
+  describe('using a form wrapper', () => {
+    let wrapper
+    it('uses the injected validator', () => {
+      wrapper = createWrapper({
+        componentOpts: { template: '<div><form-wrapper :validator="$v"><form-element label="Label" attribute="text" name="text"/></form-wrapper></div>' },
+        mountOpts: {
+          mocks: {
+            $vuelidateErrorExtractor: {
+              i18n: false,
+              messages: i18nMessages.en.validation,
+              attributes: {
+                text: 'Text override'
+              }
+            }
+          }
+        }
+      })
+      wrapper.vm.$v.$touch()
+      const component = wrapper.find(formElement)
+      expect(component.vm.activeErrorMessages).toContain('Field Text override is required')
     })
   })
 })

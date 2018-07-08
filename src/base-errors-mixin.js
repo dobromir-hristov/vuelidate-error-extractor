@@ -1,6 +1,9 @@
 import { getErrorString } from './utils'
 
 export default {
+  inject: {
+    formValidator: { default: false }
+  },
   props: {
     validator: {
       type: Object,
@@ -31,7 +34,7 @@ export default {
       return this.activeErrors.length ? this.activeErrorMessages[0] : ''
     },
     hasErrors () {
-      return this.validator.$error
+      return this.preferredValidator.$error
     },
     activeErrorMessages () {
       return this.activeErrors.map(error => this.getErrorMessage(error.validationKey, error.params))

@@ -1,6 +1,6 @@
-const fs = require('fs')
+const fs = require('fs-extra')
 const readFile = fs.readFile
-const writeFile = fs.writeFile
+const outputFile = fs.outputFile
 const relative = require('path').relative
 const gzip = require('zlib').gzip
 const rollup = require('rollup')
@@ -22,31 +22,27 @@ function build (entries) {
   next()
 }
 
-function buildEntry (config) {
-  const isProd = /min\.js$/.test(config.dest)
-  return rollup.rollup(config).then(bundle => {
-    const code = bundle.generate(config).code
-    if (isProd) {
-      var minified = (config.banner ? config.banner + '\n' : '') + uglify.minify(code, {
-        fromString: true,
-        output: {
-          screw_ie8: true,
-          ascii_only: true
-        },
-        compress: {
-          pure_funcs: ['makeMap']
-        }
-      }).code
-      return write(config.dest, minified).then(zip(config.dest))
-    } else {
-      return write(config.dest, code)
+async function buildEntry (config) {
+  const isProd = /min\.js$/.test(config.output.file)
+  const bundle = await rollup.rollup(config)
+  const { code } = await bundle.generate(config)
+  if (!isProd) return write(config.output.file, code)
+  var minified = (config.output.banner ? config.output.banner + '\n' : '') + uglify.minify(code, {
+    fromString: true,
+    output: {
+      screw_ie8: true,
+      ascii_only: true
+    },
+    compress: {
+      pure_funcs: ['makeMap']
     }
-  })
+  }).code
+  return write(config.output.file, minified).then(zip(config.output.file))
 }
 
 function write (dest, code) {
   return new Promise(function (resolve, reject) {
-    writeFile(dest, code, function (err) {
+    outputFile(dest, code, function (err) {
       if (err) { return reject(err) }
       console.log(blue(relative(process.cwd(), dest)) + ' ' + getSize(code))
       resolve()

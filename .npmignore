@@ -3,8 +3,6 @@
 *.swp
 *.yml
 coverage
-docs/_book
+docs/
 config
-dist/*.map
-lib
 test

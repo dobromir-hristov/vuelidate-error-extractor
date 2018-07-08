@@ -1,20 +1,38 @@
-# vuelidate-error-extractor
+<p align="center">
+<img :src="docs/.vuepress/public/logo.svg" width=150 alt="foo">
+</p>
 
-[![npm](https://img.shields.io/npm/v/vuelidate-error-extractor.svg)](https://www.npmjs.com/package/vuelidate-error-extractor)
-[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
+<h1 align="center">Vuelidate Error Extractor</h1>
 
-This library eases the pain of showing vuelidate error messages in your websites. It was at first made to work with Laravel and Vue-i18n, but can be configured to work with what you wish. 
+<p align="center">
+<a href="https://www.npmjs.com/package/vuelidate-error-extractor"> <img src="https://img.shields.io/npm/v/vuelidate-error-extractor.svg"/></a>
+<a href="https://vuejs.org/"> <img src="https://img.shields.io/badge/vue-2.x-brightgreen.svg"/></a>
+<a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"/></a>
+</p>
 
-By registering a `form-group` component, it automatically shows all the errors. The plugin can be configured to work with Foundation and Bootstrap, as well as custom templates provided by the user.
+**Vuelidate-error-extractor** makes error message display from vuelidate a breeze. Be it for a single form element or all displaying all the errors in a form.
 
-The plugin is also able to work with [vue-i18n](https://github.com/kazupon/vue-i18n) or without it by providing custom validation messages for all components or per component.
+## Key features
+* Easy to use
+* Flexible - can be tailored to fit your needs
+* With or without extra markup - yey **mixins** and **slots**!!!
+* No styling mucking your own
+* Tested
+
+Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) styles out of the box, or can be totally customized via templates provided by the user.
+
+Vuelidate-error-extractor is also able to work with [vue-i18n](https://github.com/kazupon/vue-i18n) or any vue translation plugin as long as it exposes a `$t` function to the Vue prototype. We also support predefining custom validation messages for all components and overriding them per component.
+
+## Example
+
+See the Pen <a href="https://codepen.io/dobromir/pen/zdzqYX/">Vuelidate Error extractor Usage Example</a>
 
 ## Documentation
 Documentation and examples can be found at http://dobromir-hristov.github.io/vuelidate-error-extractor/
 
 
 ## Changelog
-Details changes for each release are documented in the [CHANGELOG.md](https://github.com/dobromir-hristov/vuelidate-error-extractor/blob/development/CHANGELOG.md).
+Detailed changes for each release are documented in the [CHANGELOG.md](https://github.com/dobromir-hristov/vuelidate-error-extractor/blob/development/CHANGELOG.md).
 
 
 ## Issues

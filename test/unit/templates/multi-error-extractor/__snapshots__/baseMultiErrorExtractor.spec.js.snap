@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`baseMultiErrorExtractor Displays a list of errors in the dom using the injected validator 1`] = `
+<div>
+  <div>
+    <div>
+      <div>
+        <div>
+          Field First Name is required
+        </div>
+      </div>
+      <div>
+        <div>
+          Field Last Name is required
+        </div>
+      </div>
+      <div>
+        <div>
+          Field Email is required
+        </div>
+      </div>
+      <div>
+        <div>
+          Field Street is required
+        </div>
+      </div>
+      <div>
+        <div>
+          Field City is required
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`baseMultiErrorExtractor displays a list of errors in the dom using local validator 1`] = `
+<div>
+  <div>
+    <div>
+      <div>
+        Field First Name is required
+      </div>
+    </div>
+    <div>
+      <div>
+        Field Last Name is required
+      </div>
+    </div>
+    <div>
+      <div>
+        Field Email is required
+      </div>
+    </div>
+    <div>
+      <div>
+        Field Street is required
+      </div>
+    </div>
+    <div>
+      <div>
+        Field City is required
+      </div>
+    </div>
+  </div>
+</div>
+`;

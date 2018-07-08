@@ -1,41 +1,45 @@
 <template>
   <div>
-    <multi-error-extractor :attributes="attributesMap" :validator="$v.nestedObject"/>
-    <form-group :validator="$v.test" label="Test" attribute="Test Field">
-      <input type="text"
-             v-model="test"
-             @input="$v.test.$touch()">
-    </form-group>
-    <form-group :validator="$v.nestedObject.first_name" label="First Name">
-      <input type="text"
-             v-model="nestedObject.first_name"
-             @input="$v.nestedObject.first_name.$touch()">
-    </form-group>
-    <form-group :validator="$v.nestedObject.last_name" label="Nested Last Name" attribute="Last name">
-      <input type="text"
-             v-model="nestedObject.last_name"
-             @input="$v.nestedObject.last_name.$touch()">
-    </form-group>
-    <form-group :validator="$v.nestedObject.address.city" label="Deep City" attribute="City">
-      <input type="text"
-             v-model="nestedObject.address.city"
-             @input="$v.nestedObject.address.city.$touch()">
-    </form-group>
-    <form-group :validator="$v.nestedObject.address.postal" label="Deep Postal" attribute="Postal">
-      <input type="text"
-             v-model="nestedObject.address.postal"
-             @input="$v.nestedObject.address.postal.$touch()">
-    </form-group>
-    <button class="button" @click="$v.nestedObject.$touch()">Touch</button>
+    <form-wrapper :validator="$v.nestedObject">
+      <multi-error-extractor :validator="$v.nestedObject"/>
+      <form-group label="Test" attribute="Test Field">
+        <input type="text"
+               v-model="test"
+               @input="$v.test.$touch()">
+      </form-group>
+      <form-group label="First Name" attribute="FIRSTNAME" name="first_name">
+        <input type="text"
+               v-model="nestedObject.first_name"
+               @input="$v.nestedObject.first_name.$touch()">
+      </form-group>
+      <form-group :validator="$v.nestedObject.last_name" label="Nested Last Name" attribute="Last name">
+        <input type="text"
+               v-model="nestedObject.last_name"
+               @input="$v.nestedObject.last_name.$touch()">
+      </form-group>
+      <form-group label="Deep City" attribute="Deep City Field" name="address.city">
+        <input type="text"
+               v-model="nestedObject.address.city"
+               @input="$v.nestedObject.address.city.$touch()">
+      </form-group>
+      <form-group :validator="$v.nestedObject.address.postal" label="Deep Postal" attribute="Postal">
+        <input type="text"
+               v-model="nestedObject.address.postal"
+               @input="$v.nestedObject.address.postal.$touch()">
+      </form-group>
+      <button class="button" @click="$v.nestedObject.$touch()">Touch</button>
+    </form-wrapper>
   </div>
 </template>
 <script>
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 import MultiErrorExtractor from '../../src/templates/multi-error-extractor/foundation6'
+import formWrapper from '../../src/templates/form-wrapper'
 
 export default {
   components: {
-    MultiErrorExtractor
+    MultiErrorExtractor,
+    formWrapper
   },
   data () {
     return {

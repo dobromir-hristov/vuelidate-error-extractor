@@ -2,8 +2,7 @@ const replace = require('rollup-plugin-replace')
 const buble = require('rollup-plugin-buble')
 const banner = require('./banner')
 const pack = require('../package.json')
-const vue = require('rollup-plugin-vue')
-const path = require('path')
+const VuePlugin = require('rollup-plugin-vue').default
 const node = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 
@@ -21,107 +20,120 @@ const moduleName = classify(pack.name)
 
 const entries = {
   commonjs: {
-    entry: 'src/index.js',
-    dest: `dist/${pack.name}.common.js`,
-    format: 'cjs',
+    input: 'src/index.js',
+    output: {
+      file: `dist/${pack.name}.common.js`,
+      name: moduleName,
+      format: 'cjs'
+    },
     banner
   },
   esm: {
-    entry: 'src/index.js',
-    dest: `dist/${pack.name}.esm.js`,
-    format: 'es',
-    banner
+    input: 'src/index.js',
+    output: {
+      file: `dist/${pack.name}.esm.js`,
+      name: moduleName,
+      format: 'es'
+    }
   },
   production: {
-    entry: 'src/index.js',
-    dest: `dist/${pack.name}.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName,
-    banner
+    input: 'src/index.js',
+    output: {
+      file: `dist/${pack.name}.min.js`,
+      name: moduleName,
+      format: 'umd'
+    },
+    env: 'production'
   },
   development: {
-    entry: 'src/index.js',
-    dest: `dist/${pack.name}.js`,
-    format: 'umd',
-    env: 'development',
-    moduleName,
-    banner
+    input: 'src/index.js',
+    output: {
+      file: `dist/${pack.name}.js`,
+      name: moduleName,
+      format: 'iife'
+    },
+    env: 'development'
   },
   messageExtractorMixin: {
-    entry: 'src/message-extractor-mixin.js',
-    dest: 'dist/message-extractor-mixin.min.js',
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'ExtractorMixin',
-    banner
+    input: 'src/single-error-extractor-mixin.js',
+    output: {
+      file: 'dist/single-error-extractor.min.js',
+      name: moduleName + 'ExtractorMixin',
+      format: 'umd'
+    },
+    env: 'production'
   },
   foundationExtractor: {
-    entry: 'src/templates/message-extractor/foundation6.vue',
-    dest: `dist/templates/message-extractor/foundation6.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'Foundation6Template',
-    banner
+    input: 'src/templates/single-error-extractor/foundation6.vue',
+    output: {
+      file: `dist/templates/single-error-extractor/foundation6.min.js`,
+      name: moduleName + 'Foundation6Template',
+      format: 'umd'
+    },
+    env: 'production'
   },
   bootstrapExtractor: {
-    entry: 'src/templates/message-extractor/bootstrap3.vue',
-    dest: `dist/templates/message-extractor/bootstrap3.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'Bootstrap3Template',
-    banner
+    input: 'src/templates/single-error-extractor/bootstrap3.vue',
+    output: {
+      file: `dist/templates/single-error-extractor/bootstrap3.min.js`,
+      name: moduleName + 'Bootstrap3Template',
+      format: 'umd'
+    },
+    env: 'production'
   },
-  multiMessageExtractorMixin: {
-    entry: 'src/multi-message-extractor-mixin.js',
-    dest: 'dist/multi-message-extractor-mixin.min.js',
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'multiMessageExtractorMixin',
-    banner
+  multiErrorExtractorMixin: {
+    input: 'src/multi-error-extractor-mixin.js',
+    output: {
+      file: 'dist/multi-error-extractor-mixin.min.js',
+      name: moduleName + 'multiErrorExtractorMixin',
+      format: 'umd'
+    },
+    env: 'production'
   },
   baseFlatExtractor: {
-    entry: 'src/templates/multi-message-extractor/baseFlatErrorExtractor.vue',
-    dest: `dist/templates/multi-message-extractor/baseFlatErrorExtractor.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'baseFlatErrorExtractor',
-    banner
+    input: 'src/templates/multi-error-extractor/baseMultiErrorExtractor.vue',
+    output: {
+      file: `dist/templates/multi-error-extractor/baseMultiErrorExtractor.min.js`,
+      name: moduleName + 'baseMultiErrorExtractor',
+      format: 'umd'
+    },
+    env: 'production'
   },
   foundationFlatExtractor: {
-    entry: 'src/templates/multi-message-extractor/foundation6.vue',
-    dest: `dist/templates/multi-message-extractor/foundation6.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'Foundation6Template',
-    banner
+    input: 'src/templates/multi-error-extractor/foundation6.vue',
+    output: {
+      file: `dist/templates/multi-error-extractor/foundation6.min.js`,
+      name: moduleName + 'Foundation6Template',
+      format: 'umd'
+    },
+    env: 'production'
   },
   bootstrapFlatExtractorUmd: {
-    entry: 'src/templates/multi-message-extractor/bootstrap3.vue',
-    dest: `dist/templates/multi-message-extractor/bootstrap3.min.js`,
-    format: 'umd',
-    env: 'production',
-    moduleName: moduleName + 'Bootstrap3Template',
-    banner
+    input: 'src/templates/multi-error-extractor/bootstrap3.vue',
+    output: {
+      file: `dist/templates/multi-error-extractor/bootstrap3.min.js`,
+      name: moduleName + 'Bootstrap3Template',
+      format: 'umd'
+    },
+    env: 'production'
   }
 }
 
 function genConfig (opts) {
   const config = {
-    entry: opts.entry,
-    dest: opts.dest,
-    format: opts.format,
-    banner: opts.banner,
-    moduleName: opts.moduleName || moduleName,
-    exports: 'named',
+    input: opts.input,
+    output: {
+      ...opts.output,
+      banner,
+      exports: 'named'
+    },
     plugins: [
-      vue(),
+      node(),
+      VuePlugin(),
       buble({
         transforms: { dangerousForOf: true }
       }),
-      node({
-        module: true
-      })
+      commonjs()
     ]
   }
 
