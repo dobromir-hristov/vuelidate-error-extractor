@@ -93,7 +93,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "dot-prop": "^4.2.0"
+    "get-value": "^3.0.1"
   },
   "peerDependencies": {
     "vue": "^2.4.2",

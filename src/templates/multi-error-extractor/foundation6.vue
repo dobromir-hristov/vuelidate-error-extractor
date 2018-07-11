@@ -1,5 +1,5 @@
 <template>
-  <base-multi-error-extractor :validator="validator" :attributes="attributes" style="margin-top: 1rem">
+  <base-multi-error-extractor v-bind="$attrs" style="margin-top: 1rem">
     <template slot-scope="{ errorMessage }">
       <label class="form-error is-visible">{{ errorMessage }}</label>
     </template>
@@ -10,18 +10,9 @@
 import baseMultiErrorExtractor from './baseMultiErrorExtractor.vue'
 
 export default {
+  inheritAttrs: false,
   components: {
     baseMultiErrorExtractor
-  },
-  props: {
-    validator: {
-      type: Object,
-      required: true
-    },
-    attributes: {
-      type: Object,
-      default: () => ({})
-    }
   }
 }
 </script>

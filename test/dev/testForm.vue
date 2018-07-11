@@ -1,13 +1,13 @@
 <template>
   <div>
     <form-wrapper :validator="$v.nestedObject">
-      <multi-error-extractor :validator="$v.nestedObject"/>
+      <multi-error-extractor/>
       <form-group label="Test" attribute="Test Field">
         <input type="text"
                v-model="test"
                @input="$v.test.$touch()">
       </form-group>
-      <form-group label="First Name" attribute="FIRSTNAME" name="first_name">
+      <form-group label="First Name" name="first_name">
         <input type="text"
                v-model="nestedObject.first_name"
                @input="$v.nestedObject.first_name.$touch()">

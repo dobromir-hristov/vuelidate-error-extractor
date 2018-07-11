@@ -20,6 +20,8 @@ function plugin (Vue, opts = {}) {
   }
 }
 
+const version = '__VERSION__'
+
 export default plugin
 
-export { singleErrorExtractorMixin, multiErrorExtractorMixin, configs, templates }
+export { singleErrorExtractorMixin, multiErrorExtractorMixin, configs, templates, version }

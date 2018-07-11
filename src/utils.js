@@ -1,6 +1,8 @@
-import { get } from 'dot-prop'
+import getValue from 'get-value'
 
-export { get }
+export function get (obj, path, def) {
+  return getValue(obj, path, { default: def })
+}
 
 function formatErrorMessage (message) {
   return `[vuelidate-error-extractor]: ${message}`
@@ -42,16 +44,17 @@ export function getValidationObject (validationKey, key, params = {}) {
     $invalid: this.preferredValidator.$invalid,
     // Add the label for the :attribute parameter that is used in most Laravel validations
     params: Object.assign({}, {
-      attribute: getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label),
+      attribute: getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name),
       label: this.label
     }, params, this.validatorParams)
   }
 }
 
-function getAttribute (attributes, attribute, label) {
-  if (attributes.hasOwnProperty(attribute)) return attributes[attribute]
-  if (attributes.hasOwnProperty(label)) return attributes[label]
-  return attribute || label
+function getAttribute (attributes, attribute, label, name) {
+  if (attribute) return attribute
+  if (attributes[name]) return attributes[name]
+  if (attributes[label]) return attributes[label]
+  return label
 }
 
 export function flattenValidatorObjects (validator, propName) {
