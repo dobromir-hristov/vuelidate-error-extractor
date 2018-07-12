@@ -41,5 +41,6 @@ module.exports = {
       'advanced'
     ]
   },
-  ga: 'UA-29425482-9'
+  ga: 'UA-29425482-9',
+  base: 'vuelidate-error-extractor'
 }

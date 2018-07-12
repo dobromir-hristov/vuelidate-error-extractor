@@ -50,13 +50,7 @@
     "webpack-dev-server": "^2.2.1"
   },
   "files": [
-    "dist/vuelidate-error-extractor.js",
-    "dist/vuelidate-error-extractor.min.js",
-    "dist/vuelidate-error-extractor.common.js",
-    "dist/vuelidate-error-extractor.esm.js",
-    "dist/message-extractor-mixin.js",
-    "dist/templates",
-    "src"
+    "dist"
   ],
   "homepage": "https://github.com/dobromir-hristov/vuelidate-error-extractor#readme",
   "main": "dist/vuelidate-error-extractor.common.js",
