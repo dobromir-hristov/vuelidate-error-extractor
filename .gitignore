@@ -44,4 +44,4 @@ jspm_packages/
 # dotenv environment variables file
 .env
 
-
+docs/.vuepress/dist
