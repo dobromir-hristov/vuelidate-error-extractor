@@ -1,4 +1,4 @@
-import { flattenValidatorObjects, get } from './utils'
+import { flattenValidatorObjects } from './utils'
 import baseErrorsMixin from './base-errors-mixin'
 
 export default {

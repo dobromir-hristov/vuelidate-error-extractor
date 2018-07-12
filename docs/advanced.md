@@ -1,11 +1,14 @@
-#i18n
+---
+title: Advanced Examples
+---
+# i18n
 
-Vuelidate-error-extractor can be used with vue-18n to provide translated error messages.
+**Vuelidate-error-extractor** can be used with **vue-i18n** to provide error message translation.
 
 To enable the i18n mode, you have to pass a string containing the top structure of your validation messages. 
 E.g.
-If your validations are coming from Laravel
-{% raw %}
+If your validations are looking like this:
+
 ```js
 const message = {
   en: {
@@ -19,9 +22,9 @@ const message = {
   }
 }
 ```
-{% endraw %}
 
 Then when initializing your plugin you have to set up like this:
+
 ```js
 Vue.use(VuelidateErrorExtractor, {
   template,
@@ -35,6 +38,7 @@ Now **vuelidate-error-extractor** will use `$t('validation.required')` to output
 Validation keys is a special hatch that lets you map more complex error messages to vuelidate's simpler tree structure.
 E.g.
 Laravel uses deeper  structures for some of it's validation messages. 
+
 ```php
 [
     'min' => [
@@ -45,7 +49,9 @@ Laravel uses deeper  structures for some of it's validation messages.
     ],
 ]
 ```
+
 We are forced to use strange validation rule names like `min.string` or easy way around this is to map the differences with the validationKeys option.
+
 ```js
 const validationKeys = {
   minLength: { // Validation rule name in vuelidate
@@ -75,6 +81,7 @@ Vue.use(VuelidateMessageExtractor, {
 })
 
 ```
+
 This way you can easily remap them without fiddling with the provided translated validation messages, in this case Laravel, or messing with your own rules.
 
 ## Validator Params
@@ -82,6 +89,7 @@ This way you can easily remap them without fiddling with the provided translated
 This is another escape hatch for those moments where you need to provide a parameter which applies only for the current component.
 A really good example is the `same` validation. Laravel implements this via `same` message, where as Vuelidate has a `sameAs` rule. Even if we call ours `same:sameAs('password')` the parameter names don't match as vuelidate uses `eq` and laravel `other`.
 To solve our issue, we just provide a small map with the params we want to provide:
+
 ```html
 <form-group 
   :validator="$v.password_confirm" 
@@ -90,6 +98,7 @@ To solve our issue, we just provide a small map with the params we want to provi
     <input type="text" v-model="password_confirm">
 </form-group>
 ```
+
 Now if we have used `validationKeys` as well we get `The :attribute and :other must match.`  transformed to `The Password Confirmation and Password must match.`
 
 ## Usage with other plugins
@@ -106,7 +115,6 @@ Lets try with [Multiselect](http://monterail.github.io/vue-multiselect/)
 ```
 
 <p data-height="400" data-theme-id="0" data-slug-hash="PKjxvr" data-default-tab="result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor with Multiselect" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/PKjxvr/">Vuelidate-error-extractor with Multiselect</a> by Dobromir (<a href="https://codepen.io/dobromir">@dobromir</a>) on <a href="https://codepen.io">CodePen</a>.</p>
-<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Usage with quasar
 

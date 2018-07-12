@@ -26,7 +26,7 @@ const entries = {
       name: moduleName,
       format: 'cjs'
     },
-    banner
+    external: ['get-value']
   },
   esm: {
     input: 'src/index.js',
@@ -34,7 +34,8 @@ const entries = {
       file: `dist/${pack.name}.esm.js`,
       name: moduleName,
       format: 'es'
-    }
+    },
+    external: ['get-value']
   },
   production: {
     input: 'src/index.js',
@@ -54,7 +55,15 @@ const entries = {
     },
     env: 'development'
   },
-  messageExtractorMixin: {
+  formWrapper: {
+    input: 'src/templates/form-wrapper.js',
+    output: {
+      file: 'dist/templates/form-wrapper.min.js',
+      name: moduleName + 'formWrapper',
+      format: 'umd'
+    }
+  },
+  singleErrorExtractorMixin: {
     input: 'src/single-error-extractor-mixin.js',
     output: {
       file: 'dist/single-error-extractor.min.js',
@@ -63,7 +72,7 @@ const entries = {
     },
     env: 'production'
   },
-  foundationExtractor: {
+  singleErrorExtractorFoundation6: {
     input: 'src/templates/single-error-extractor/foundation6.vue',
     output: {
       file: `dist/templates/single-error-extractor/foundation6.min.js`,
@@ -72,7 +81,7 @@ const entries = {
     },
     env: 'production'
   },
-  bootstrapExtractor: {
+  singleErrorExtractorBootstrap3: {
     input: 'src/templates/single-error-extractor/bootstrap3.vue',
     output: {
       file: `dist/templates/single-error-extractor/bootstrap3.min.js`,
@@ -90,7 +99,7 @@ const entries = {
     },
     env: 'production'
   },
-  baseFlatExtractor: {
+  baseMultiErrorExtractor: {
     input: 'src/templates/multi-error-extractor/baseMultiErrorExtractor.vue',
     output: {
       file: `dist/templates/multi-error-extractor/baseMultiErrorExtractor.min.js`,
@@ -99,20 +108,20 @@ const entries = {
     },
     env: 'production'
   },
-  foundationFlatExtractor: {
+  multiErrorExtractorFoundation6: {
     input: 'src/templates/multi-error-extractor/foundation6.vue',
     output: {
       file: `dist/templates/multi-error-extractor/foundation6.min.js`,
-      name: moduleName + 'Foundation6Template',
+      name: moduleName + 'multiErrorExtractorFoundation6',
       format: 'umd'
     },
     env: 'production'
   },
-  bootstrapFlatExtractorUmd: {
+  multiErrorExtractorBootstrap3: {
     input: 'src/templates/multi-error-extractor/bootstrap3.vue',
     output: {
       file: `dist/templates/multi-error-extractor/bootstrap3.min.js`,
-      name: moduleName + 'Bootstrap3Template',
+      name: moduleName + 'multiErrorExtractorBootstrap3',
       format: 'umd'
     },
     env: 'production'
@@ -128,13 +137,18 @@ function genConfig (opts) {
       exports: 'named'
     },
     plugins: [
-      node(),
+      node({
+        customResolveOptions: {
+          moduleDirectory: 'node_modules'
+        }
+      }),
+      commonjs(),
       VuePlugin(),
       buble({
         transforms: { dangerousForOf: true }
-      }),
-      commonjs()
-    ]
+      })
+    ],
+    external: opts.external
   }
 
   const replacePluginOptions = { '__VERSION__': pack.version }
