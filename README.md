@@ -1,5 +1,5 @@
 <p align="center">
-<img :src="docs/.vuepress/public/logo.svg" width=150 alt="foo">
+<img :src="https://github.com/dobromir-hristov/vuelidate-error-extractor/blob/master/docs/logo.svg" width=150 alt="foo">
 </p>
 
 <h1 align="center">Vuelidate Error Extractor</h1>
