@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v1.3.1 
+ * vuelidate-error-extractor v2.0.0-beta.0 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -109,7 +109,7 @@ function getErrorString (messages, key, params) {
   return template(msg, params)
 }
 
-var errorsMixin = {
+var baseErrorsMixin = {
   inject: {
     formValidator: { default: false }
   },
@@ -182,7 +182,7 @@ var singleErrorExtractorMixin = {
       default: false
     }
   },
-  extends: errorsMixin,
+  extends: baseErrorsMixin,
   computed: {
     preferredValidator: function preferredValidator () {
       // if validator is passed is present on propsData, user has explicitly provided it.
@@ -635,7 +635,7 @@ var multiErrorExtractorMixin = {
       default: function () { return ({}); }
     }
   },
-  extends: errorsMixin,
+  extends: baseErrorsMixin,
   computed: {
     preferredValidator: function preferredValidator () {
       // if validator is passed is present on propsData, user has explicitly provided it.
@@ -1169,7 +1169,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '1.3.1';
+var version = '2.0.0-beta.0';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;

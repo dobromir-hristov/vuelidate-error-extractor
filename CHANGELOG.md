@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0-beta.0"></a>
+# [2.0.0-beta.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v1.3.1...v2.0.0-beta.0) (2018-07-12)
+
+
+### Features
+
+* Add formWrapper to provide/inject validator data into error-extractors. ([69df4ec](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/69df4ec))
+* Add multiErrorExtractor. Almost complete rewrite of the plugin. ([2c041dd](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/2c041dd))
+
+
+### BREAKING CHANGES
+
+* template structure changed. Rename messageExtractorMixin to single-error-extractor-mixin.
+
+
+
 <a name="1.3.1"></a>
 ## [1.3.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v1.3.0...v1.3.1) (2018-04-02)
 
