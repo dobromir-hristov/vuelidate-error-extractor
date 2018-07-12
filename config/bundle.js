@@ -2,7 +2,6 @@ const fs = require('fs-extra')
 const readFile = fs.readFile
 const outputFile = fs.outputFile
 const relative = require('path').relative
-const gzip = require('zlib').gzip
 const rollup = require('rollup')
 const uglify = require('uglify-js')
 
@@ -37,7 +36,7 @@ async function buildEntry (config) {
       pure_funcs: ['makeMap']
     }
   }).code
-  return write(config.output.file, minified).then(zip(config.output.file))
+  return write(config.output.file, minified)
 }
 
 function write (dest, code) {
@@ -48,20 +47,6 @@ function write (dest, code) {
       resolve()
     })
   })
-}
-
-function zip (file) {
-  return function () {
-    return new Promise(function (resolve, reject) {
-      readFile(file, function (err, buf) {
-        if (err) { return reject(err) }
-        gzip(buf, function (err, buf) {
-          if (err) { return reject(err) }
-          write(file + '.gz', buf).then(resolve)
-        })
-      })
-    })
-  }
 }
 
 function getSize (code) {
