@@ -1,8 +1,11 @@
 <p align="center">
-<img :src="https://github.com/dobromir-hristov/vuelidate-error-extractor/blob/master/docs/logo.svg" width=150 alt="foo">
+  <a align="center" href="https://www.npmjs.com/package/vuelidate-error-extractor" target="_blank">
+    <img alt="Vuelidate-error-extractor logo" width=200 src="https://raw.githubusercontent.com/dobromir-hristov/vuelidate-error-extractor/master/docs/logo.png">
+  </a>
 </p>
 
-<h1 align="center">Vuelidate Error Extractor</h1>
+
+<h2 align="center">Vuelidate Error Extractor</h1>
 
 <p align="center">
 <a href="https://www.npmjs.com/package/vuelidate-error-extractor"> <img src="https://img.shields.io/npm/v/vuelidate-error-extractor.svg"/></a>
@@ -13,11 +16,11 @@
 **Vuelidate-error-extractor** makes error message display from vuelidate a breeze. Be it for a single form element or all displaying all the errors in a form.
 
 ## Key features
-* Easy to use
-* Flexible - can be tailored to fit your needs
-* With or without extra markup - yey **mixins** and **slots**!!!
-* No styling mucking your own
-* Tested
+* :rocket: Easy to use
+* :boom: Flexible - can be tailored to fit your needs
+* :fire: With or without extra markup - yey **mixins** and **slots**!!!
+* :punch: No styling to interfere with your own
+* :muscle: Tested
 
 Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) styles out of the box, or can be totally customized via templates provided by the user.
 
@@ -26,6 +29,17 @@ Vuelidate-error-extractor is also able to work with [vue-i18n](https://github.co
 ## Example
 
 See the Pen <a href="https://codepen.io/dobromir/pen/zdzqYX/">Vuelidate Error extractor Usage Example</a>
+
+## Upgrade Guide
+Version 2 added some breaking changes. Instead of reaching into templates directly for the predefined templates, 
+you need to go into either `templates.singleErrorExtractor` or `templates.multiErrorExtractor`. Everything else is backwards compatible.
+
+```js
+import VuelidateErrorExtractor, { templates } from 'vuelidate-error-extractor'
+Vue.use(VuelidateErrorExtractor,{
+  template: templates.singleErrorExtractor.foundaton6
+})
+```
 
 ## Documentation
 Documentation and examples can be found at http://dobromir-hristov.github.io/vuelidate-error-extractor/

@@ -9,7 +9,7 @@ module.exports = {
     }],
     ['meta', {
       'name': 'twitter:image',
-      'content': 'https://dobromir-hristov.github.io/vuelidate-error-extractor/logo.png'
+      'content': 'https://dobromir-hristov.github.io/vuelidate-error-extractor/logo.jpg'
     }],
     ['meta', {
       'property': 'og:url',
@@ -25,7 +25,7 @@ module.exports = {
     }],
     ['meta', {
       'property': 'og:image',
-      'content': 'https://dobromir-hristov.github.io/vuelidate-error-extractor/logo.png'
+      'content': 'https://dobromir-hristov.github.io/vuelidate-error-extractor/logo.jpg'
     }]
   ],
   title: 'Vuelidate-error-extractor',
