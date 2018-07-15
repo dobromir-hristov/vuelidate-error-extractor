@@ -1,5 +1,5 @@
 import { get, getValidationObject } from './utils'
-import errorsMixin from './base-errors-mixin'
+import baseErrorsMixin from './base-errors-mixin'
 
 export default {
   props: {
@@ -19,7 +19,7 @@ export default {
       default: false
     }
   },
-  extends: errorsMixin,
+  extends: baseErrorsMixin,
   computed: {
     preferredValidator () {
       // if validator is passed is present on propsData, user has explicitly provided it.

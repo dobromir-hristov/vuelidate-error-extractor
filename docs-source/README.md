@@ -30,4 +30,15 @@ The plugin is also able to work as a standalone component or in tandem with [vue
 <iframe height='265' scrolling='no' title='Vuelidate Error extractor Usage Example' src='//codepen.io/dobromir/embed/zdzqYX/?height=265&theme-id=0&default-tab=html,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/dobromir/pen/zdzqYX/'>Vuelidate Error extractor Usage Example</a> by Dobromir (<a href='https://codepen.io/dobromir'>@dobromir</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
+## Upgrade Guide
+Version 2 added some breaking changes. Instead of reaching into templates directly for the predefined templates, 
+you need to go into either `templates.singleErrorExtractor` or `templates.multiErrorExtractor`. Everything else is backwards compatible.
+
+```js
+import VuelidateErrorExtractor, { templates } from 'vuelidate-error-extractor'
+Vue.use(VuelidateErrorExtractor, {
+  template: templates.singleErrorExtractor.foundaton6
+})
+```
+
 [MIT](http://opensource.org/licenses/MIT)

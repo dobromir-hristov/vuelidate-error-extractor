@@ -36,7 +36,7 @@ you need to go into either `templates.singleErrorExtractor` or `templates.multiE
 
 ```js
 import VuelidateErrorExtractor, { templates } from 'vuelidate-error-extractor'
-Vue.use(VuelidateErrorExtractor,{
+Vue.use(VuelidateErrorExtractor, {
   template: templates.singleErrorExtractor.foundaton6
 })
 ```

@@ -66,8 +66,8 @@ const entries = {
   singleErrorExtractorMixin: {
     input: 'src/single-error-extractor-mixin.js',
     output: {
-      file: 'dist/single-error-extractor.min.js',
-      name: moduleName + 'ExtractorMixin',
+      file: 'dist/single-error-extractor-mixin.min.js',
+      name: moduleName + 'SingleErrorExtractorMixin',
       format: 'umd'
     },
     env: 'production'
@@ -76,7 +76,7 @@ const entries = {
     input: 'src/templates/single-error-extractor/foundation6.vue',
     output: {
       file: `dist/templates/single-error-extractor/foundation6.min.js`,
-      name: moduleName + 'Foundation6Template',
+      name: moduleName + 'singleErrorExtractorFoundation6',
       format: 'umd'
     },
     env: 'production'
@@ -85,7 +85,7 @@ const entries = {
     input: 'src/templates/single-error-extractor/bootstrap3.vue',
     output: {
       file: `dist/templates/single-error-extractor/bootstrap3.min.js`,
-      name: moduleName + 'Bootstrap3Template',
+      name: moduleName + 'singleErrorExtractorBootstrap3',
       format: 'umd'
     },
     env: 'production'
@@ -94,7 +94,7 @@ const entries = {
     input: 'src/multi-error-extractor-mixin.js',
     output: {
       file: 'dist/multi-error-extractor-mixin.min.js',
-      name: moduleName + 'multiErrorExtractorMixin',
+      name: moduleName + 'MultiErrorExtractorMixin',
       format: 'umd'
     },
     env: 'production'

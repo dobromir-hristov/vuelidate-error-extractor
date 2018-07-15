@@ -52,11 +52,11 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/dobromir-hristov/vuelidate-error-extractor#readme",
+  "homepage": "https://dobromir-hristov.github.io/vuelidate-error-extractor/",
   "main": "dist/vuelidate-error-extractor.common.js",
-  "browser": "dist/vuelidate-error-extractor.js",
   "module": "dist/vuelidate-error-extractor.esm.js",
   "unpkg": "dist/vuelidate-error-extractor.js",
+  "jsdelivr": "dist/vuelidate-error-extractor.js",
   "keywords": [
     "plugin",
     "vue",
@@ -90,7 +90,7 @@
     "get-value": "^3.0.1"
   },
   "peerDependencies": {
-    "vue": "^2.4.2",
+    "vue": "^2.5.16",
     "vuelidate": "^0.6.2"
   },
   "standard-version": {
