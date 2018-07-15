@@ -27,8 +27,7 @@ Error messages can be styled to fit either [Foundation 6](http://foundation.zurb
 The plugin is also able to work as a standalone component or in tandem with [vue-i18n](https://github.com/kazupon/vue-i18n).
 
 ## Example 
-<iframe height='265' scrolling='no' title='Vuelidate Error extractor Usage Example' src='//codepen.io/dobromir/embed/zdzqYX/?height=265&theme-id=0&default-tab=html,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/dobromir/pen/zdzqYX/'>Vuelidate Error extractor Usage Example</a> by Dobromir (<a href='https://codepen.io/dobromir'>@dobromir</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<iframe src="https://codesandbox.io/embed/mo6v8nrmpp?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
 ## Upgrade Guide
 Version 2 added some breaking changes. Instead of reaching into templates directly for the predefined templates, 
