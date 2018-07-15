@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.0.0-beta.0...v2.0.0) (2018-07-15)
+
+
+### Bug Fixes
+
+* move docs to docs-source. ([b1cff93](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/b1cff93))
+* set proper vuepress base ([f181a10](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/f181a10))
+
+
+
 <a name="2.0.0-beta.0"></a>
 # [2.0.0-beta.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v1.3.1...v2.0.0-beta.0) (2018-07-12)
 
