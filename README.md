@@ -16,11 +16,11 @@
 **Vuelidate-error-extractor** makes error message display from vuelidate a breeze. Be it for a single form element or all displaying all the errors in a form.
 
 ## Key features
-* :rocket: Easy to use
-* :boom: Flexible - can be tailored to fit your needs
-* :fire: With or without extra markup - yey **mixins** and **slots**!!!
-* :punch: No styling to interfere with your own
-* :muscle: Tested
+* :rocket: **Easy** to use
+* :boom: **Flexible** - can be tailored to fit your needs
+* :fire: **Optional templates** - yey **mixins** and **slots**!!!
+* :punch: **No extra styling** mucking your own
+* :muscle: **Tested**
 
 Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) styles out of the box, or can be totally customized via templates provided by the user.
 
