@@ -26,7 +26,7 @@ That way fields with the same name like **email** or **name** will get properly 
 ```vue
 <template>
   <div>
-    <form-wrapper :validator="$v.form">
+    <form-wrapper :validator="$v.form" :messages="localMessages">
       <form-errors/>
       <form-field name="name">
         <input type="text" v-model="form.name">
@@ -46,6 +46,9 @@ export default {
       form: {
         name: "",
         email: ""
+      },
+      localMessages: {
+        email: '{attribute} is not a proper email, you should check it again.'
       }
     };
   },
@@ -59,12 +62,39 @@ export default {
 </script>
 ```
 
+You have to pass the `validator` prop which is your form object's Vuelidate validation. 
+Its a good practice to wrap your forms in an object like so:
+
+```js
+export default {
+  data() {
+    return {
+      form: {
+        name: '',
+        email: ''
+      }
+    }
+  },
+  validations: {
+    form: {
+      name: { required },
+      email: { required, email }
+    }
+  }
+}
+```
+By adding a `messages` prop, you can override the globally defined messages. 
+
+::: warning
+Does not work in i18n mode for now!
+:::
+
 ### Single Error Extractor
 When using with the `SingleErrorExtractor` component, its required to pass а **name** prop to each error extractor. That is a string representing the field's key in the form.
 
 That way the `singleErrorExtractor` can look into the `formWrapper` validator and get the proper validations.
  
-Using the name prop, the error message `attribute` is guessed from the global `$vuelidateErrorExtractor.attributes` object. 
+Using the `name` prop, the error message `attribute` is guessed from the global `$vuelidateErrorExtractor.attributes` object. 
 
 ### Multi Error Extractor
 

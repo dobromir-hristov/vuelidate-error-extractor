@@ -4,6 +4,10 @@ export default {
     validator: {
       type: Object,
       required: true
+    },
+    messages: {
+      type: Object,
+      default: () => ({})
     }
   },
   render (h) {
@@ -11,7 +15,8 @@ export default {
   },
   provide () {
     return {
-      formValidator: this.validator
+      formValidator: this.validator,
+      formMessages: this.messages
     }
   }
 }

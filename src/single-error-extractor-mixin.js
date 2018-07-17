@@ -46,6 +46,12 @@ export default {
         // We are using the Vuelidate keys
         return getValidationObject.call(this, key, key, params)
       })
+    },
+    events () {
+      return { input: () => this.preferredValidator.$touch() }
+    },
+    isValid () {
+      return this.preferredValidator.$dirty && !this.hasErrors
     }
   }
 }

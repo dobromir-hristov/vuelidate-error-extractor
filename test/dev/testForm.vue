@@ -1,7 +1,16 @@
 <template>
   <div>
-    <form-wrapper :validator="$v.nestedObject">
+    <form-wrapper :validator="$v.nestedObject" :messages="messages">
       <multi-error-extractor/>
+      <form-group name="first_name" label="First name">
+        <template slot-scope="{ validator, hasErrors, attributes, events }">
+          <input
+            v-bind="attributes"
+            v-on="events"
+            type="text"
+            v-model="nestedObject.first_name">
+        </template>
+      </form-group>
       <form-group label="Test" attribute="Test Field">
         <input type="text"
                v-model="test"
@@ -32,8 +41,8 @@
   </div>
 </template>
 <script>
-import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
-import MultiErrorExtractor from '../../src/templates/multi-error-extractor/foundation6'
+import { required, minLength, maxLength, email, numeric } from 'vuelidate/lib/validators'
+import MultiErrorExtractor from '../../src/templates/multi-error-extractor/bootstrap3'
 import formWrapper from '../../src/templates/form-wrapper'
 
 export default {
@@ -61,6 +70,9 @@ export default {
         'address.street': 'Street',
         'address.city': 'City',
         'address.postal': 'Postal Code'
+      },
+      messages: {
+        numeric: '{attribute} needs to be numeric.'
       }
     }
   },
@@ -71,7 +83,7 @@ export default {
       maxLength: maxLength(10)
     },
     nestedObject: {
-      first_name: { required, minLength: minLength(3), maxLength: maxLength(20) },
+      first_name: { required, minLength: minLength(3), maxLength: maxLength(20), numeric },
       last_name: { required, minLength: minLength(3), maxLength: maxLength(20) },
       email: { required, email },
       address: {

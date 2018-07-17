@@ -2,7 +2,8 @@ import { getErrorString } from './utils'
 
 export default {
   inject: {
-    formValidator: { default: false }
+    formValidator: { default: false },
+    formMessages: { default: () => ({}) }
   },
   props: {
     validator: {
@@ -25,7 +26,7 @@ export default {
       return this.errors.filter(error => error.hasError && error.$dirty)
     },
     mergedMessages () {
-      return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
+      return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.formMessages, this.messages)
     },
     firstError () {
       return this.activeErrors.length ? this.activeErrors[0] : ''
