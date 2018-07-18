@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.0.0...v2.1.0) (2018-07-18)
+
+
+### Features
+
+* Add boostrap4 single and multi error templates. ([39e185d](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/39e185d))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.0.0-beta.0...v2.0.0) (2018-07-15)
 

@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.0.0 
+ * vuelidate-error-extractor v2.1.0 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -228,7 +228,8 @@ var VuelidateErrorExtractor = (function (exports) {
 
   var baseErrorsMixin = {
     inject: {
-      formValidator: { default: false }
+      formValidator: { default: false },
+      formMessages: { default: function () { return ({}); } }
     },
     props: {
       validator: {
@@ -251,7 +252,7 @@ var VuelidateErrorExtractor = (function (exports) {
         return this.errors.filter(function (error) { return error.hasError && error.$dirty; })
       },
       mergedMessages: function mergedMessages () {
-        return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.messages)
+        return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.formMessages, this.messages)
       },
       firstError: function firstError () {
         return this.activeErrors.length ? this.activeErrors[0] : ''
@@ -328,6 +329,14 @@ var VuelidateErrorExtractor = (function (exports) {
           // We are using the Vuelidate keys
           return getValidationObject.call(this$1, key, key, params)
         })
+      },
+      events: function events () {
+        var this$1 = this;
+
+        return { input: function () { return this$1.preferredValidator.$touch(); } }
+      },
+      isValid: function isValid () {
+        return this.preferredValidator.$dirty && !this.hasErrors
       }
     }
   };
@@ -335,7 +344,14 @@ var VuelidateErrorExtractor = (function (exports) {
   //
 
   var script = {
-    mixins: [singleErrorExtractorMixin]
+    mixins: [singleErrorExtractorMixin],
+    computed: {
+      attributes: function attributes () {
+        return {
+          class: { 'is-invalid-input': this.hasErrors }
+        }
+      }
+    }
   };
 
   /* script */
@@ -359,10 +375,13 @@ var VuelidateErrorExtractor = (function (exports) {
         ]),
         _vm._v(" "),
         _vm._t("default", null, {
+          attributes: _vm.attributes,
+          errorMessages: _vm.activeErrorMessages,
           errors: _vm.activeErrors,
-          hasErrors: _vm.hasErrors,
+          events: _vm.events,
           firstErrorMessage: _vm.firstErrorMessage,
-          errorMessages: _vm.activeErrorMessages
+          hasErrors: _vm.hasErrors,
+          validator: _vm.preferredValidator
         }),
         _vm._v(" "),
         _vm._t(
@@ -532,7 +551,15 @@ var VuelidateErrorExtractor = (function (exports) {
   //
 
   var script$1 = {
-    mixins: [singleErrorExtractorMixin]
+    mixins: [singleErrorExtractorMixin],
+    computed: {
+      attributes: function attributes () {
+        return {
+          class: { 'form-control': true },
+          name: this.name || undefined
+        }
+      }
+    }
   };
 
   /* script */
@@ -547,24 +574,30 @@ var VuelidateErrorExtractor = (function (exports) {
       "div",
       {
         staticClass: "form-group",
-        class: {
-          "has-error": _vm.hasErrors,
-          "has-success": !_vm.hasErrors && _vm.validator.$dirty
-        }
+        class: { "has-error": _vm.hasErrors, "has-success": _vm.isValid }
       },
       [
         _vm._t("label", [
           _vm.label
             ? _c("label", { staticClass: "control-label" }, [
-                _vm._v(_vm._s(_vm.label) + " " + _vm._s(_vm.errors ? "*" : ""))
+                _vm._v(
+                  "\n      " +
+                    _vm._s(_vm.label) +
+                    " " +
+                    _vm._s(_vm.errors ? "*" : "") +
+                    "\n    "
+                )
               ])
             : _vm._e()
         ]),
         _vm._v(" "),
         _vm._t("default", null, {
+          attributes: _vm.attributes,
           errors: _vm.activeErrors,
+          events: _vm.events,
+          firstErrorMessage: _vm.firstErrorMessage,
           hasErrors: _vm.hasErrors,
-          firstErrorMessage: _vm.firstErrorMessage
+          validator: _vm.preferredValidator
         }),
         _vm._v(" "),
         _vm._t(
@@ -625,6 +658,7 @@ var VuelidateErrorExtractor = (function (exports) {
           ],
           {
             errors: _vm.activeErrors,
+            errorMessages: _vm.activeErrorMessages,
             hasErrors: _vm.hasErrors,
             firstErrorMessage: _vm.firstErrorMessage
           }
@@ -740,46 +774,19 @@ var VuelidateErrorExtractor = (function (exports) {
       undefined
     );
 
-  var singleErrorExtractor = {
-    foundation6: foundation6,
-    bootstrap3: bootstrap3
-  };
-
-  var multiErrorExtractorMixin = {
-    props: {
-      attributes: {
-        type: Object,
-        default: function () { return ({}); }
-      }
-    },
-    extends: baseErrorsMixin,
-    computed: {
-      preferredValidator: function preferredValidator () {
-        // if validator is passed is present on propsData, user has explicitly provided it.
-        if (this.$options.propsData.hasOwnProperty('validator')) { return this.validator }
-        return this.formValidator
-      },
-      mergedAttributes: function mergedAttributes () {
-        return Object.assign({}, this.$vuelidateErrorExtractor.attributes, this.attributes)
-      },
-      errors: function errors () {
-        var this$1 = this;
-
-        return flattenValidatorObjects(this.preferredValidator).map(function (error) {
-          var params = Object.assign({}, error.params, {
-            attribute: this$1.mergedAttributes[error.propName]
-          });
-          return Object.assign({}, error, { params: params })
-        })
-      }
-    }
-  };
-
   //
 
   var script$2 = {
-    name: 'baseMultiErrorExtractor',
-    extends: multiErrorExtractorMixin
+    name: 'Bootstrap4',
+    mixins: [singleErrorExtractorMixin],
+    computed: {
+      attributes: function attributes () {
+        return {
+          class: { 'form-control': true, 'is-invalid': this.hasErrors, 'is-valid': this.isValid },
+          name: this.name || undefined
+        }
+      }
+    }
   };
 
   /* script */
@@ -792,19 +799,54 @@ var VuelidateErrorExtractor = (function (exports) {
     var _c = _vm._self._c || _h;
     return _c(
       "div",
-      _vm._l(_vm.activeErrorMessages, function(error, index) {
-        return _c(
-          "div",
-          { key: index },
+      [
+        _vm._t("label", [_c("label", [_vm._v(_vm._s(_vm.label))])]),
+        _vm._v(" "),
+        _vm._t("default", null, {
+          attributes: _vm.attributes,
+          errors: _vm.activeErrors,
+          events: _vm.events,
+          firstErrorMessage: _vm.firstErrorMessage,
+          hasErrors: _vm.hasErrors,
+          validator: _vm.preferredValidator
+        }),
+        _vm._v(" "),
+        _vm._t(
+          "errors",
           [
-            _vm._t("default", [_c("div", [_vm._v(_vm._s(error))])], {
-              errorMessage: error,
-              error: _vm.activeErrors[index]
-            })
+            _vm.hasErrors
+              ? _c(
+                  "div",
+                  {
+                    class: {
+                      "invalid-feedback": _vm.hasErrors,
+                      "valid-feedback": !_vm.hasErrors
+                    }
+                  },
+                  [
+                    _vm.showSingleError
+                      ? [_vm._v(_vm._s(_vm.firstErrorMessage))]
+                      : _vm._l(_vm.activeErrorMessages, function(errorMessage) {
+                          return _c("div", { key: errorMessage }, [
+                            _vm._v(
+                              "\n          " + _vm._s(errorMessage) + "\n        "
+                            )
+                          ])
+                        })
+                  ],
+                  2
+                )
+              : _vm._e()
           ],
-          2
+          {
+            errors: _vm.activeErrors,
+            errorMessages: _vm.activeErrorMessages,
+            hasErrors: _vm.hasErrors,
+            firstErrorMessage: _vm.firstErrorMessage
+          }
         )
-      })
+      ],
+      2
     )
   };
   var __vue_staticRenderFns__$2 = [];
@@ -827,7 +869,7 @@ var VuelidateErrorExtractor = (function (exports) {
       var component = (typeof script === 'function' ? script.options : script) || {};
 
       {
-        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\baseMultiErrorExtractor.vue";
+        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap4.vue";
       }
 
       if (!component.render) {
@@ -903,7 +945,7 @@ var VuelidateErrorExtractor = (function (exports) {
     
 
     
-    var baseMultiErrorExtractor = __vue_normalize__$2(
+    var bootstrap4 = __vue_normalize__$2(
       { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
       __vue_inject_styles__$2,
       __vue_script__$2,
@@ -914,13 +956,47 @@ var VuelidateErrorExtractor = (function (exports) {
       undefined
     );
 
+  var singleErrorExtractor = {
+    foundation6: foundation6,
+    bootstrap3: bootstrap3,
+    bootstrap4: bootstrap4
+  };
+
+  var multiErrorExtractorMixin = {
+    props: {
+      attributes: {
+        type: Object,
+        default: function () { return ({}); }
+      }
+    },
+    extends: baseErrorsMixin,
+    computed: {
+      preferredValidator: function preferredValidator () {
+        // if validator is passed is present on propsData, user has explicitly provided it.
+        if (this.$options.propsData.hasOwnProperty('validator')) { return this.validator }
+        return this.formValidator
+      },
+      mergedAttributes: function mergedAttributes () {
+        return Object.assign({}, this.$vuelidateErrorExtractor.attributes, this.attributes)
+      },
+      errors: function errors () {
+        var this$1 = this;
+
+        return flattenValidatorObjects(this.preferredValidator).map(function (error) {
+          var params = Object.assign({}, error.params, {
+            attribute: this$1.mergedAttributes[error.propName]
+          });
+          return Object.assign({}, error, { params: params })
+        })
+      }
+    }
+  };
+
   //
 
   var script$3 = {
-    inheritAttrs: false,
-    components: {
-      baseMultiErrorExtractor: baseMultiErrorExtractor
-    }
+    name: 'baseMultiErrorExtractor',
+    extends: multiErrorExtractorMixin
   };
 
   /* script */
@@ -932,28 +1008,20 @@ var VuelidateErrorExtractor = (function (exports) {
     var _h = _vm.$createElement;
     var _c = _vm._self._c || _h;
     return _c(
-      "base-multi-error-extractor",
-      _vm._b(
-        {
-          staticClass: "has-error",
-          scopedSlots: _vm._u([
-            {
-              key: "default",
-              fn: function(ref) {
-                var errorMessage = ref.errorMessage;
-                return [
-                  _c("label", { staticClass: "help-block" }, [
-                    _vm._v(_vm._s(errorMessage))
-                  ])
-                ]
-              }
-            }
-          ])
-        },
-        "base-multi-error-extractor",
-        _vm.$attrs,
-        false
-      )
+      "div",
+      _vm._l(_vm.activeErrorMessages, function(error, index) {
+        return _c(
+          "div",
+          { key: index },
+          [
+            _vm._t("default", [_c("div", [_vm._v(_vm._s(error))])], {
+              errorMessage: error,
+              error: _vm.activeErrors[index]
+            })
+          ],
+          2
+        )
+      })
     )
   };
   var __vue_staticRenderFns__$3 = [];
@@ -976,7 +1044,7 @@ var VuelidateErrorExtractor = (function (exports) {
       var component = (typeof script === 'function' ? script.options : script) || {};
 
       {
-        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap3.vue";
+        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\baseMultiErrorExtractor.vue";
       }
 
       if (!component.render) {
@@ -1052,7 +1120,7 @@ var VuelidateErrorExtractor = (function (exports) {
     
 
     
-    var bootstrap3$1 = __vue_normalize__$3(
+    var baseMultiErrorExtractor = __vue_normalize__$3(
       { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
       __vue_inject_styles__$3,
       __vue_script__$3,
@@ -1084,14 +1152,14 @@ var VuelidateErrorExtractor = (function (exports) {
       "base-multi-error-extractor",
       _vm._b(
         {
-          staticStyle: { "margin-top": "1rem" },
+          staticClass: "has-error",
           scopedSlots: _vm._u([
             {
               key: "default",
               fn: function(ref) {
                 var errorMessage = ref.errorMessage;
                 return [
-                  _c("label", { staticClass: "form-error is-visible" }, [
+                  _c("label", { staticClass: "help-block" }, [
                     _vm._v(_vm._s(errorMessage))
                   ])
                 ]
@@ -1125,7 +1193,7 @@ var VuelidateErrorExtractor = (function (exports) {
       var component = (typeof script === 'function' ? script.options : script) || {};
 
       {
-        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\foundation6.vue";
+        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap3.vue";
       }
 
       if (!component.render) {
@@ -1201,7 +1269,7 @@ var VuelidateErrorExtractor = (function (exports) {
     
 
     
-    var foundation6$1 = __vue_normalize__$4(
+    var bootstrap3$1 = __vue_normalize__$4(
       { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
       __vue_inject_styles__$4,
       __vue_script__$4,
@@ -1212,9 +1280,308 @@ var VuelidateErrorExtractor = (function (exports) {
       undefined
     );
 
+  //
+
+  var script$5 = {
+    inheritAttrs: false,
+    components: {
+      baseMultiErrorExtractor: baseMultiErrorExtractor
+    }
+  };
+
+  /* script */
+              var __vue_script__$5 = script$5;
+              
+  /* template */
+  var __vue_render__$5 = function() {
+    var _vm = this;
+    var _h = _vm.$createElement;
+    var _c = _vm._self._c || _h;
+    return _c(
+      "base-multi-error-extractor",
+      _vm._b(
+        {
+          staticClass: "was-validated",
+          scopedSlots: _vm._u([
+            {
+              key: "default",
+              fn: function(ref) {
+                var errorMessage = ref.errorMessage;
+                return [
+                  _c("label", { staticClass: "invalid-feedback d-block" }, [
+                    _vm._v(_vm._s(errorMessage))
+                  ])
+                ]
+              }
+            }
+          ])
+        },
+        "base-multi-error-extractor",
+        _vm.$attrs,
+        false
+      )
+    )
+  };
+  var __vue_staticRenderFns__$5 = [];
+  __vue_render__$5._withStripped = true;
+
+    /* style */
+    var __vue_inject_styles__$5 = undefined;
+    /* scoped */
+    var __vue_scope_id__$5 = undefined;
+    /* module identifier */
+    var __vue_module_identifier__$5 = undefined;
+    /* functional template */
+    var __vue_is_functional_template__$5 = false;
+    /* component normalizer */
+    function __vue_normalize__$5(
+      template, style, script,
+      scope, functional, moduleIdentifier,
+      createInjector, createInjectorSSR
+    ) {
+      var component = (typeof script === 'function' ? script.options : script) || {};
+
+      {
+        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap4.vue";
+      }
+
+      if (!component.render) {
+        component.render = template.render;
+        component.staticRenderFns = template.staticRenderFns;
+        component._compiled = true;
+
+        if (functional) { component.functional = true; }
+      }
+
+      component._scopeId = scope;
+
+      return component
+    }
+    /* style inject */
+    function __vue_create_injector__$5() {
+      var head = document.head || document.getElementsByTagName('head')[0];
+      var styles = __vue_create_injector__$5.styles || (__vue_create_injector__$5.styles = {});
+      var isOldIE =
+        typeof navigator !== 'undefined' &&
+        /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+      return function addStyle(id, css) {
+        if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
+
+        var group = isOldIE ? css.media || 'default' : id;
+        var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+        if (!style.ids.includes(id)) {
+          var code = css.source;
+          var index = style.ids.length;
+
+          style.ids.push(id);
+
+          if (isOldIE) {
+            style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+          }
+
+          if (!style.element) {
+            var el = style.element = document.createElement('style');
+            el.type = 'text/css';
+
+            if (css.media) { el.setAttribute('media', css.media); }
+            if (isOldIE) {
+              el.setAttribute('data-group', group);
+              el.setAttribute('data-next-index', '0');
+            }
+
+            head.appendChild(el);
+          }
+
+          if (isOldIE) {
+            index = parseInt(style.element.getAttribute('data-next-index'));
+            style.element.setAttribute('data-next-index', index + 1);
+          }
+
+          if (style.element.styleSheet) {
+            style.parts.push(code);
+            style.element.styleSheet.cssText = style.parts
+              .filter(Boolean)
+              .join('\n');
+          } else {
+            var textNode = document.createTextNode(code);
+            var nodes = style.element.childNodes;
+            if (nodes[index]) { style.element.removeChild(nodes[index]); }
+            if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
+            else { style.element.appendChild(textNode); }
+          }
+        }
+      }
+    }
+    /* style inject SSR */
+    
+
+    
+    var bootstrap4$1 = __vue_normalize__$5(
+      { render: __vue_render__$5, staticRenderFns: __vue_staticRenderFns__$5 },
+      __vue_inject_styles__$5,
+      __vue_script__$5,
+      __vue_scope_id__$5,
+      __vue_is_functional_template__$5,
+      __vue_module_identifier__$5,
+      __vue_create_injector__$5,
+      undefined
+    );
+
+  //
+
+  var script$6 = {
+    inheritAttrs: false,
+    components: {
+      baseMultiErrorExtractor: baseMultiErrorExtractor
+    }
+  };
+
+  /* script */
+              var __vue_script__$6 = script$6;
+              
+  /* template */
+  var __vue_render__$6 = function() {
+    var _vm = this;
+    var _h = _vm.$createElement;
+    var _c = _vm._self._c || _h;
+    return _c(
+      "base-multi-error-extractor",
+      _vm._b(
+        {
+          staticStyle: { "margin-top": "1rem" },
+          scopedSlots: _vm._u([
+            {
+              key: "default",
+              fn: function(ref) {
+                var errorMessage = ref.errorMessage;
+                return [
+                  _c("label", { staticClass: "form-error is-visible" }, [
+                    _vm._v(_vm._s(errorMessage))
+                  ])
+                ]
+              }
+            }
+          ])
+        },
+        "base-multi-error-extractor",
+        _vm.$attrs,
+        false
+      )
+    )
+  };
+  var __vue_staticRenderFns__$6 = [];
+  __vue_render__$6._withStripped = true;
+
+    /* style */
+    var __vue_inject_styles__$6 = undefined;
+    /* scoped */
+    var __vue_scope_id__$6 = undefined;
+    /* module identifier */
+    var __vue_module_identifier__$6 = undefined;
+    /* functional template */
+    var __vue_is_functional_template__$6 = false;
+    /* component normalizer */
+    function __vue_normalize__$6(
+      template, style, script,
+      scope, functional, moduleIdentifier,
+      createInjector, createInjectorSSR
+    ) {
+      var component = (typeof script === 'function' ? script.options : script) || {};
+
+      {
+        component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\foundation6.vue";
+      }
+
+      if (!component.render) {
+        component.render = template.render;
+        component.staticRenderFns = template.staticRenderFns;
+        component._compiled = true;
+
+        if (functional) { component.functional = true; }
+      }
+
+      component._scopeId = scope;
+
+      return component
+    }
+    /* style inject */
+    function __vue_create_injector__$6() {
+      var head = document.head || document.getElementsByTagName('head')[0];
+      var styles = __vue_create_injector__$6.styles || (__vue_create_injector__$6.styles = {});
+      var isOldIE =
+        typeof navigator !== 'undefined' &&
+        /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+
+      return function addStyle(id, css) {
+        if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
+
+        var group = isOldIE ? css.media || 'default' : id;
+        var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
+
+        if (!style.ids.includes(id)) {
+          var code = css.source;
+          var index = style.ids.length;
+
+          style.ids.push(id);
+
+          if (isOldIE) {
+            style.element = style.element || document.querySelector('style[data-group=' + group + ']');
+          }
+
+          if (!style.element) {
+            var el = style.element = document.createElement('style');
+            el.type = 'text/css';
+
+            if (css.media) { el.setAttribute('media', css.media); }
+            if (isOldIE) {
+              el.setAttribute('data-group', group);
+              el.setAttribute('data-next-index', '0');
+            }
+
+            head.appendChild(el);
+          }
+
+          if (isOldIE) {
+            index = parseInt(style.element.getAttribute('data-next-index'));
+            style.element.setAttribute('data-next-index', index + 1);
+          }
+
+          if (style.element.styleSheet) {
+            style.parts.push(code);
+            style.element.styleSheet.cssText = style.parts
+              .filter(Boolean)
+              .join('\n');
+          } else {
+            var textNode = document.createTextNode(code);
+            var nodes = style.element.childNodes;
+            if (nodes[index]) { style.element.removeChild(nodes[index]); }
+            if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
+            else { style.element.appendChild(textNode); }
+          }
+        }
+      }
+    }
+    /* style inject SSR */
+    
+
+    
+    var foundation6$1 = __vue_normalize__$6(
+      { render: __vue_render__$6, staticRenderFns: __vue_staticRenderFns__$6 },
+      __vue_inject_styles__$6,
+      __vue_script__$6,
+      __vue_scope_id__$6,
+      __vue_is_functional_template__$6,
+      __vue_module_identifier__$6,
+      __vue_create_injector__$6,
+      undefined
+    );
+
   var multiErrorExtractor = {
     baseMultiErrorExtractor: baseMultiErrorExtractor,
     bootstrap3: bootstrap3$1,
+    bootstrap4: bootstrap4$1,
     foundation6: foundation6$1
   };
 
@@ -1224,6 +1591,10 @@ var VuelidateErrorExtractor = (function (exports) {
       validator: {
         type: Object,
         required: true
+      },
+      messages: {
+        type: Object,
+        default: function () { return ({}); }
       }
     },
     render: function render (h) {
@@ -1231,7 +1602,8 @@ var VuelidateErrorExtractor = (function (exports) {
     },
     provide: function provide () {
       return {
-        formValidator: this.validator
+        formValidator: this.validator,
+        formMessages: this.messages
       }
     }
   };
@@ -1286,7 +1658,7 @@ var VuelidateErrorExtractor = (function (exports) {
     }
   }
 
-  var version = '2.0.0';
+  var version = '2.1.0';
 
   exports.default = plugin;
   exports.singleErrorExtractorMixin = singleErrorExtractorMixin;
