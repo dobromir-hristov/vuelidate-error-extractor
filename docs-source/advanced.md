@@ -1,6 +1,36 @@
 ---
 title: Advanced Examples
 ---
+# Using with Scoped Slots
+If you really want to cut down on boilerplate, scoped slots are the way to go.
+
+**Vuelidate-error-extractor** supports scoped slots from the beginning, but with version 2, they just got better.
+
+```vue
+<form-wrapper :validator="$v.nestedObject">
+... other random content
+
+<form-group name="first_name" label="First name">
+  <template slot-scope="{ attributes, events }">
+    <input
+      v-bind="attributes"
+      v-on="events"
+      type="text"
+      v-model="nestedObject.first_name">
+  </template>
+</form-group>
+
+... other random content
+</form-wrapper>
+```
+
+The default slot scope now gives us access to props like `validator`, `attributes` and `events`. 
+
+* **Validator** - the validator object that the `form-group` uses. It will pick between the component validator or the injected one from the form-wrapper.
+* **Attributes** - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.
+* **Events** - this is a shorter version of the `@input="$v.form.field.$touch()"`. You can skip it if you don't need it.
+
+
 # i18n
 
 **Vuelidate-error-extractor** can be used with **vue-i18n** to provide error message translation.
@@ -125,12 +155,14 @@ We can create a new simple component to use with Quasar inputs.
 ```html
 <!--form-group.vue-->
 <template>
-  <div class="form-group"
-         :class="{error: hasErrors}">
-    <slot :errors="activeErrors"
-          :has-errors="hasErrors"
-          :first-error-message="firstErrorMessage"
-          :label="label"
+  <div
+    class="form-group"
+    :class="{ error: hasErrors }">
+    <slot 
+      :has-errors="hasErrors"
+      :first-error-message="firstErrorMessage"
+      :label="label"
+      :isValid="isValid"
     />
   </div>
 </template>
@@ -139,10 +171,11 @@ We can create a new simple component to use with Quasar inputs.
 Pass scoped props to quasar's q-input
 ```html
   <form-group>
-    <template scope="prop">
-      <q-input v-model="text" 
-               :error="prop.hasErrors" 
-               :float-label="prop.hasErrors ? prop.firstErrorMessage : 'Everything fine now'" />
+    <template slot-scope="{ hasErrors, firstErrorMessage, isValid }">
+      <q-input 
+        v-model="text" 
+        :error="hasErrors" 
+        :float-label="!isValid ? firstErrorMessage : 'Everything fine now'" />
     </template>
   </form-group>
 ```

@@ -22,7 +22,7 @@
 * :punch: **No extra styling** mucking your own
 * :muscle: **Tested**
 
-Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) styles out of the box, or can be totally customized via templates provided by the user.
+Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html), [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) and [Bootstrap 4](https://getbootstrap.com/docs/4.1/components/forms/#server-side) styles out of the box, or can be totally customized via your own custom templates.
 
 Vuelidate-error-extractor is also able to work with [vue-i18n](https://github.com/kazupon/vue-i18n) or any vue translation plugin as long as it exposes a `$t` function to the Vue prototype. We also support predefining custom validation messages for all components and overriding them per component.
 

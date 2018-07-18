@@ -24,7 +24,7 @@
   <meta name="msapplication-config" content="/favicons/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
     
-    <link rel="preload" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css" as="style"><link rel="preload" href="/vuelidate-error-extractor/assets/js/app.91d32b32.js" as="script"><link rel="preload" href="/vuelidate-error-extractor/assets/js/3.39994f5f.js" as="script"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/4.a3cc0057.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/1.c838be43.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/2.bbb6d8cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/0.80fc537b.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/5.f0c62c2c.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/6.d086f591.js">
+    <link rel="preload" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css" as="style"><link rel="preload" href="/vuelidate-error-extractor/assets/js/app.5de17e38.js" as="script"><link rel="preload" href="/vuelidate-error-extractor/assets/js/3.2541f226.js" as="script"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/4.a3cc0057.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/1.c838be43.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/2.bbb6d8cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/0.dadf27cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/5.3d873721.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/6.662cb710.js">
     <link rel="stylesheet" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css">
   </head>
   <body>
@@ -38,7 +38,7 @@ Vue<span class="token punctuation">.</span><span class="token function">componen
 </code></pre></div><p>You can also register the FormWrapper component locally just for a component by passing it to the <code>components</code> key on the Vue component that needs it.</p><p>To get the most benefit, provide the <code>attributes</code> options inside the Vuelidate-error-extractor initial setup.
 That way fields with the same name like <strong>email</strong> or <strong>name</strong> will get properly mapped to <strong>E-mail</strong> or <strong>User Name</strong>.</p><h2 id="usage"><a href="#usage" aria-hidden="true" class="header-anchor">#</a> Usage</h2><div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-wrapper</span> <span class="token attr-name">:validator</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>$v.form<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-wrapper</span> <span class="token attr-name">:validator</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>$v.form<span class="token punctuation">&quot;</span></span> <span class="token attr-name">:messages</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>localMessages<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-errors</span><span class="token punctuation">/&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-field</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>name<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>text<span class="token punctuation">&quot;</span></span> <span class="token attr-name">v-model</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>form.name<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
@@ -58,6 +58,9 @@ That way fields with the same name like <strong>email</strong> or <strong>name</
       form<span class="token punctuation">:</span> <span class="token punctuation">{</span>
         name<span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
         email<span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      localMessages<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        email<span class="token punctuation">:</span> <span class="token string">'{attribute} is not a proper email, you should check it again.'</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -69,7 +72,24 @@ That way fields with the same name like <strong>email</strong> or <strong>name</
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h3 id="single-error-extractor"><a href="#single-error-extractor" aria-hidden="true" class="header-anchor">#</a> Single Error Extractor</h3><p>When using with the <code>SingleErrorExtractor</code> component, its required to pass а <strong>name</strong> prop to each error extractor. That is a string representing the field's key in the form.</p><p>That way the <code>singleErrorExtractor</code> can look into the <code>formWrapper</code> validator and get the proper validations.</p><p>Using the name prop, the error message <code>attribute</code> is guessed from the global <code>$vuelidateErrorExtractor.attributes</code> object.</p><h3 id="multi-error-extractor"><a href="#multi-error-extractor" aria-hidden="true" class="header-anchor">#</a> Multi Error Extractor</h3><p>When the <code>FormWrapper</code> is used with the <code>MultiErrorExtractor</code>, the later requires no props what so ever. The extractor becomes a prop-less component. See the example above.</p><h2 id="how-it-works"><a href="#how-it-works" aria-hidden="true" class="header-anchor">#</a> How it works</h2><p>The <code>FormWrapper</code> is a component that has no markup, just a slot that renders everything passed to it.
+</code></pre></div><p>You have to pass the <code>validator</code> prop which is your form object's Vuelidate validation.
+Its a good practice to wrap your forms in an object like so:</p><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      form<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        name<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+        email<span class="token punctuation">:</span> <span class="token string">''</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  validations<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      name<span class="token punctuation">:</span> <span class="token punctuation">{</span> required <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      email<span class="token punctuation">:</span> <span class="token punctuation">{</span> required<span class="token punctuation">,</span> email <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>By adding a <code>messages</code> prop, you can override the globally defined messages.</p><div class="warning custom-block"><p class="custom-block-title">WARNING</p><p>Does not work in i18n mode for now!</p></div><h3 id="single-error-extractor"><a href="#single-error-extractor" aria-hidden="true" class="header-anchor">#</a> Single Error Extractor</h3><p>When using with the <code>SingleErrorExtractor</code> component, its required to pass а <strong>name</strong> prop to each error extractor. That is a string representing the field's key in the form.</p><p>That way the <code>singleErrorExtractor</code> can look into the <code>formWrapper</code> validator and get the proper validations.</p><p>Using the <code>name</code> prop, the error message <code>attribute</code> is guessed from the global <code>$vuelidateErrorExtractor.attributes</code> object.</p><h3 id="multi-error-extractor"><a href="#multi-error-extractor" aria-hidden="true" class="header-anchor">#</a> Multi Error Extractor</h3><p>When the <code>FormWrapper</code> is used with the <code>MultiErrorExtractor</code>, the later requires no props what so ever. The extractor becomes a prop-less component. See the example above.</p><h2 id="how-it-works"><a href="#how-it-works" aria-hidden="true" class="header-anchor">#</a> How it works</h2><p>The <code>FormWrapper</code> is a component that has no markup, just a slot that renders everything passed to it.
 It expects one prop, <code>validator</code> that it passes down to all the error extractor components via the provide/inject API.</p></div><div class="page-edit"><!----><!----></div><div class="page-nav"><p class="inner"><span class="prev">
         ← <a href="/vuelidate-error-extractor/multi_error_extractor.html" class="prev">
           Multi Error Extractor
@@ -77,6 +97,6 @@ It expects one prop, <code>validator</code> that it passes down to all the error
           Custom Templates
         </a> →
       </span></p></div></div></div></div>
-    <script src="/vuelidate-error-extractor/assets/js/3.39994f5f.js" defer></script><script src="/vuelidate-error-extractor/assets/js/app.91d32b32.js" defer></script>
+    <script src="/vuelidate-error-extractor/assets/js/3.2541f226.js" defer></script><script src="/vuelidate-error-extractor/assets/js/app.5de17e38.js" defer></script>
   </body>
 </html>

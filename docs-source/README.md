@@ -23,7 +23,7 @@ Display errors for a single form field or all the errors in a form summed up.
 * :punch: **No extra styling** mucking your own
 * :muscle: **Tested**
 
-Error messages can be styled to fit both [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html) and [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) styles out of the box, or can be totally customized via your own custom templates.
+Error messages can be styled to fit either [Foundation 6](http://foundation.zurb.com/sites/docs/forms.html), [Bootstrap 3](https://getbootstrap.com/docs/3.3/css/#forms) and [Bootstrap 4](https://getbootstrap.com/docs/4.1/components/forms/#server-side) styles out of the box, or can be totally customized via your own custom templates.
 
 The plugin is also able to work as a standalone component or in tandem with [vue-i18n](https://github.com/kazupon/vue-i18n) - see [Using with vue-i18n](advanced.md#i18n).
 
