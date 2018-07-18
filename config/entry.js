@@ -90,6 +90,15 @@ const entries = {
     },
     env: 'production'
   },
+  singleErrorExtractorBootstrap4: {
+    input: 'src/templates/single-error-extractor/bootstrap4.vue',
+    output: {
+      file: `dist/templates/single-error-extractor/bootstrap4.min.js`,
+      name: moduleName + 'singleErrorExtractorBootstrap4',
+      format: 'umd'
+    },
+    env: 'production'
+  },
   multiErrorExtractorMixin: {
     input: 'src/multi-error-extractor-mixin.js',
     output: {
@@ -122,6 +131,15 @@ const entries = {
     output: {
       file: `dist/templates/multi-error-extractor/bootstrap3.min.js`,
       name: moduleName + 'multiErrorExtractorBootstrap3',
+      format: 'umd'
+    },
+    env: 'production'
+  },
+  multiErrorExtractorBootstrap4: {
+    input: 'src/templates/multi-error-extractor/bootstrap4.vue',
+    output: {
+      file: `dist/templates/multi-error-extractor/bootstrap4.min.js`,
+      name: moduleName + 'multiErrorExtractorBootstrap4',
       format: 'umd'
     },
     env: 'production'
