@@ -51,7 +51,7 @@ export default {
       return { input: () => this.preferredValidator.$touch() }
     },
     isValid () {
-      return this.preferredValidator.$dirty && !this.hasErrors
+      return this.preferredValidator.$dirty ? !this.hasErrors : null
     }
   }
 }

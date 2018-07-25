@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+- '9'
+- '8'
+
+before_script:
+  - npm run list
+
+script: npm run test
