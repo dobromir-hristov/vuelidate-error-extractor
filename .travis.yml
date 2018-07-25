@@ -4,6 +4,6 @@ node_js:
 - '8'
 
 before_script:
-  - npm run list
+  - npm run lint
 
 script: npm run test
