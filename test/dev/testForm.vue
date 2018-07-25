@@ -36,6 +36,15 @@
                v-model="nestedObject.address.postal"
                @input="$v.nestedObject.address.postal.$touch()">
       </form-group>
+      <form-group name="phones.$each.0.model" label="First Phone models">
+        <template slot-scope="{ attributes, events }">
+          <input
+            v-bind="attributes"
+            v-on="events"
+            type="text"
+            v-model="nestedObject.phones[0].model">
+        </template>
+      </form-group>
       <button class="button" @click="$v.nestedObject.$touch()">Touch</button>
     </form-wrapper>
   </div>
@@ -61,7 +70,13 @@ export default {
           street: '',
           city: '',
           postal: ''
-        }
+        },
+        phones: [
+          {
+            model: '',
+            brand: ''
+          }
+        ]
       },
       attributesMap: {
         first_name: 'First Name',
@@ -90,6 +105,12 @@ export default {
         street: { required, minLength: minLength(5) },
         city: { required, minLength: minLength(5) },
         postal: { required }
+      },
+      phones: {
+        $each: {
+          model: { required },
+          brand: { minLength: minLength(8) }
+        }
       }
     }
   }

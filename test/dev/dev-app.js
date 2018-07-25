@@ -30,7 +30,8 @@ Vue.use(vuelidateErrorExtractor, {
     email: 'Email',
     'address.street': 'Street',
     'address.city': 'City',
-    'address.postal': 'Postal Code'
+    'address.postal': 'Postal Code',
+    'phones.model': 'Phone Model'
   }
   // validationKeys: configs.laravel
 })

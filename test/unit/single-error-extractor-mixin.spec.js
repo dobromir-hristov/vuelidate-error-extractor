@@ -45,7 +45,9 @@ function createWrapper (opts = {}) {
       $vuelidateErrorExtractor: {
         validationKeys: {},
         i18n: 'validation',
-        attributes: {}
+        attributes: {
+          text: 'Text override'
+        }
       }
     }
   }, mountOpts)
@@ -139,10 +141,7 @@ describe('single-error-extractor-mixin', () => {
           mocks: {
             $vuelidateErrorExtractor: {
               i18n: false,
-              messages: i18nMessages.en.validation,
-              attributes: {
-                text: 'Text override'
-              }
+              messages: i18nMessages.en.validation
             }
           }
         }
@@ -174,25 +173,36 @@ describe('single-error-extractor-mixin', () => {
 
     it('uses the globally provided attributes as attribute prop', () => {
       wrapper = createWrapper({
-        componentOpts: { template: '<div><form-element :validator="$v.text" label="Label" attribute="text"/></div>' },
+        componentOpts: { template: '<div><form-element :validator="$v.text" label="Label" name="text"/></div>' },
         mountOpts: {
           mocks: {
             $vuelidateErrorExtractor: {
               i18n: false,
-              messages: i18nMessages.en.validation,
-              attributes: {
-                text: 'Text override'
-              }
+              messages: i18nMessages.en.validation
             }
           }
         }
       })
       wrapper.vm.$v.$touch()
-      wrapper.setData({
-        text: ''
-      })
       const component = wrapper.find(formElement)
       expect(component.vm.activeErrorMessages).toContain('Field Text override is required')
+    })
+
+    it('overrides the globally provided attributes by a local attribute', () => {
+      wrapper = createWrapper({
+        componentOpts: { template: '<div><form-element :validator="$v.text" attribute="Local Text" name="text"/></div>' },
+        mountOpts: {
+          mocks: {
+            $vuelidateErrorExtractor: {
+              i18n: false,
+              messages: i18nMessages.en.validation
+            }
+          }
+        }
+      })
+      wrapper.vm.$v.$touch()
+      const component = wrapper.find(formElement)
+      expect(component.vm.activeErrorMessages).toContain('Field Local Text is required')
     })
   })
 
@@ -248,18 +258,14 @@ describe('single-error-extractor-mixin', () => {
   })
 
   describe('using a form wrapper', () => {
-    let wrapper
-    it('uses the injected validator', () => {
-      wrapper = createWrapper({
-        componentOpts: { template: '<div><form-wrapper :validator="$v"><form-element label="Label" attribute="text" name="text"/></form-wrapper></div>' },
+    it('uses the injected validator and global attributes', () => {
+      const wrapper = createWrapper({
+        componentOpts: { template: '<div><form-wrapper :validator="$v"><form-element label="Label" name="text"/></form-wrapper></div>' },
         mountOpts: {
           mocks: {
             $vuelidateErrorExtractor: {
               i18n: false,
-              messages: i18nMessages.en.validation,
-              attributes: {
-                text: 'Text override'
-              }
+              messages: i18nMessages.en.validation
             }
           }
         }
@@ -267,6 +273,40 @@ describe('single-error-extractor-mixin', () => {
       wrapper.vm.$v.$touch()
       const component = wrapper.find(formElement)
       expect(component.vm.activeErrorMessages).toContain('Field Text override is required')
+    })
+  })
+
+  describe('using with nested $each rules', () => {
+    it('finds the proper validator and assigns proper attributes', () => {
+      const wrapper = createWrapper({
+        componentOpts: {
+          template: '<form-wrapper :validator="$v"><form-element name="phones.$each.0.batteries.$each.0.model"/></form-wrapper>',
+          data: () => ({ phones: [{ batteries: [{ model: null }] }] }),
+          validations: {
+            phones: {
+              $each: {
+                batteries: {
+                  $each: { model: { required } }
+                }
+              }
+            }
+          }
+        },
+        mountOpts: {
+          mocks: {
+            $vuelidateErrorExtractor: {
+              i18n: false,
+              messages: i18nMessages.en.validation,
+              attributes: {
+                'phones.batteries.model': 'Phone Battery model'
+              }
+            }
+          }
+        }
+      })
+      wrapper.vm.$v.$touch()
+      const component = wrapper.find(formElement)
+      expect(component.vm.activeErrorMessages).toContain('Field Phone Battery model is required')
     })
   })
 })

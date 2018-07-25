@@ -1,4 +1,4 @@
-import { flattenValidatorObjects } from './utils'
+import { flattenValidatorObjects, get } from './utils'
 import baseErrorsMixin from './base-errors-mixin'
 
 export default {
@@ -21,7 +21,7 @@ export default {
     errors () {
       return flattenValidatorObjects(this.preferredValidator).map(error => {
         const params = Object.assign({}, error.params, {
-          attribute: this.mergedAttributes[error.propName]
+          attribute: get(this.mergedAttributes, error.propName, error.propName)
         })
         return Object.assign({}, error, { params })
       })

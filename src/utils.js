@@ -50,20 +50,25 @@ export function getValidationObject (validationKey, key, params = {}) {
   }
 }
 
-function getAttribute (attributes, attribute, label, name) {
+function getAttribute (attributes, attribute, label, name = '') {
   if (attribute) return attribute
-  if (attributes[name]) return attributes[name]
-  if (attributes[label]) return attributes[label]
-  return label
+  if (!name) return label
+  // strip out the $each
+  const normalizedName = name.replace(/\$each\.\d\./g, '')
+  return attributes[normalizedName] || normalizedName
 }
 
 export function flattenValidatorObjects (validator, propName) {
   return Object.entries(validator)
-    .filter(([key, value]) => !key.startsWith('$'))
+    .filter(([key, value]) => !key.startsWith('$') || key === '$each')
     .reduce((errors, [key, value]) => {
       // its probably a deeply nested object
       if (typeof value === 'object') {
-        return errors.concat(flattenValidatorObjects(value, propName ? `${propName}.${key}` : key))
+        const nestedValidatorName =
+          (key === '$each' || !isNaN(parseInt(key))) ? propName
+            : propName ? `${propName}.${key}`
+            : key
+        return errors.concat(flattenValidatorObjects(value, nestedValidatorName))
       } // else its the validated prop
       const params = Object.assign({}, validator.$params[key])
       delete params.type
