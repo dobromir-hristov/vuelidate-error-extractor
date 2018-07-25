@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.2.0 
+ * vuelidate-error-extractor v2.2.1 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -1548,7 +1548,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.2.0';
+var version = '2.2.1';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;
