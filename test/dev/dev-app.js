@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import vuelidate from 'vuelidate'
-import VueI18n from 'vue-i18n'
-import vuelidateErrorExtractor, { templates, configs } from '../../src/index'
+// import VueI18n from 'vue-i18n'
+import vuelidateErrorExtractor, { templates } from '../../src/index'
 import testForm from './testForm.vue'
 
 const messages = {
