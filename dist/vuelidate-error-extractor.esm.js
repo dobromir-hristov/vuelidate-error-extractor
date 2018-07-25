@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.1.1 
+ * vuelidate-error-extractor v2.2.0 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -58,10 +58,13 @@ function getValidationObject (validationKey, key, params) {
 }
 
 function getAttribute (attributes, attribute, label, name) {
+  if ( name === void 0 ) name = '';
+
   if (attribute) { return attribute }
-  if (attributes[name]) { return attributes[name] }
-  if (attributes[label]) { return attributes[label] }
-  return label
+  if (!name) { return label }
+  // strip out the $each
+  var normalizedName = name.replace(/\$each\.\d\./g, '');
+  return attributes[normalizedName] || normalizedName
 }
 
 function flattenValidatorObjects (validator, propName) {
@@ -70,7 +73,7 @@ function flattenValidatorObjects (validator, propName) {
       var key = ref[0];
       var value = ref[1];
 
-      return !key.startsWith('$');
+      return !key.startsWith('$') || key === '$each';
   })
     .reduce(function (errors, ref) {
       var key = ref[0];
@@ -78,7 +81,11 @@ function flattenValidatorObjects (validator, propName) {
 
       // its probably a deeply nested object
       if (typeof value === 'object') {
-        return errors.concat(flattenValidatorObjects(value, propName ? (propName + "." + key) : key))
+        var nestedValidatorName =
+          (key === '$each' || !isNaN(parseInt(key))) ? propName
+            : propName ? (propName + "." + key)
+            : key;
+        return errors.concat(flattenValidatorObjects(value, nestedValidatorName))
       } // else its the validated prop
       var params = Object.assign({}, validator.$params[key]);
       delete params.type;
@@ -861,7 +868,7 @@ var multiErrorExtractorMixin = {
 
       return flattenValidatorObjects(this.preferredValidator).map(function (error) {
         var params = Object.assign({}, error.params, {
-          attribute: this$1.mergedAttributes[error.propName]
+          attribute: get(this$1.mergedAttributes, error.propName, error.propName)
         });
         return Object.assign({}, error, { params: params })
       })
@@ -1535,7 +1542,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.1.1';
+var version = '2.2.0';
 
 export default plugin;
 export { singleErrorExtractorMixin, multiErrorExtractorMixin, index$1 as configs, index as templates, version };

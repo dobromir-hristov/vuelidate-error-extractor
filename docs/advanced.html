@@ -24,7 +24,7 @@
   <meta name="msapplication-config" content="/favicons/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
     
-    <link rel="preload" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css" as="style"><link rel="preload" href="/vuelidate-error-extractor/assets/js/app.ad4ff8bf.js" as="script"><link rel="preload" href="/vuelidate-error-extractor/assets/js/5.3d873721.js" as="script"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/4.a3cc0057.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/1.c838be43.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/2.bbb6d8cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/3.2541f226.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/0.dadf27cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/6.662cb710.js">
+    <link rel="preload" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css" as="style"><link rel="preload" href="/vuelidate-error-extractor/assets/js/app.dca96ecf.js" as="script"><link rel="preload" href="/vuelidate-error-extractor/assets/js/5.424d2761.js" as="script"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/4.a3cc0057.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/1.c838be43.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/2.bbb6d8cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/3.2541f226.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/0.dadf27cd.js"><link rel="prefetch" href="/vuelidate-error-extractor/assets/js/6.662cb710.js">
     <link rel="stylesheet" href="/vuelidate-error-extractor/assets/css/7.styles.a73ff961.css">
   </head>
   <body>
@@ -45,7 +45,33 @@
 
 ... other random content
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form-wrapper</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>The default slot scope now gives us access to props like <code>validator</code>, <code>attributes</code> and <code>events</code>.</p><ul><li><strong>Validator</strong> - the validator object that the <code>form-group</code> uses. It will pick between the component validator or the injected one from the form-wrapper.</li><li><strong>Attributes</strong> - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.</li><li><strong>Events</strong> - this is a shorter version of the <code>@input=&quot;$v.form.field.$touch()&quot;</code>. You can skip it if you don't need it.</li></ul><h1 id="i18n"><a href="#i18n" aria-hidden="true" class="header-anchor">#</a> i18n</h1><p><strong>Vuelidate-error-extractor</strong> can be used with <strong>vue-i18n</strong> to provide error message translation.</p><p>To enable the i18n mode, you have to pass a string containing the top structure of your validation messages.
+</code></pre></div><p>The default slot scope now gives us access to props like <code>validator</code>, <code>attributes</code> and <code>events</code>.</p><ul><li><strong>Validator</strong> - the validator object that the <code>form-group</code> uses. It will pick between the component validator or the injected one from the form-wrapper.</li><li><strong>Attributes</strong> - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.</li><li><strong>Events</strong> - this is a shorter version of the <code>@input=&quot;$v.form.field.$touch()&quot;</code>. You can skip it if you don't need it.</li></ul><h1 id="nested-objects-with-each"><a href="#nested-objects-with-each" aria-hidden="true" class="header-anchor">#</a> Nested objects with $each</h1><p>When you need to validate a nested set of objects, you can use the <strong>$each</strong> config keyword inside Vuelidate validations.</p><p>Lets say you have a list of phones and each phone should have a model number.</p><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token function">data</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      phones<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          model<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  validations<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      phones<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        $each<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          model<span class="token punctuation">:</span> <span class="token punctuation">{</span> required <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>All you have to do now is tell vuelidate-error-extractor how to name that field in a human readable manner and which field to validate exactly.</p><p>Set inside the <code>attributes</code> initial setup object an entry like <code>'phones.model': 'Phone model'</code>. Now vuelidate-error-extractor will know that we want to validate a <em>Phone Model</em> field.</p><p>Your field will look like this. Example uses the <code>form-wrapper</code>.</p><div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-wrapper</span> <span class="token attr-name">:validator</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>$v<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>phones.$each.0.model<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span>
+        <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>text<span class="token punctuation">&quot;</span></span>
+        <span class="token attr-name">v-model</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>phones[0].model<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form-group</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form-wrapper</span><span class="token punctuation">&gt;</span></span>
+
+</code></pre></div><p>Under the hood it loops all the nested rules and it generates a path like <code>phones.$each.0.model</code>. That gets stripped out of <strong>$each</strong> and <strong>index</strong> so we can have attributes mapping - <code>phones.model</code> to <strong>Phone Model</strong>.</p><p>You can go as deep as you want <code>phones.$each.0.apps.$each.0.profiles.$each.0.name</code> corresponds to <code>phones.apps.profiles.name</code>.</p><h1 id="i18n"><a href="#i18n" aria-hidden="true" class="header-anchor">#</a> i18n</h1><p><strong>Vuelidate-error-extractor</strong> can be used with <strong>vue-i18n</strong> to provide error message translation.</p><p>To enable the i18n mode, you have to pass a string containing the top structure of your validation messages.
 E.g.
 If your validations are looking like this:</p><div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> message <span class="token operator">=</span> <span class="token punctuation">{</span>
   en<span class="token punctuation">:</span> <span class="token punctuation">{</span>
@@ -136,6 +162,6 @@ To solve our issue, we just provide a small map with the params we want to provi
         ← <a href="/vuelidate-error-extractor/custom_templates.html" class="prev">
           Custom Templates
         </a></span><!----></p></div></div></div></div>
-    <script src="/vuelidate-error-extractor/assets/js/5.3d873721.js" defer></script><script src="/vuelidate-error-extractor/assets/js/app.ad4ff8bf.js" defer></script>
+    <script src="/vuelidate-error-extractor/assets/js/5.424d2761.js" defer></script><script src="/vuelidate-error-extractor/assets/js/app.dca96ecf.js" defer></script>
   </body>
 </html>

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.1.1...v2.2.0) (2018-07-25)
+
+
+### Bug Fixes
+
+* Add Docs for Nested object validation using $each ([60e8e21](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/60e8e21))
+
+
+### Features
+
+* add ability to walk through nested $each declarations. ([2821014](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/2821014))
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.1.0...v2.1.1) (2018-07-18)
 
