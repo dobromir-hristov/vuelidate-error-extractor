@@ -30,6 +30,52 @@ The default slot scope now gives us access to props like `validator`, `attribute
 * **Attributes** - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.
 * **Events** - this is a shorter version of the `@input="$v.form.field.$touch()"`. You can skip it if you don't need it.
 
+# Nested objects with $each
+When you need to validate a nested set of objects, you can use the **$each** config keyword inside Vuelidate validations.
+
+Lets say you have a list of phones and each phone should have a model number.
+
+```js
+export default {
+  data () {
+    return {
+      phones: [
+        {
+          model: '',
+        }
+      ]
+    }
+   },
+  validations: {
+      phones: {
+        $each: {
+          model: { required }
+        }
+      }
+   }
+}
+```
+
+All you have to do now is tell vuelidate-error-extractor how to name that field in a human readable manner and which field to validate exactly.
+
+Set inside the `attributes` initial setup object an entry like `'phones.model': 'Phone model'`. Now vuelidate-error-extractor will know that we want to validate a _Phone Model_ field.
+ 
+Your field will look like this. Example uses the `form-wrapper`.
+
+```vue
+<form-wrapper :validator="$v">
+  <form-group name="phones.$each.0.model">
+      <input
+        type="text"
+        v-model="phones[0].model">
+  </form-group>
+</form-wrapper>
+
+```
+
+Under the hood it loops all the nested rules and it generates a path like `phones.$each.0.model`. That gets stripped out of **$each** and **index** so we can have attributes mapping - `phones.model` to **Phone Model**.
+
+You can go as deep as you want `phones.$each.0.apps.$each.0.profiles.$each.0.name` corresponds to `phones.apps.profiles.name`.
 
 # i18n
 
