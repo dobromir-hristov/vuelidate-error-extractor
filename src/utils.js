@@ -44,13 +44,13 @@ export function getValidationObject (validationKey, key, params = {}) {
     $invalid: this.preferredValidator.$invalid,
     // Add the label for the :attribute parameter that is used in most Laravel validations
     params: Object.assign({}, {
-      attribute: getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name),
+      attribute: this.resolvedAttribute,
       label: this.label
     }, params, this.validatorParams)
   }
 }
 
-function getAttribute (attributes, attribute, label, name = '') {
+export function getAttribute (attributes, attribute, label, name = '') {
   if (attribute) return attribute
   if (!name) return label
   // strip out the $each

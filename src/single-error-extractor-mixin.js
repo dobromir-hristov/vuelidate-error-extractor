@@ -1,4 +1,4 @@
-import { get, getValidationObject } from './utils'
+import { get, getValidationObject, getAttribute } from './utils'
 import baseErrorsMixin from './base-errors-mixin'
 
 export default {
@@ -52,6 +52,9 @@ export default {
     },
     isValid () {
       return this.preferredValidator.$dirty ? !this.hasErrors : null
+    },
+    resolvedAttribute () {
+      return getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name)
     }
   }
 }
