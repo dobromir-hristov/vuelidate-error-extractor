@@ -48,7 +48,8 @@ module.exports = {
       'multi_error_extractor',
       'form_wrapper',
       'custom_templates',
-      'advanced'
+      'advanced',
+      'other_frameworks'
     ]
   },
   ga: 'UA-29425482-9',
