@@ -22,6 +22,10 @@ export default {
     }
   },
   computed: {
+    /**
+     * Filters out only the active errors
+     * @return {Array}
+     */
     activeErrors () {
       return this.errors.filter(error => error.hasError && error.$dirty)
     },

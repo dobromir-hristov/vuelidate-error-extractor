@@ -25,6 +25,13 @@ export default {
         })
         return Object.assign({}, error, { params })
       })
+    },
+    /**
+     * Returns if the form has any errors
+     * @return {boolean}
+     */
+    hasErrors () {
+      return !!this.activeErrors.length
     }
   }
 }
