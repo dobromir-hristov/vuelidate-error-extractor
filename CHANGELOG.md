@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.2"></a>
+## [2.2.2](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.2.1...v2.2.2) (2018-07-29)
+
+
+### Bug Fixes
+
+* fix multiErrorExtractor hasErrors property ([1c2a55f](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/1c2a55f))
+* fix travis lint command ([426ab9d](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/426ab9d))
+* rename travis config file ([1448de3](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/1448de3))
+* return null if not dirty on isValid computed property ([df15584](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/df15584))
+
+
+
 <a name="2.2.1"></a>
 ## [2.2.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.2.0...v2.2.1) (2018-07-25)
 

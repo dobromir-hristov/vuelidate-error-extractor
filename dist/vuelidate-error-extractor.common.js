@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.2.1 
+ * vuelidate-error-extractor v2.2.2 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -57,7 +57,7 @@ function getValidationObject (validationKey, key, params) {
     $invalid: this.preferredValidator.$invalid,
     // Add the label for the :attribute parameter that is used in most Laravel validations
     params: Object.assign({}, {
-      attribute: getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name),
+      attribute: this.resolvedAttribute,
       label: this.label
     }, params, this.validatorParams)
   }
@@ -138,6 +138,10 @@ var baseErrorsMixin = {
     }
   },
   computed: {
+    /**
+     * Filters out only the active errors
+     * @return {Array}
+     */
     activeErrors: function activeErrors () {
       return this.errors.filter(function (error) { return error.hasError && error.$dirty; })
     },
@@ -226,7 +230,10 @@ var singleErrorExtractorMixin = {
       return { input: function () { return this$1.preferredValidator.$touch(); } }
     },
     isValid: function isValid () {
-      return this.preferredValidator.$dirty && !this.hasErrors
+      return this.preferredValidator.$dirty ? !this.hasErrors : null
+    },
+    resolvedAttribute: function resolvedAttribute () {
+      return getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name)
     }
   }
 };
@@ -878,6 +885,13 @@ var multiErrorExtractorMixin = {
         });
         return Object.assign({}, error, { params: params })
       })
+    },
+    /**
+     * Returns if the form has any errors
+     * @return {boolean}
+     */
+    hasErrors: function hasErrors () {
+      return !!this.activeErrors.length
     }
   }
 };
@@ -1548,7 +1562,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.2.1';
+var version = '2.2.2';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;
