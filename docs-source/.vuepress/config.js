@@ -50,7 +50,10 @@ module.exports = {
       'custom_templates',
       'advanced',
       'other_frameworks'
-    ]
+    ],
+    repo: 'dobromir-hristov/vuelidate-error-extractor',
+    editLinks: true,
+    docsDir: 'docs-source',
   },
   ga: 'UA-29425482-9',
   base: '/vuelidate-error-extractor/',

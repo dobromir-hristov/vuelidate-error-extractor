@@ -140,3 +140,50 @@ Now we can use it like so:
 
 
 <iframe src="https://codesandbox.io/embed/v834qo51o7?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+## Usage with MintUI
+
+Mint-UI has only one field that supports validation state so its really easy to create a wrapper around it.
+
+```vue
+<template>
+  <mt-field :v-bind="$attrs" :state="state" v-model="model"><slot/></mt-field>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  name: 'FormGroup',
+  extends: singleErrorExtractorMixin,
+  inheritAttrs: false,
+  props: {
+      value: {
+          type: [Number, String],
+          default: null
+      }
+  },
+  computed: {
+    model: {
+        get () {
+            return this.value
+        },
+        set (value) {
+            this.preferredValidator.$touch()
+            this.$emit('input', value)
+        }
+    },
+    state () {
+      return this.hasErrors ? 'error': 
+      this.isValid ? 'success': 
+      null
+    }
+  }
+};
+</script>
+```
+
+After we register the global component we can use it like so:
+```vue
+<form-group :validator="$v.form.name" v-model="form.name" label="Some label"/>
+```
+
+<iframe src="https://codesandbox.io/embed/myrn9y85wx?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
