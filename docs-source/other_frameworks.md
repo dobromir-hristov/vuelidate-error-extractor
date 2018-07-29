@@ -51,6 +51,8 @@ You can be more specific with the props that get assigned, but for simplicity th
 </el-form>
 ```
 
+### Live ElementUI example
+
 <iframe src="https://codesandbox.io/embed/yjy0v2x7rj?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
 ## Usage with iView
@@ -137,7 +139,7 @@ Now we can use it like so:
 ```
 
 
-
+### Live Vuetify example
 
 <iframe src="https://codesandbox.io/embed/v834qo51o7?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
@@ -186,4 +188,50 @@ After we register the global component we can use it like so:
 <form-group :validator="$v.form.name" v-model="form.name" label="Some label"/>
 ```
 
+### Live MintUI example
+
 <iframe src="https://codesandbox.io/embed/myrn9y85wx?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+## Usage with Quasar
+
+Quasar offers the `q-field` component, that has an error and a message prop. We can leverage those and create
+an invisible wrapper around it.
+
+```vue
+<template>
+  <q-field
+    v-bind="$attrs"
+    :label="label"
+    :error="hasErrors"
+    :error-label="firstErrorMessage"
+  >
+    <slot/>
+  </q-field>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  name: "FormGroup",
+  extends: singleErrorExtractorMixin,
+  inheritAttrs: false
+};
+</script>
+```
+
+Then we can register it globally and use it with `q-input` or any other form element.
+```vue
+ <form-group 
+    :validator="$v.form.email"
+    label="Email with wrapper"
+  >
+    <q-input
+      v-model="form.email"
+      placeholder="Input Email"
+      @input="$v.form.email.$touch()"
+    />
+  </form-group>
+```
+
+### Live Quasar example
+
+<iframe src="https://codesandbox.io/embed/nmzw8rzl?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
