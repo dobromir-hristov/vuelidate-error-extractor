@@ -192,6 +192,30 @@ After we register the global component we can use it like so:
 
 <iframe src="https://codesandbox.io/embed/myrn9y85wx?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
+## Usage with MuseUI
+This is very similar to how ElementUI and iView work but you pass an `error-text` prop.
+
+```vue
+<template>
+  <mu-form-item v-bind="$attrs" :error-text="firstErrorMessage" :label="label">
+    <slot/>
+  </mu-form-item>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  extends: singleErrorExtractorMixin,
+  inheritAttrs: false
+};
+</script>
+```
+
+```vue
+<form-group :validator="$v.name" attribute="Name">
+  <mu-text-field type="password" v-model="name" prop="name"/>
+</form-group>
+```
+
 ## Usage with Quasar
 
 Quasar offers the `q-field` component, that has an error and a message prop. We can leverage those and create
@@ -235,3 +259,84 @@ Then we can register it globally and use it with `q-input` or any other form ele
 ### Live Quasar example
 
 <iframe src="https://codesandbox.io/embed/nmzw8rzl?autoresize=1&module=%2Fsrc%2Fcomponents%2FFormSummary.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+## Usage with Vue Material
+
+Vue Material uses a very simple wrapper around its inputs to give them error state. Just wrap your input with an `md-field` and give it a class of `md-invalid` and you are done.
+
+```vue
+<template>
+  <md-field :class="{ 'md-invalid': hasErrors }">
+    <label> {{label}} </label>
+    <slot/>
+    <span class="md-error" v-if="hasErrors">{{ firstErrorMessage }}</span>
+  </md-field>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  extends: singleErrorExtractorMixin
+};
+</script>
+```
+Usage is straight forward
+
+```vue
+<form-group :validator="$v.form.email" label="Email Input">
+  <md-input 
+    v-model="form.email"
+    @input="$v.form.email.$touch()"
+  />
+</form-group>
+```
+
+### Live Vue Material Example
+
+<iframe src="https://codesandbox.io/embed/v37lk6zlvl?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+## Usage with BootstrapVue
+
+Bootstrap Vue offers the `v-form-group` component with `invalid-feedback` and `state` props. It expects an error message and a boolean state, so we pass the `firstErrorMessage` and the `isValid`.
+
+Added bonus is the scoped slot with `attrs` and `listeners` props. You can skip those, but they can reduce boilerplate in the future.
+
+```vue
+<template>
+  <b-form-group
+    :invalid-feedback="firstErrorMessage"
+    :state="isValid"
+    :label="label"
+  >
+    <slot
+      :attrs="{ state: isValid }"
+      :listeners="{ input: () => preferredValidator.$touch() }"
+    />
+  </b-form-group>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+
+export default {
+  name: "FormElement",
+  extends: singleErrorExtractorMixin
+};
+</script>
+```
+
+Usage is simple
+
+```vue
+<form-group :validator="$v.form.email" label="Email with wrapper">
+  <template slot-scope="{ attrs, listeners }">
+    <b-form-input
+      v-bind="attrs"
+      v-on="listeners"
+      v-model="form.email"
+    />
+  </template>  
+</form-group>
+```
+
+### Live Bootstrap Vue Example
+
+<iframe src="https://codesandbox.io/embed/2pww743mrr?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
