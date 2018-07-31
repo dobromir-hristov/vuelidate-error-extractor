@@ -392,3 +392,52 @@ And we use like normal
 ### Live Buefy example
 
 <iframe src="https://codesandbox.io/embed/v6jl8qz0p0?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+## Usage with Vuesax
+
+Vuesax just has one input the `vs-input` that accepts `vs-danger` and `vs-success` as booleans props. You can provide `vs-danger-text` prop which is waits for a string.
+
+```vue
+<template>
+  <vs-input 
+      :vs-danger="hasError" 
+      :vs-success="isValid"  
+      :vs-label="label"
+      :vs-danger-text="firstErrorMessage" 
+      v-model="model"
+  />
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  name: 'FormInput',
+  extends: singleErrorExtractorMixin,
+  props: {
+      value: {
+          type: [Object, String, Number],
+          default: null
+      }
+  },
+  computed: {
+    model : {
+        get () {
+            return this.value
+        },
+        set (value) {
+            this.$emit('input', value)
+        }
+    }
+  }
+};
+</script>
+```
+
+Use it like so:
+
+```vue
+<form-input
+  :validator="$v.form.name"
+  label="Name field"
+  v-model="$v.form.name"
+/>
+```
