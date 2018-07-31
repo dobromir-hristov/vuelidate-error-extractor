@@ -340,3 +340,55 @@ Usage is simple
 ### Live Bootstrap Vue Example
 
 <iframe src="https://codesandbox.io/embed/2pww743mrr?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+
+## Usage with Buefy
+
+Buefy exposes the `b-field` component, which has `type` and `message` props. We supply a type of `is-danger` and the `firstErrorMessage` to these respectively.
+
+```vue
+<template>
+  <b-field
+    :label="label"
+    :custom-class="customClass"
+    :type="type"
+    :message="firstErrorMessage">
+     <slot/>
+  </b-field>
+</template>
+<script>
+import { singleErrorExtractorMixin } from "vuelidate-error-extractor";
+export default {
+  extends: singleErrorExtractorMixin,
+  computed: {
+    type() {
+      return this.hasErrors ? "is-danger" : this.isValid ? "is-success" : null;
+    },
+    customClass() {
+      return this.hasErrors
+        ? "has-text-danger"
+        : this.isValid
+          ? "has-text-success"
+          : null;
+    }
+  }
+};
+</script>
+```
+
+And we use like normal
+
+```vue
+ <form-group
+      :validator="$v.form.email"
+      label="Email with wrapper">
+    <b-input 
+      v-model="form.email"
+      @input="$v.form.email.$touch()"
+    />
+</form-group>
+```
+
+### Live Buefy example
+
+<iframe src="https://codesandbox.io/embed/v6jl8qz0p0?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
