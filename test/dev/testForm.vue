@@ -52,12 +52,12 @@
 <script>
 import { required, minLength, maxLength, email, numeric } from 'vuelidate/lib/validators'
 import MultiErrorExtractor from '../../src/templates/multi-error-extractor/bootstrap3'
-import formWrapper from '../../src/templates/form-wrapper'
+import FormWrapper from '../../src/templates/form-wrapper'
 
 export default {
   components: {
     MultiErrorExtractor,
-    formWrapper
+    FormWrapper
   },
   data () {
     return {

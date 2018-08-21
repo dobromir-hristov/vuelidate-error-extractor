@@ -5,7 +5,7 @@ title: Multi Error Extractor
 # Multi Error Extractor
 The Multi Error Extractor is a component that displays all the errors of a form.
 
-It can receive a validator object either from a direct prop or via a `formWrapper`, see [Using a Form Wrapper](form_wrapper.md). 
+It can receive a validator object either from a direct prop or via a `FormWrapper`, see [Using a Form Wrapper](form_wrapper.md). 
 An `attributes` prop cam be passed to identify each field's name in the form. Passing a local `attributes` prop will override the global `attributes`.
 
 The component does not come with any special styling or markup. We do however provide optional prebuilt templates for Foundation6 and Bootstrap3.
@@ -62,9 +62,9 @@ The required error message will be `Field Name should be filled in.` because we 
 
 To implement your own Multi Error Extractor template, please checkout the [Creating Custom Components](custom_templates.md#multi-error-extractor-component) page.
 
-### Using with formWrapper
+### Using with FormWrapper
 
-Similar to Single Error Extractors, when used with `formWrapper` component, the `validator` prop is not needed any more. If you have the `{attributes}`  defined globally, you can rely on them, making the component prop-less.
+Similar to Single Error Extractors, when used with `FormWrapper` component, the `validator` prop is not needed any more. If you have the `{attributes}`  defined globally, you can rely on them, making the component prop-less.
 
 Checkout the [Using a FormWrapper](form_wrapper.md) section to see how to use the FormWrapper component.
 
@@ -72,6 +72,6 @@ Checkout the [Using a FormWrapper](form_wrapper.md) section to see how to use th
 
 | Prop            | Type             | Required  | Description                                                                                                                                                                                                                         |
 | --------------- | ---------------- | --------  | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| attributes      | Object           | required* | The attributes object is a map of `field_name: Field Name` representing each field in the form with a proper title. Not required with formWrapper component.   |
-| validator       | Vuelidate object | required* | The vuelidate validator of a form object. Not required when used with formWrapper component.                                                                   |
+| attributes      | Object           | required* | The attributes object is a map of `field_name: Field Name` representing each field in the form with a proper title. Not required with FormWrapper component.   |
+| validator       | Vuelidate object | required* | The vuelidate validator of a form object. Not required when used with FormWrapper component.                                                                   |
 | messages        | Object           | optional  | A collection of local error messages that overwrite the global ones. **Does not work with i18n mode!**                                                         |

@@ -14,7 +14,7 @@ You need to register the FormWrapper as a new Vue component. How you name it is 
 import { templates } from 'vuelidate-error-extractor'
 
 // This will register the component globally
-Vue.component('FormWrapper', templates.formWrapper)
+Vue.component('FormWrapper', templates.FormWrapper)
 ```
 You can also register the FormWrapper component locally just for a component by passing it to the `components` key on the Vue component that needs it.
 
@@ -92,9 +92,9 @@ Does not work in i18n mode for now!
 ### Single Error Extractor
 When using with the `SingleErrorExtractor` component, its required to pass а **name** prop to each error extractor. That is a string representing the field's key in the form.
 
-That way the `singleErrorExtractor` can look into the `formWrapper` validator and get the proper validations.
+That way the `singleErrorExtractor` can look into the `FormWrapper` component and get the proper validations.
  
-Using the `name` prop, the error message `attribute` is guessed from the global `$vuelidateErrorExtractor.attributes` object. 
+Using the `name` prop, the error message `attribute` is picked from the globally defined upon setup `attributes` object. 
 
 ### Multi Error Extractor
 

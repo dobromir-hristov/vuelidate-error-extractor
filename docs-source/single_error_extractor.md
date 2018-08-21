@@ -5,7 +5,7 @@ title: Single Error Extractor
 # Single Error Extractor
 The Single Error Extractor is a component that displays the errors of a single form input. It can be used with plain html inputs or with any custom components.
 
-It can receive a validator from a `formWrapper`, see [Using a Form Wrapper](form_wrapper.md) or a local validator object. It can also use global attribute defaults or local attribute overrides. 
+It can receive a validator from a `FormWrapper`, see [Using a Form Wrapper](form_wrapper.md) or a local validator object. It can also use global attribute defaults or local attribute overrides. 
 
 It does not come with any special styling or templates, it leaves that to the developers. We do however provide prebuilt ones for Foundation6, Bootstrap3 and Bootstrap4.
 
@@ -61,8 +61,8 @@ export default {
 
 The required error message will be `Field Name should be filled in.` instead of the globally defined one.
 
-### Using with formWrapper
-If used with the `formWrapper` component, you don't need to pass the `validator` prop any more as it will get auto injected. What you must provide however is a `name` param.
+### Using with FormWrapper
+If used with the `FormWrapper` component, you don't need to pass the `validator` prop any more as it will get auto injected. What you must provide however is a `name` param.
 That will be used to both find the appropriate field validator inside the main `validator` object as well as try to guess the `{attribute}` name of the field you are validating.
 
 ```vue
@@ -82,5 +82,5 @@ Checkout the [Using a FormWrapper](form_wrapper.md) section to see how to use th
 | validator       | Vuelidate object | required  | The vuelidate object to pass for each input element. E.g. for the `username` data property you will have to pass `<form-group :validator="$v.username">`.                                                                           |
 | messages        | Object           | optional  | A collection of local error messages that have precedence over the global ones. This comes in handy when you need to override or set a single use case message. **Does not work with i18n mode!**                                   |
 | validatorParams | Object           | optional  | Optional parameters to override or provide to the validation message. Mostly used to provide additional values like in the `other` property in laravel's `same` validation. [Validator Params](./advanced.md#validator-params)      |
-| name            | String           | optional* | The name of the current field in the `validator` object when used with the `formWrapper` component. For nested objects use like `address.street.first`. Also used to fetch the attribute from the globally provided `{attributes}`. |
+| name            | String           | optional* | The name of the current field in the `validator` object when used with the `FormWrapper` component. For nested objects use like `address.street.first`. Also used to fetch the attribute from the globally provided `{attributes}`. |
 | showSingleError | Boolean          | optional* | Whether to display one error at a time or all the errors.                                                                                                                                                                           |

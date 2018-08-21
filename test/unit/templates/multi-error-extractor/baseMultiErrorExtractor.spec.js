@@ -1,5 +1,5 @@
 import baseMultiErrorExtractor from '@/templates/multi-error-extractor/baseMultiErrorExtractor'
-import formWrapper from '@/templates/form-wrapper.js'
+import FormWrapper from '@/templates/form-wrapper.js'
 import { required, minLength, email, maxLength } from 'vuelidate/lib/validators'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuelidate from 'vuelidate'
@@ -26,7 +26,7 @@ function createWrapper (opts = {}) {
   })
   const component = _merge({
     template: '<div><form-wrapper :validator="$v.form"><multi-errors/></form-wrapper></div>',
-    components: { multiErrors: baseMultiErrorExtractor, formWrapper },
+    components: { multiErrors: baseMultiErrorExtractor, FormWrapper },
     data: () => ({
       form: {
         first_name: '',
