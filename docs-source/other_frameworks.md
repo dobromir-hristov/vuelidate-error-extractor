@@ -296,7 +296,7 @@ Usage is straight forward
 
 ## Usage with BootstrapVue
 
-Bootstrap Vue offers the `v-form-group` component with `invalid-feedback` and `state` props. It expects an error message and a boolean state, so we pass the `firstErrorMessage` and the `isValid`.
+Bootstrap Vue offers the `b-form-group` component with `invalid-feedback` and `state` props. It expects an error message and a boolean state, so we pass the `firstErrorMessage` and the `isValid`.
 
 Added bonus is the scoped slot with `attrs` and `listeners` props. You can skip those, but they can reduce boilerplate in the future.
 
