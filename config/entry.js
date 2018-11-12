@@ -26,7 +26,7 @@ const entries = {
       name: moduleName,
       format: 'cjs'
     },
-    external: ['get-value']
+    external: ['@d_hristov/get-value']
   },
   esm: {
     input: 'src/index.js',
@@ -35,7 +35,7 @@ const entries = {
       name: moduleName,
       format: 'es'
     },
-    external: ['get-value']
+    external: ['@d_hristov/get-value']
   },
   production: {
     input: 'src/index.js',

@@ -1,4 +1,4 @@
-import getValue from 'get-value'
+import getValue from '@d_hristov/get-value'
 
 export function get (obj, path, def) {
   return getValue(obj, path, { default: def })
