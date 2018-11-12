@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.2.2 
+ * vuelidate-error-extractor v2.2.3 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -9,7 +9,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var getValue = _interopDefault(require('get-value'));
+var getValue = _interopDefault(require('@d_hristov/get-value'));
 
 function get (obj, path, def) {
   return getValue(obj, path, { default: def })
@@ -1562,7 +1562,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.2.2';
+var version = '2.2.3';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;

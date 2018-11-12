@@ -1,9 +1,9 @@
 /*!
- * vuelidate-error-extractor v2.2.2 
+ * vuelidate-error-extractor v2.2.3 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
-import getValue from 'get-value';
+import getValue from '@d_hristov/get-value';
 
 function get (obj, path, def) {
   return getValue(obj, path, { default: def })
@@ -1556,7 +1556,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.2.2';
+var version = '2.2.3';
 
 export default plugin;
 export { singleErrorExtractorMixin, multiErrorExtractorMixin, index$1 as configs, index as templates, version };

@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.2.2 
+ * vuelidate-error-extractor v2.2.3 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -25,10 +25,11 @@ var VuelidateErrorExtractor = (function (exports) {
    */
 
 
-
-  var getValue = function(target, path, options) {
+  var getValue = function (target, path, options) {
     if (!isobject(options)) {
-      options = { default: options };
+      options = {
+        default: options
+      };
     }
 
     if (!isValidObject(target)) {
@@ -58,6 +59,7 @@ var VuelidateErrorExtractor = (function (exports) {
 
     do {
       var prop = segs[idx];
+
       if (typeof prop === 'number') {
         prop = String(prop);
       }
@@ -79,7 +81,7 @@ var VuelidateErrorExtractor = (function (exports) {
         while (n < len) {
           prop = join([prop, segs[n++]], joinChar, options);
 
-          if ((hasProp = prop in target)) {
+          if (hasProp = prop in target) {
             if (!isValid(prop, target, options)) {
               return options.default;
             }
@@ -107,6 +109,7 @@ var VuelidateErrorExtractor = (function (exports) {
     if (typeof options.join === 'function') {
       return options.join(segs);
     }
+
     return segs[0] + joinChar + segs[1];
   }
 
@@ -114,6 +117,7 @@ var VuelidateErrorExtractor = (function (exports) {
     if (typeof options.split === 'function') {
       return options.split(path);
     }
+
     return path.split(splitChar);
   }
 
@@ -121,6 +125,7 @@ var VuelidateErrorExtractor = (function (exports) {
     if (typeof options.isValid === 'function') {
       return options.isValid(key, target);
     }
+
     return true;
   }
 
@@ -1679,7 +1684,7 @@ var VuelidateErrorExtractor = (function (exports) {
     }
   }
 
-  var version = '2.2.2';
+  var version = '2.2.3';
 
   exports.default = plugin;
   exports.singleErrorExtractorMixin = singleErrorExtractorMixin;
