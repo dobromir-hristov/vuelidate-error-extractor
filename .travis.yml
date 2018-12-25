@@ -11,15 +11,17 @@ cache:
 before_script:
   - npm run lint
 
-script: npm run test
-
-after_success:
-  - npm run docs:build
-
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  local_dir: docs/.vuepress/dist
-  on:
-    branch: master
+jobs:
+  include:
+    - script: npm run test
+    - stage: "Docs Deploy"
+      node_js: "10"
+      script: echo "Building Docs"
+    - script: npm run docs:build
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+        local_dir: docs/.vuepress/dist
+        on:
+          branch: master
