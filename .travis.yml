@@ -15,7 +15,8 @@ jobs:
   include:
     - stage: "Docs Deploy"
       script: skip
-    - before_deploy: npm run docs:build
+      before_script: skip
+      before_deploy: npm run docs:build
       deploy:
         provider: pages
         skip-cleanup: true
