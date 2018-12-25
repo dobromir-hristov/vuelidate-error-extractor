@@ -14,6 +14,7 @@ before_script:
 jobs:
   include:
     - stage: "Docs Deploy"
+      if: branch = master
       script: skip
       before_script: skip
       before_deploy: npm run docs:build
@@ -22,5 +23,3 @@ jobs:
         skip-cleanup: true
         github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
         local_dir: docs/.vuepress/dist
-        on:
-          branch: master
