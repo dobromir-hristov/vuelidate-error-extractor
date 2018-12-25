@@ -1,10 +1,25 @@
 language: node_js
 node_js:
-- '10'
-- '9'
-- '8'
+  - '10'
+  - '9'
+  - '8'
+
+cache:
+  directories:
+    - "node_modules"
 
 before_script:
   - npm run lint
 
 script: npm run test
+
+after_success:
+  - npm run docs:build
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  local_dir: docs/.vuepress/dist
+  on:
+    branch: master

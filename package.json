@@ -75,12 +75,12 @@
     "url": "git+https://github.com/dobromir-hristov/vuelidate-error-extractor.git"
   },
   "scripts": {
-    "build": "node config/build.js && npm run docs:build",
+    "build": "node config/build.js && node config/version.js",
     "changelog": "conventional-changelog -i CHANGELOG.md -s -p angular",
     "release": "standard-version -a",
     "clean": "rm -rf coverage && rm -rf dist/*.js* && rm ./*.log",
-    "docs:dev": "vuepress dev docs-source",
-    "docs:build": "node config/version.js && vuepress build docs-source",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
     "dev": "SET BABEL_ENV=test & webpack-dev-server --inline --hot --open --config config/webpack.dev.conf.js",
     "lint": "eslint src test config",
     "test": "jest",

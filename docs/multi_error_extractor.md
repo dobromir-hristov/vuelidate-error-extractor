@@ -26,7 +26,7 @@ Vue.component('form-errors', template.multiErrorExtractor.foundation6)
 This is the basic usage of a `multi-error-extractor` component. It should get passed a validator and an attributes object.
 Attributes will map each error field by name to its `{attribute}` placeholder in the validation messages.
 
-You can skip the `attributes` param and rely on the globally defined attributes on initialization0. Make sure that either the local or global attributes are defined.
+You can skip the `attributes` param and rely on the globally defined attributes on initialization. Make sure that either the local or global attributes are defined.
  
 You can also provide a messages object that will override the globally defined messages. That allows for custom error messages, perfect when you want a specific validation message that is not applicable anywhere else.
 

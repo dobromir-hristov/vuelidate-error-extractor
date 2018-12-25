@@ -53,9 +53,8 @@ module.exports = {
     ],
     repo: 'dobromir-hristov/vuelidate-error-extractor',
     editLinks: true,
-    docsDir: 'docs-source',
+    docsDir: 'docs'
   },
   ga: 'UA-29425482-9',
-  base: '/vuelidate-error-extractor/',
-  dest: 'docs'
+  base: '/vuelidate-error-extractor/'
 }
