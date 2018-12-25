@@ -13,10 +13,7 @@ before_script:
 
 jobs:
   include:
-    - script: npm run test
     - stage: "Docs Deploy"
-      node_js: "10"
-      script: echo "Building Docs"
     - script: npm run docs:build
       deploy:
         provider: pages
