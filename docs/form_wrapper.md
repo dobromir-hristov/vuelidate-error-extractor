@@ -52,7 +52,7 @@ export default {
       }
     };
   },
-  validation: {
+  validations: {
     form: {
       name: { required },
       email: { required, email }
