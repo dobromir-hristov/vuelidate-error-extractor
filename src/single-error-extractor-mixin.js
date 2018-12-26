@@ -62,7 +62,7 @@ export default {
         if (remappedValidation.hasOwnProperty(validationRuleKey)) {
           const params = remappedValidation[validationRuleKey].params.reduce((all, paramKey) => {
             // Use the extra supplied data via validator-params prop or use the one from vuelidate
-            all[paramKey.ext] = this.validatorParams.hasOwnProperty(paramKey.other) ? this.validatorParams[paramKey.other] : vuelidateValidatorObject[paramKey.vue]
+            all[paramKey.ext] = this.validatorParams[paramKey.vue] || vuelidateValidatorObject[paramKey.vue]
             return all
           }, {})
           return getValidationObject.call(this, remappedValidation[validationRuleKey].validationKey, validationRuleKey, params)
