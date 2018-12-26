@@ -4,7 +4,7 @@ title: Getting started
 
 ## Installation
 
-**Vuelidate-error-extractor** can be used with bundlers like Webpack/Rollup or in the browser, but is strongly advised and preferred to use the bundler approach.
+**Vuelidate-error-extractor** can be used with bundlers like Webpack/Rollup/Parcel or directly with CDN in the browser, but is strongly advised and preferred to use the bundler approach.
 
 > We will be using ES6 syntax for all of our examples
 
@@ -21,8 +21,12 @@ import vuelidate from "vuelidate";
 import vuelidateErrorExtractor, { templates } from "vuelidate-error-extractor";
 
 Vue.use(vuelidate);
-Vue.use(vuelidateErrorExtractor, {
-  template: templates.singleErrorExtractor.foundation6, // optional
+Vue.use(vuelidateErrorExtractor, { 
+  /**
+   * Optionally provide the template in the configuration. 
+   * or use Vue.component("FormField", templates.singleErrorExtractor.foundation6)
+   */
+  template: templates.singleErrorExtractor.foundation6,
   messages: { required: "The {attribute} field is required" },
   attributes: {
     email: "Email",
@@ -32,7 +36,7 @@ Vue.use(vuelidateErrorExtractor, {
 });
 ```
 
-Now you can use it in your components
+Now you can use it in your components as shown below.
 
 ```vue
 <template>
@@ -63,31 +67,44 @@ export default {
 </script>
 ```
 
+The error extractor component is registered as a `<form-group>` component by default, but can be changed. See [Initialization Options - name](./installation.md#initialization-options)
+
 ## Exported objects
 
 **Vuelidate-error-extractor** exports a few things, but you can import them separately from their files if your bundles include more than what you use (don't get tree shaken).
 
-- default - The default export that installs the plugin in Vue.
-- templates - Object containing different templates that are supported out of the box.
-- singleErrorExtractorMixin - Used for building your own single field error template. See [single error extractor](single_error_extractor.md).
-- multiErrorExtractorMixin - Used for building your own summary form errors template. See [multi error extractor](multi_error_extractor.md)
-- configs - Object remapping vuelidate rules to another system's messages, like Laravel's. [Using Validation Keys](./advanced.md#validation-keys)
+- **default** - The default export that installs the plugin in Vue.
+- **templates** - Object containing different templates that are supported out of the box.
+  - **singleErrorExtractor** - The available singleErrorExtractor templates 
+    - foundation6 - Foundation 6 singleErrorExtractor template
+    - bootstrap3 - Bootstrap 3 singleErrorExtractor template
+    - bootstrap4 - Bootstrap 4 singleErrorExtractor template
+  - **multiErrorExtractor** - The available multiErrorExtractor templates 
+    - baseMultiErrorExtractor - A base multiErrorExtractor component, that is used to create a custom styled multi error extractor.
+    - bootstrap3 - Bootstrap 3 multiErrorExtractor template
+    - bootstrap4 - Bootstrap 4 multiErrorExtractor template
+    - foundation6 - Foundation 6 multiErrorExtractor template
+  - **FormWrapper** - The FormWrapper component. See [FormWrapper](./form_wrapper.md)
+- **singleErrorExtractorMixin** - Used for building your own single field error template. See [single error extractor](single_error_extractor.md).
+- **multiErrorExtractorMixin** - Used for building your own summary form errors template. See [multi error extractor](multi_error_extractor.md)
+- **configs** - Object remapping vuelidate rules to another system's messages, like Laravel's. [Using Validation Keys](./advanced.md#validation-keys)
 
 ## Initialization Options
 
-When installing Vuelidate-error-extractor there are just a few options that are optional but recommended to setup.
+When installing Vuelidate-error-extractor there are just a few options required.
 
 | Option         | Type          | Required   | Description                                                                                                                                                                                                    |
 | -------------- | ------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| template       | Vue Component | optional   | **Single Error field template**. It just registers it for you, same as doing `Vue.component('formGroup', template)`. Should implement the `singleErroExtractorMixin` mixin.                                    |
-| messages       | Object        | optional\* | The messages from which to extract each validation rule message. Required if not using i18n.                                                                                                                   |
-| i18n           | String        | optional\* | Pass a path to your translated messages array that will be used to access them. Usage of [vue-i18n](https://github.com/kazupon/vue-i18n) package is assumed. See [Advanced](./advanced.md#i18n) for more info. |
-| validationKeys | Object        | optional   | Allows remapping validation keys and props. See [Using Validation Keys](./advanced.md#validation-keys)                                                                                                         |
-| name           | String        | option     | The name under which to register the **Single Error field template**. Defaults to **formGroup**                                                                                                                |
+| template       | Vue Component | optional   | **singleErrorExtractor** field template. It registers the component globally for you, or you can do it yourself via `Vue.component('formGroup', template)`. Custom templates should implement the `singleErroExtractorMixin` mixin.                                    |
+| i18n           | String        | optional\* | Pass a path to your validation rules error messages in your translation file. Usage of [vue-i18n](https://github.com/kazupon/vue-i18n) package is assumed. See [Advanced](./advanced.md#i18n) for more info. |
+| messages       | Object        | optional\* | The messages from which to extract each validation rule error message. Optional if using i18n mode, otherwise required.                                                                                                                   |
+| validationKeys | Object        | optional   | Allows remapping validation rule keys and their props. See [Using Validation Keys](./advanced.md#validation-keys)                                                                                                         |
+| name           | String        | optional   | The name under which to register the **Single Error Extractor** template. Defaults to **formGroup**                                                                                                                |
+| attributes     | Object        | optional   | A dictionary of input field names. Used when displaying error messages for specific fields that display the name of the field. See [FormWrapper - Reusable Attributes](./form_wrapper.md#reusable-attributes)                                                                             |
 
 ## Direct Download/CDN
 
-[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like https://unpkg.com/vuelidate-error-extractor@0.0.1-alpha.0/dist/vuelidate-error-extractor.js
+[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The link below will always point to the latest release on NPM. You can also use a specific version/tag via URLs like `https://unpkg.com/vuelidate-error-extractor@0.0.1-alpha.0/dist/vuelidate-error-extractor.js`
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.0/vue.js"></script>
@@ -127,7 +144,7 @@ Inside your component
   </form-group>
 ```
 
-<iframe height='265' scrolling='no' title='Vuelidate-error-extractor in Browser' src='//codepen.io/dobromir/embed/OjgVNx/?height=265&theme-id=0&default-tab=html,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/dobromir/pen/OjgVNx/'>Vuelidate-error-extractor in Browser</a> by Dobromir (<a href='https://codepen.io/dobromir'>@dobromir</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='265' scrolling='no' title='Vuelidate-error-extractor in Browser' src='//codepen.io/dobromir/embed/OjgVNx/?height=265&theme-id=0&default-tab=result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/dobromir/pen/OjgVNx/'>Vuelidate-error-extractor in Browser</a> by Dobromir (<a href='https://codepen.io/dobromir'>@dobromir</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
 ## Recap
@@ -136,7 +153,7 @@ Inside your component
 
 The two main installation properties you should provide are `template` and `messages`.
 
-- `template` tells the plugin to use the template you provide. We currently give you 2 out of the box, but you can use your own.
+- `template` tells the plugin to use the template you provide. We currently give you 3 out of the box, but you can use your own.
 - `messages` is the collection of error messages corresponding to each of your validation rule names.
 
 To create your own templates, see [Custom Template](custom_templates.md)

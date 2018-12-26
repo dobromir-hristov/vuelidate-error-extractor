@@ -18,7 +18,8 @@ Vue.component('FormWrapper', templates.FormWrapper)
 ```
 You can also register the FormWrapper component locally just for a component by passing it to the `components` key on the Vue component that needs it.
 
-To get the most benefit, provide the `attributes` options inside the Vuelidate-error-extractor initial setup.
+### Reusable Attributes
+To get the most benefit, provide an `attributes` option inside the Vuelidate-error-extractor initial setup.
 That way fields with the same name like **email** or **name** will get properly mapped to **E-mail** or **User Name**.
 
 ## Usage
@@ -28,12 +29,12 @@ That way fields with the same name like **email** or **name** will get properly 
   <div>
     <form-wrapper :validator="$v.form" :messages="localMessages">
       <form-errors/>
-      <form-field name="name">
+      <form-group name="name">
         <input type="text" v-model="form.name">
-      </form-field>
-      <form-field name="email">
+      </form-group>
+      <form-group name="email">
         <input type="email" v-model="form.email">
-      </form-field>
+      </form-group>
     </form-wrapper>
   </div>
 </template>

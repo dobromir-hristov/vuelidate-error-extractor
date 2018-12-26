@@ -170,7 +170,7 @@ To solve our issue, we just provide a small map with the params we want to provi
 <form-group 
   :validator="$v.password_confirm" 
   :label="$('auth.password_confirm')" 
-  :validatorParams="{ other: $t('auth.password') }">
+  :validator-params="{ other: $t('auth.password') }">
     <input type="text" v-model="password_confirm">
 </form-group>
 ```

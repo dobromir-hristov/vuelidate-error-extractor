@@ -28,12 +28,16 @@ Attributes will map each error field by name to its `{attribute}` placeholder in
 
 You can skip the `attributes` param and rely on the globally defined attributes on initialization. Make sure that either the local or global attributes are defined.
  
-You can also provide a messages object that will override the globally defined messages. That allows for custom error messages, perfect when you want a specific validation message that is not applicable anywhere else.
+You can also provide a messages object that will override the globally defined messages. That allows for custom error messages, perfect when you want a specific validation message that is not applicable anywhere else. Check [Overriding Messages](./overriding_messages.md#using-messages-prop) for more examples.
 
 
 ```vue
 <template>
-  <form-summary :validator="$v.form" :messages="localMessages" :attributes="attributes"/>
+  <form-summary 
+    :validator="$v.form" 
+    :messages="localMessages" 
+    :attributes="attributes"
+  />
 </template>
 <script>
   import { templates } from 'vuelidate-error-extractor'
@@ -74,4 +78,4 @@ Checkout the [Using a FormWrapper](form_wrapper.md) section to see how to use th
 | --------------- | ---------------- | --------  | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | attributes      | Object           | required* | The attributes object is a map of `field_name: Field Name` representing each field in the form with a proper title. Not required with FormWrapper component.   |
 | validator       | Vuelidate object | required* | The vuelidate validator of a form object. Not required when used with FormWrapper component.                                                                   |
-| messages        | Object           | optional  | A collection of local error messages that overwrite the global ones. **Does not work with i18n mode!**                                                         |
+| messages        | Object           | optional  | A collection of local error messages that overwrite the global ones. Check [Overriding Messages](./overriding_messages.md#using-messages-prop) for more examples.                                                     |

@@ -49,6 +49,7 @@ module.exports = {
       'form_wrapper',
       'custom_templates',
       'advanced',
+      'overriding_messages',
       'other_frameworks'
     ],
     repo: 'dobromir-hristov/vuelidate-error-extractor',

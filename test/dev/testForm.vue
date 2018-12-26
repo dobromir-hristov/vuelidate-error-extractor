@@ -1,51 +1,95 @@
 <template>
   <div>
-    <form-wrapper :validator="$v.nestedObject" :messages="messages">
+    <form-wrapper
+      :validator="$v.nestedObject"
+      :messages="messages"
+    >
       <multi-error-extractor/>
-      <form-group name="first_name" label="First name">
+      <form-group
+        name="first_name"
+        label="First name"
+        :messages="{ required: 'validations.required_further_extended'}"
+      >
         <template slot-scope="{ validator, hasErrors, attributes, events }">
           <input
             v-bind="attributes"
             v-on="events"
             type="text"
-            v-model="nestedObject.first_name">
+            v-model="nestedObject.first_name"
+          >
         </template>
       </form-group>
-      <form-group label="Test" attribute="Test Field">
-        <input type="text"
-               v-model="test"
-               @input="$v.test.$touch()">
+      <form-group
+        label="Test"
+        attribute="Test Field"
+      >
+        <input
+          type="text"
+          v-model="test"
+          @input="$v.test.$touch()"
+        >
       </form-group>
-      <form-group label="First Name" name="first_name">
-        <input type="text"
-               v-model="nestedObject.first_name"
-               @input="$v.nestedObject.first_name.$touch()">
+      <form-group
+        label="First Name"
+        name="first_name"
+      >
+        <input
+          type="text"
+          v-model="nestedObject.first_name"
+          @input="$v.nestedObject.first_name.$touch()"
+        >
       </form-group>
-      <form-group :validator="$v.nestedObject.last_name" label="Nested Last Name" attribute="Last name">
-        <input type="text"
-               v-model="nestedObject.last_name"
-               @input="$v.nestedObject.last_name.$touch()">
+      <form-group
+        :validator="$v.nestedObject.last_name"
+        label="Nested Last Name"
+        attribute="Last name"
+      >
+        <input
+          type="text"
+          v-model="nestedObject.last_name"
+          @input="$v.nestedObject.last_name.$touch()"
+        >
       </form-group>
-      <form-group label="Deep City" attribute="Deep City Field" name="address.city">
-        <input type="text"
-               v-model="nestedObject.address.city"
-               @input="$v.nestedObject.address.city.$touch()">
+      <form-group
+        label="Deep City"
+        attribute="Deep City Field"
+        name="address.city"
+      >
+        <input
+          type="text"
+          v-model="nestedObject.address.city"
+          @input="$v.nestedObject.address.city.$touch()"
+        >
       </form-group>
-      <form-group :validator="$v.nestedObject.address.postal" label="Deep Postal" attribute="Postal">
-        <input type="text"
-               v-model="nestedObject.address.postal"
-               @input="$v.nestedObject.address.postal.$touch()">
+      <form-group
+        :validator="$v.nestedObject.address.postal"
+        label="Deep Postal"
+        attribute="Postal"
+      >
+        <input
+          type="text"
+          v-model="nestedObject.address.postal"
+          @input="$v.nestedObject.address.postal.$touch()"
+        >
       </form-group>
-      <form-group name="phones.$each.0.model" label="First Phone models">
+      <form-group
+        name="phones.$each.0.model"
+        label="First Phone models"
+      >
         <template slot-scope="{ attributes, events }">
           <input
             v-bind="attributes"
             v-on="events"
             type="text"
-            v-model="nestedObject.phones[0].model">
+            v-model="nestedObject.phones[0].model"
+          >
         </template>
       </form-group>
-      <button class="button" @click="$v.nestedObject.$touch()">Touch</button>
+      <button
+        class="button"
+        @click="$v.nestedObject.$touch()"
+      >Touch
+      </button>
     </form-wrapper>
   </div>
 </template>
@@ -87,7 +131,7 @@ export default {
         'address.postal': 'Postal Code'
       },
       messages: {
-        numeric: '{attribute} needs to be numeric.'
+        required: 'validations.required_extended'
       }
     }
   },
