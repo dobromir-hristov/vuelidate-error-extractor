@@ -163,7 +163,8 @@ function genConfig (opts) {
       commonjs(),
       VuePlugin(),
       buble({
-        transforms: { dangerousForOf: true }
+        transforms: { dangerousForOf: true },
+        objectAssign: 'Object.assign'
       })
     ],
     external: opts.external
