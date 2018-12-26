@@ -25,18 +25,18 @@
       <div
         class="form-error is-visible"
         v-if="hasErrors">
-        <span
+        <div
           v-if="showSingleError"
           :data-validation-attr="firstError.validationKey">
           {{ firstErrorMessage }}
-        </span>
+        </div>
         <template v-else>
-          <span
+          <div
             v-for="(error, index) in activeErrorMessages"
             :key="activeErrors[index].validationKey"
             :data-validation-attr="activeErrors[index].validationKey">
             {{ error }}
-          </span>
+          </div>
         </template>
       </div>
     </slot>
