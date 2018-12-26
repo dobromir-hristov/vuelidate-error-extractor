@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.2.3 
+ * vuelidate-error-extractor v2.3.0 
  * (c) 2018 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -11,6 +11,13 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var getValue = _interopDefault(require('@d_hristov/get-value'));
 
+/**
+ * Gets object values deeply by using a dot notation path
+ * @param {object} obj
+ * @param {string} path
+ * @param {*} [def]
+ * @return {*}
+ */
 function get (obj, path, def) {
   return getValue(obj, path, { default: def })
 }
@@ -63,12 +70,22 @@ function getValidationObject (validationKey, key, params) {
   }
 }
 
+/**
+ * Retrieves a validations attribute from the provided attributes object
+ * @param {object} attributes
+ * @param {string} attribute
+ * @param {string} label
+ * @param {string} [name = '']
+ * @return {string}
+ */
 function getAttribute (attributes, attribute, label, name) {
   if ( name === void 0 ) name = '';
 
+  // if an attribute is provided, just return it as its with highest priority
   if (attribute) { return attribute }
+  // if there is no name prop, we cant reach into the attributes object, so we use the label instead
   if (!name) { return label }
-  // strip out the $each
+  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
   var normalizedName = name.replace(/\$each\.\d\./g, '');
   return attributes[normalizedName] || normalizedName
 }
@@ -108,6 +125,14 @@ function flattenValidatorObjects (validator, propName) {
     }, [])
 }
 
+/**
+ * Fetches error message by its key from the provided messages object
+ * Key can be a deep dot notation path 'path.to.object' in "{ path:{ to: { object: {} } } }"
+ * @param {object} messages
+ * @param {string} key
+ * @param {object} [params]
+ * @return {string}
+ */
 function getErrorString (messages, key, params) {
   var msg = get(messages, key, false);
   if (!msg) {
@@ -118,10 +143,20 @@ function getErrorString (messages, key, params) {
 
 var baseErrorsMixin = {
   inject: {
+    /**
+     * Inject the validator from a parent FormWrapper component
+     */
     formValidator: { default: false },
+    /**
+     * Injects an error messages dictionary from a parent FormWrapper
+     */
     formMessages: { default: function () { return ({}); } }
   },
   props: {
+    /**
+     * The Vuelidate validator object
+     * Not required as a field may loose its validator under some validation rule change
+     */
     validator: {
       type: Object,
       default: function () { return ({
@@ -132,6 +167,10 @@ var baseErrorsMixin = {
         $params: []
       }); }
     },
+    /**
+     * A dictionary of error messages that can override the globally defined ones.
+     * @type {Object.<string, string>}
+     */
     messages: {
       type: Object,
       default: function () { return ({}); }
@@ -140,23 +179,44 @@ var baseErrorsMixin = {
   computed: {
     /**
      * Filters out only the active errors
-     * @return {Array}
+     * @return {array}
      */
     activeErrors: function activeErrors () {
       return this.errors.filter(function (error) { return error.hasError && error.$dirty; })
     },
+    /**
+     * Returns a merged messages object from the global ones, the injected ones from form-wrapper and the locally provided messages prop
+     * @return {object}
+     */
     mergedMessages: function mergedMessages () {
       return Object.assign({}, this.$vuelidateErrorExtractor.messages, this.formMessages, this.messages)
     },
+    /**
+     * Returns the first available error object
+     * @return {string}
+     */
     firstError: function firstError () {
       return this.activeErrors.length ? this.activeErrors[0] : ''
     },
+    /**
+     * Returns the first available error message
+     * @return {string}
+     */
     firstErrorMessage: function firstErrorMessage () {
       return this.activeErrors.length ? this.activeErrorMessages[0] : ''
     },
+    /**
+     * A convenience method to check if the validator has errors
+     * @return {boolean}
+     */
     hasErrors: function hasErrors () {
       return this.preferredValidator.$error
     },
+    /**
+     * Returns an array of all the active error messages.
+     * Use this if you just need to loop over the error messages as it is cached.
+     * @return {string[]}
+     */
     activeErrorMessages: function activeErrorMessages () {
       var this$1 = this;
 
@@ -164,12 +224,38 @@ var baseErrorsMixin = {
     }
   },
   methods: {
+    /**
+     * The recommended method to fetch error messages with.
+     * It will choose between using i18n or the plain error method
+     * @param {string} key
+     * @param {object} [params]
+     * @return {string}
+     */
     getErrorMessage: function getErrorMessage (key, params) {
       return this.$vuelidateErrorExtractor.i18n ? this.getI18nMessage(key, params) : this.getPlainMessage(key, params)
     },
+    /**
+     * Returns the translated error message
+     * If a locally provided error message with the same key exists,
+     * it will take weight over the default dictionary
+     * @param {string} key
+     * @param {object} [params]
+     * @return {string}
+     */
     getI18nMessage: function getI18nMessage (key, params) {
+      var localMessageOverride = get(this.mergedMessages, key);
+      if (localMessageOverride) {
+        return this.$t(localMessageOverride, params)
+      }
+      // fallback to the default dictionary in i18n
       return this.$t(this.$vuelidateErrorExtractor.i18n + '.' + key, params)
     },
+    /**
+     * Gets the error message from the provided dictionary
+     * @param {string} key
+     * @param {object} [params]
+     * @return {string}
+     */
     getPlainMessage: function getPlainMessage (key, params) {
       return getErrorString(this.mergedMessages, key, params)
     }
@@ -178,17 +264,34 @@ var baseErrorsMixin = {
 
 var singleErrorExtractorMixin = {
   props: {
+    /**
+     * A generic label that is shown as a Label above the input and replaces the attribute placeholder if not provided.
+     * @type {string}
+     */
     label: { type: String, default: '' },
+    /**
+     * Replaces the {attribute} placeholder in the error message fields.
+     * @type {string}
+     */
     attribute: { type: String, default: '' },
+    /**
+     * Used to find the attribute and validator of the field when used with a FormWrapper component.
+     * @type {string}
+     */
     name: { type: String, default: '' },
     /**
      * Params that are passed for the validation.
+     * @type { Object.<string, (string|number)> }
      * Example: {other: $t('auth.password')} when using a sameAs validation and we need a translated "other" field.
      */
     validatorParams: {
       type: Object,
       default: function () { return ({}); }
     },
+    /**
+     * Whether to show only one error at a time
+     * @type {boolean}
+     */
     showSingleError: {
       type: Boolean,
       default: false
@@ -196,42 +299,63 @@ var singleErrorExtractorMixin = {
   },
   extends: baseErrorsMixin,
   computed: {
+    /**
+     * Returns the appropriate validator based on provided validator props, injected validator and so on.
+     * @return {object}
+     */
     preferredValidator: function preferredValidator () {
       // if validator is passed is present on propsData, user has explicitly provided it.
       if (this.$options.propsData.hasOwnProperty('validator')) { return this.validator }
       return this.name ? get(this.formValidator, this.name, this.validator) : this.validator
     },
+    /**
+     * Returns an array of possible error objects
+     * @return {any[]}
+     */
     errors: function errors () {
       var this$1 = this;
 
       var vualidateParams = this.preferredValidator.$params;
-      var remappedValidation = this.$vuelidateErrorExtractor.validationKeys;
+      /** @type {Object.<string, { validationKey: string, params: { ext: string, vue: string }[]}>} */
+      var remappedValidation = this.$vuelidateErrorExtractor.validationKeys || {};
       // Map all the params in the validator object. They correspond to every validation rule.
-      return Object.keys(vualidateParams).map(function (key) {
-        var vuelidateValidatorObject = vualidateParams[key];
+      return Object.keys(vualidateParams).map(function (validationRuleKey) {
+        var vuelidateValidatorObject = vualidateParams[validationRuleKey];
         // Check of we have defined our validation remap in the settings
-        if (typeof remappedValidation !== 'undefined' && remappedValidation.hasOwnProperty(key)) {
-          var params$1 = remappedValidation[key].params.reduce(function (all, paramKey) {
+        if (remappedValidation.hasOwnProperty(validationRuleKey)) {
+          var params$1 = remappedValidation[validationRuleKey].params.reduce(function (all, paramKey) {
             // Use the extra supplied data via validator-params prop or use the one from vuelidate
-            all[paramKey.ext] = this$1.validatorParams.hasOwnProperty(paramKey.other) ? this$1.validatorParams[paramKey.other] : vuelidateValidatorObject[paramKey.vue];
+            all[paramKey.ext] = this$1.validatorParams[paramKey.vue] || vuelidateValidatorObject[paramKey.vue];
             return all
           }, {});
-          return getValidationObject.call(this$1, remappedValidation[key].validationKey, key, params$1)
+          return getValidationObject.call(this$1, remappedValidation[validationRuleKey].validationKey, validationRuleKey, params$1)
         }
         var params = Object.assign({}, vuelidateValidatorObject, this$1.validatorParams);
         delete params.type;
         // We are using the Vuelidate keys
-        return getValidationObject.call(this$1, key, key, params)
+        return getValidationObject.call(this$1, validationRuleKey, validationRuleKey, params)
       })
     },
+    /**
+     * Generic helper object to assign events easier.
+     * @return {{ input: function }}
+     */
     events: function events () {
       var this$1 = this;
 
       return { input: function () { return this$1.preferredValidator.$touch(); } }
     },
+    /**
+     * Returns true if field is dirty and has no errors, else null
+     * @return {?Boolean}
+     */
     isValid: function isValid () {
       return this.preferredValidator.$dirty ? !this.hasErrors : null
     },
+    /**
+     * Returns the attribute property depending on provided props - label, attribute, name etc.
+     * @return {string}
+     */
     resolvedAttribute: function resolvedAttribute () {
       return getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name)
     }
@@ -291,7 +415,7 @@ var __vue_render__ = function() {
                 [
                   _vm.showSingleError
                     ? _c(
-                        "span",
+                        "div",
                         {
                           attrs: {
                             "data-validation-attr": _vm.firstError.validationKey
@@ -307,7 +431,7 @@ var __vue_render__ = function() {
                       )
                     : _vm._l(_vm.activeErrorMessages, function(error, index) {
                         return _c(
-                          "span",
+                          "div",
                           {
                             key: _vm.activeErrors[index].validationKey,
                             attrs: {
@@ -357,9 +481,8 @@ __vue_render__._withStripped = true;
   ) {
     var component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\foundation6.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\foundation6.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -374,62 +497,7 @@ __vue_render__._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -441,7 +509,7 @@ __vue_render__._withStripped = true;
     __vue_scope_id__,
     __vue_is_functional_template__,
     __vue_module_identifier__,
-    __vue_create_injector__,
+    undefined,
     undefined
   );
 
@@ -583,9 +651,8 @@ __vue_render__$1._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap3.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap3.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -600,62 +667,7 @@ __vue_render__$1._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$1() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$1.styles || (__vue_create_injector__$1.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -667,7 +679,7 @@ __vue_render__$1._withStripped = true;
     __vue_scope_id__$1,
     __vue_is_functional_template__$1,
     __vue_module_identifier__$1,
-    __vue_create_injector__$1,
+    undefined,
     undefined
   );
 
@@ -765,9 +777,8 @@ __vue_render__$2._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap4.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap4.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -782,62 +793,7 @@ __vue_render__$2._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$2() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$2.styles || (__vue_create_injector__$2.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -849,7 +805,7 @@ __vue_render__$2._withStripped = true;
     __vue_scope_id__$2,
     __vue_is_functional_template__$2,
     __vue_module_identifier__$2,
-    __vue_create_injector__$2,
+    undefined,
     undefined
   );
 
@@ -868,22 +824,35 @@ var multiErrorExtractorMixin = {
   },
   extends: baseErrorsMixin,
   computed: {
+    /**
+     * Returns the preferred validator based on the provided validator props, the injected validator and so on.
+     * @return {object}
+     */
     preferredValidator: function preferredValidator () {
-      // if validator is passed is present on propsData, user has explicitly provided it.
+      // if validator prop is passed, we use it, else we use the injected one.
       if (this.$options.propsData.hasOwnProperty('validator')) { return this.validator }
       return this.formValidator
     },
+    /**
+     * Merge the global attributes and the locally provided ones
+     * @return {object  }
+     */
     mergedAttributes: function mergedAttributes () {
       return Object.assign({}, this.$vuelidateErrorExtractor.attributes, this.attributes)
     },
+    /**
+     * Shallow array of all the errors for the provided validator
+     * @return {Array}
+     */
     errors: function errors () {
       var this$1 = this;
 
       return flattenValidatorObjects(this.preferredValidator).map(function (error) {
-        var params = Object.assign({}, error.params, {
-          attribute: get(this$1.mergedAttributes, error.propName, error.propName)
-        });
-        return Object.assign({}, error, { params: params })
+        return Object.assign({}, error, {
+          params: Object.assign({}, error.params, {
+            attribute: get(this$1.mergedAttributes, error.propName, error.propName)
+          })
+        })
       })
     },
     /**
@@ -947,9 +916,8 @@ __vue_render__$3._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\baseMultiErrorExtractor.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\baseMultiErrorExtractor.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -964,62 +932,7 @@ __vue_render__$3._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$3() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$3.styles || (__vue_create_injector__$3.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -1031,7 +944,7 @@ __vue_render__$3._withStripped = true;
     __vue_scope_id__$3,
     __vue_is_functional_template__$3,
     __vue_module_identifier__$3,
-    __vue_create_injector__$3,
+    undefined,
     undefined
   );
 
@@ -1096,9 +1009,8 @@ __vue_render__$4._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap3.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap3.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -1113,62 +1025,7 @@ __vue_render__$4._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$4() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$4.styles || (__vue_create_injector__$4.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -1180,7 +1037,7 @@ __vue_render__$4._withStripped = true;
     __vue_scope_id__$4,
     __vue_is_functional_template__$4,
     __vue_module_identifier__$4,
-    __vue_create_injector__$4,
+    undefined,
     undefined
   );
 
@@ -1245,9 +1102,8 @@ __vue_render__$5._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap4.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap4.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -1262,62 +1118,7 @@ __vue_render__$5._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$5() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$5.styles || (__vue_create_injector__$5.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -1329,7 +1130,7 @@ __vue_render__$5._withStripped = true;
     __vue_scope_id__$5,
     __vue_is_functional_template__$5,
     __vue_module_identifier__$5,
-    __vue_create_injector__$5,
+    undefined,
     undefined
   );
 
@@ -1394,9 +1195,8 @@ __vue_render__$6._withStripped = true;
   ) {
     var component = (typeof script === 'function' ? script.options : script) || {};
 
-    {
-      component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\foundation6.vue";
-    }
+    // For security concerns, we use only base name in production mode.
+    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\foundation6.vue";
 
     if (!component.render) {
       component.render = template.render;
@@ -1411,62 +1211,7 @@ __vue_render__$6._withStripped = true;
     return component
   }
   /* style inject */
-  function __vue_create_injector__$6() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__$6.styles || (__vue_create_injector__$6.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -1478,7 +1223,7 @@ __vue_render__$6._withStripped = true;
     __vue_scope_id__$6,
     __vue_is_functional_template__$6,
     __vue_module_identifier__$6,
-    __vue_create_injector__$6,
+    undefined,
     undefined
   );
 
@@ -1550,19 +1295,19 @@ function plugin (Vue, opts) {
     i18n: opts.i18n || false,
     messages: opts.messages || {},
     validationKeys: opts.validationKeys || {},
-    attributes: opts.attributes || {}
+    attributes: opts.attributes || {},
+    name: opts.name || 'formGroup'
   };
   if (typeof options.i18n !== 'string' && options.i18n !== false) {
     throw Error(("[vuelidate-error-extractor] options.i18n should be false or a string, " + (options.i18n) + " given."))
   }
   Vue.prototype.$vuelidateErrorExtractor = options;
   if (typeof opts.template !== 'undefined') {
-    var name = opts.name || 'formGroup';
-    Vue.component(name, opts.template);
+    Vue.component(options.name, opts.template);
   }
 }
 
-var version = '2.2.3';
+var version = '2.3.0';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;

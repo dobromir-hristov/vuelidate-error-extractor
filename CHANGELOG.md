@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.0"></a>
+# [2.3.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.2.3...v2.3.0) (2018-12-26)
+
+
+### Bug Fixes
+
+* fix issue with using wrong validator param key. ([6c71274](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/6c71274))
+* Make Foundation 6 template default error field element a div ([59b1e60](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/59b1e60))
+
+
+### Features
+
+* allow overriding i18n validation messages on FormWrapper, MultiErrorExtractor and SingleErrorExtractor components. ([c6d9012](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/c6d9012))
+
+
+
 <a name="2.2.3"></a>
 ## [2.2.3](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.2.2...v2.2.3) (2018-11-12)
 
