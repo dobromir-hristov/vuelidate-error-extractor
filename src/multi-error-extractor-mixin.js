@@ -10,20 +10,33 @@ export default {
   },
   extends: baseErrorsMixin,
   computed: {
+    /**
+     * Returns the preferred validator based on the provided validator props, the injected validator and so on.
+     * @return {object}
+     */
     preferredValidator () {
-      // if validator is passed is present on propsData, user has explicitly provided it.
+      // if validator prop is passed, we use it, else we use the injected one.
       if (this.$options.propsData.hasOwnProperty('validator')) return this.validator
       return this.formValidator
     },
+    /**
+     * Merge the global attributes and the locally provided ones
+     * @return {object  }
+     */
     mergedAttributes () {
-      return Object.assign({}, this.$vuelidateErrorExtractor.attributes, this.attributes)
+      return { ...this.$vuelidateErrorExtractor.attributes, ...this.attributes }
     },
+    /**
+     * Shallow array of all the errors for the provided validator
+     * @return {Array}
+     */
     errors () {
       return flattenValidatorObjects(this.preferredValidator).map(error => {
-        const params = Object.assign({}, error.params, {
-          attribute: get(this.mergedAttributes, error.propName, error.propName)
+        return Object.assign({}, error, {
+          params: Object.assign({}, error.params, {
+            attribute: get(this.mergedAttributes, error.propName, error.propName)
+          })
         })
-        return Object.assign({}, error, { params })
       })
     },
     /**

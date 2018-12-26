@@ -1,5 +1,12 @@
 import getValue from '@d_hristov/get-value'
 
+/**
+ * Gets object values deeply by using a dot notation path
+ * @param {object} obj
+ * @param {string} path
+ * @param {*} [def]
+ * @return {*}
+ */
 export function get (obj, path, def) {
   return getValue(obj, path, { default: def })
 }
@@ -50,10 +57,20 @@ export function getValidationObject (validationKey, key, params = {}) {
   }
 }
 
+/**
+ * Retrieves a validations attribute from the provided attributes object
+ * @param {object} attributes
+ * @param {string} attribute
+ * @param {string} label
+ * @param {string} [name = '']
+ * @return {string}
+ */
 export function getAttribute (attributes, attribute, label, name = '') {
+  // if an attribute is provided, just return it as its with highest priority
   if (attribute) return attribute
+  // if there is no name prop, we cant reach into the attributes object, so we use the label instead
   if (!name) return label
-  // strip out the $each
+  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
   const normalizedName = name.replace(/\$each\.\d\./g, '')
   return attributes[normalizedName] || normalizedName
 }
@@ -85,6 +102,14 @@ export function flattenValidatorObjects (validator, propName) {
     }, [])
 }
 
+/**
+ * Fetches error message by its key from the provided messages object
+ * Key can be a deep dot notation path 'path.to.object' in "{ path:{ to: { object: {} } } }"
+ * @param {object} messages
+ * @param {string} key
+ * @param {object} [params]
+ * @return {string}
+ */
 export function getErrorString (messages, key, params) {
   const msg = get(messages, key, false)
   if (!msg) {

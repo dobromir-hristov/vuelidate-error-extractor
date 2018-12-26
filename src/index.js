@@ -8,15 +8,15 @@ function plugin (Vue, opts = {}) {
     i18n: opts.i18n || false,
     messages: opts.messages || {},
     validationKeys: opts.validationKeys || {},
-    attributes: opts.attributes || {}
+    attributes: opts.attributes || {},
+    name: opts.name || 'formGroup'
   }
   if (typeof options.i18n !== 'string' && options.i18n !== false) {
     throw Error(`[vuelidate-error-extractor] options.i18n should be false or a string, ${options.i18n} given.`)
   }
   Vue.prototype.$vuelidateErrorExtractor = options
   if (typeof opts.template !== 'undefined') {
-    const name = opts.name || 'formGroup'
-    Vue.component(name, opts.template)
+    Vue.component(options.name, opts.template)
   }
 }
 
