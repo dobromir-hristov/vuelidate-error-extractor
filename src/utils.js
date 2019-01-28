@@ -31,7 +31,7 @@ export function template (template, object) {
   }
   const regx = /{(.*?)}/g
 
-  return template.replace(regx, (_, key) => get(object, key) || '')
+  return template.replace(regx, (_, key) => get(object, key, ''))
 }
 
 /**

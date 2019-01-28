@@ -21,6 +21,10 @@ describe('utils.js', () => {
     it('returns empty if not found', () => {
       expect(template('A string {attribute}', {})).toEqual('A string ')
     })
+
+    it('can use 0 as a value', () => {
+      expect(template('A string {attr}', { attr: 0 })).toEqual('A string 0')
+    })
   })
 
   describe('get', () => {
