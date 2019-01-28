@@ -1,6 +1,6 @@
 /*!
- * vuelidate-error-extractor v2.3.0 
- * (c) 2018 Dobromir Hristov
+ * vuelidate-error-extractor v2.3.1 
+ * (c) 2019 Dobromir Hristov
  * Released under the MIT License.
  */
 'use strict';
@@ -42,7 +42,7 @@ function template (template, object) {
   }
   var regx = /{(.*?)}/g;
 
-  return template.replace(regx, function (_, key) { return get(object, key) || ''; })
+  return template.replace(regx, function (_, key) { return get(object, key, ''); })
 }
 
 /**
@@ -1307,7 +1307,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.3.0';
+var version = '2.3.1';
 
 exports.default = plugin;
 exports.singleErrorExtractorMixin = singleErrorExtractorMixin;

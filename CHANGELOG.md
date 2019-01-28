@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.1"></a>
+## [2.3.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.3.0...v2.3.1) (2019-01-28)
+
+
+### Bug Fixes
+
+* passing zero as a parameter ([62ac854](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/62ac854))
+
+
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.2.3...v2.3.0) (2018-12-26)
 
