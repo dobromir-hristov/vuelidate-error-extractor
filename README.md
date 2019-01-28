@@ -1,6 +1,6 @@
 <p align="center">
   <a align="center" href="https://www.npmjs.com/package/vuelidate-error-extractor" target="_blank">
-    <img alt="Vuelidate-error-extractor logo" width=200 src="https://raw.githubusercontent.com/dobromir-hristov/vuelidate-error-extractor/master/docs/logo.jpg">
+    <img alt="Vuelidate-error-extractor logo" width=200 src="https://raw.githubusercontent.com/dobromir-hristov/vuelidate-error-extractor/master/docs/.vuepress/public/logo.jpg">
   </a>
 </p>
 
