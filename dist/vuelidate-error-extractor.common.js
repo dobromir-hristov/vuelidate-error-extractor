@@ -71,27 +71,32 @@ function getValidationObject (validationKey, key, params) {
 }
 
 /**
- * Retrieves a validations attribute from the provided attributes object
- * @param {object} attributes
- * @param {string} attribute
- * @param {string} label
- * @param {string} [name = '']
- * @return {string}
+ * The flat
+ * @typedef VeeFlatMultiError
+ * @property {string} fieldName - The name of the field validated. Can be dot.path based.
+ * @property {string} validationKey - Name of the validation rule
+ * @property {boolean} hasError - Whether it has an error or not
+ * @property {object} params - The object holding merged params from Vuelidate + custom provided ones
+ * @property {boolean} $dirty - Whether its dirty. Vuelidate.$dirty
+ * @property {boolean} $error - Whether there is an error or not. Vuelidate.$error
+ * @property {boolean} $invalid - Whether the field is invalid. Vuelidate.$invalid
  */
-function getAttribute (attributes, attribute, label, name) {
-  if ( name === void 0 ) name = '';
 
-  // if an attribute is provided, just return it as its with highest priority
-  if (attribute) { return attribute }
-  // if there is no name prop, we cant reach into the attributes object, so we use the label instead
-  if (!name) { return label }
-  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
-  var normalizedName = name.replace(/\$each\.\d\./g, '');
-  return attributes[normalizedName] || normalizedName
-}
+/**
+ * A collection of VeeFlatMultiError objects
+ * @typedef {VeeFlatMultiError[]} VeeFlatMultiErrorBag
+ */
 
-function flattenValidatorObjects (validator, propName) {
+/**
+ * Flattens a deep Vuelidate Validator object to a normalized flat structure
+ * @param {object} validator - Vuelidate Validator object
+ * @param {string} [fieldName] - Name of validated field. Builds a dot.path when used on deep objects. Passed by recursive call to same function.
+ * @return {VeeFlatMultiErrorBag}
+ */
+function flattenValidatorObjects (validator, fieldName) {
+  // loop the validator objects
   return Object.entries(validator)
+  // leave those that dont have $ in their name with exception of $each
     .filter(function (ref) {
       var key = ref[0];
       var value = ref[1];
@@ -102,18 +107,24 @@ function flattenValidatorObjects (validator, propName) {
       var key = ref[0];
       var value = ref[1];
 
-      // its probably a deeply nested object
+      // if its an object, its probably a deeply nested object
       if (typeof value === 'object') {
         var nestedValidatorName =
-          (key === '$each' || !isNaN(parseInt(key))) ? propName
-            : propName ? (propName + "." + key)
+          // Key can be "$each", a "string" or a "number" from inside "$each".
+          // If "key" is "$each" or a string (from a nested object like "address.postal_code"), use the passed fieldName as its a recursive call from previous call.
+          (key === '$each' || !isNaN(parseInt(key))) ? fieldName
+            // if fieldName is available, build it like `model.brand` from `model.$each.0.brand`.
+            : fieldName ? (fieldName + "." + key)
+            // fallback to the "key" if "fieldName" is not available
             : key;
+        // recursively call the flatten again on the same error object, looking deep into it.
         return errors.concat(flattenValidatorObjects(value, nestedValidatorName))
       } // else its the validated prop
       var params = Object.assign({}, validator.$params[key]);
+      // delete type as it is coming for Vuelidate and may interfere with user custom attributes
       delete params.type;
       errors.push({
-        propName: propName,
+        fieldName: fieldName,
         validationKey: key,
         hasError: !value,
         params: params,
@@ -139,6 +150,66 @@ function getErrorString (messages, key, params) {
     return key
   }
   return template(msg, params)
+}
+
+/**
+ * Strip the "$each.0" from field names
+ * @type {RegExp}
+ */
+var NORMALIZE_ATTR_REGEX = /\$each\.\d\./g;
+
+/**
+ * Retrieves a validations attribute from the provided attributes object
+ * @param {object} attributes - Map of attribute name as key to attribute value
+ * @param {string} fieldName - The attribute key. Can be dot.notation.
+ * @return {string}
+ */
+function getAttribute (attributes, fieldName) {
+  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
+  var normalizedName = fieldName.replace(NORMALIZE_ATTR_REGEX, '');
+  return get(attributes, normalizedName, normalizedName)
+}
+
+/**
+ * Retrieves the translated attribute value by its key.
+ * If key is not present in the provided attributes parameter,
+ * we build it using the $_VEE_i18nDefaultAttribute key.
+ * @param {object} attributes - Map of attribute name as keys and paths to translations as values
+ * @param {string} fieldName - Attribute name, can be name or dot notation path to key
+ * @return {string}
+ */
+function getI18nAttribute (attributes, fieldName) {
+  // strip out the $each from the name
+  var normalizedName = fieldName.replace(NORMALIZE_ATTR_REGEX, '');
+  // fetches the attribute key from the i18nAttributes property. Can be dot.notation based.
+  var attributeKey = get(attributes, normalizedName);
+  // if there is such a key in the passed attributes param, we translate with it directly
+  if (attributeKey) {
+    return this.$t(attributeKey)
+  } else {
+    // We dont have the key defined and no __default attribute, so we just return the key so its not empty
+    if (!this.$_VEE_i18nDefaultAttribute) {
+      return normalizedName
+    }
+    // use the defaultAttribute to build the path to the attribute translation
+    return this.$t(((this.$_VEE_i18nDefaultAttribute) + "." + normalizedName))
+  }
+}
+
+/**
+ * Resolves the attribute depending if in i18n mode or not
+ * @param {Object.<string, string>} i18nAttributes
+ * @param {Object.<string, string>} attributes
+ * @param {string} name - Validated field name. Dot.path based
+ * @return {string}
+ */
+function resolveAttribute (i18nAttributes, attributes, name) {
+  // if its in 18n mode and has i18n attributes defined, extract them
+  if (this.$_VEE_hasI18n && this.$_VEE_hasI18nAttributes) {
+    return getI18nAttribute.call(this, i18nAttributes, name)
+  } else {
+    return getAttribute(attributes, name)
+  }
 }
 
 var baseErrorsMixin = {
@@ -221,6 +292,29 @@ var baseErrorsMixin = {
       var this$1 = this;
 
       return this.activeErrors.map(function (error) { return this$1.getErrorMessage(error.validationKey, error.params); })
+    },
+    /**
+     * Returns a boolean whether plugin is in i18n mode
+     * @return {boolean}
+     */
+    $_VEE_hasI18n: function $_VEE_hasI18n () {
+      return !!this.$vuelidateErrorExtractor.i18n
+    },
+    /**
+     * Returns a boolean whether i18nAttributes are available
+     * @return {boolean}
+     */
+    $_VEE_hasI18nAttributes: function $_VEE_hasI18nAttributes () {
+      return !!this.$vuelidateErrorExtractor.i18nAttributes
+    },
+    /**
+     * Returns the __default attribute from the i18nAttributes property
+     * @return {string}
+     */
+    $_VEE_i18nDefaultAttribute: function $_VEE_i18nDefaultAttribute () {
+      return this.$_VEE_hasI18nAttributes
+        ? this.$vuelidateErrorExtractor.i18nAttributes['__default']
+        : ''
     }
   },
   methods: {
@@ -232,7 +326,9 @@ var baseErrorsMixin = {
      * @return {string}
      */
     getErrorMessage: function getErrorMessage (key, params) {
-      return this.$vuelidateErrorExtractor.i18n ? this.getI18nMessage(key, params) : this.getPlainMessage(key, params)
+      return this.$_VEE_hasI18n
+        ? this.getI18nMessage(key, params)
+        : this.getPlainMessage(key, params)
     },
     /**
      * Returns the translated error message
@@ -357,7 +453,11 @@ var singleErrorExtractorMixin = {
      * @return {string}
      */
     resolvedAttribute: function resolvedAttribute () {
-      return getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name)
+      // if an attribute is provided, just return it as its with highest priority
+      if (this.attribute) { return this.attribute }
+      // if there is no name prop, we cant reach into the attributes object, so we use the label instead
+      if (!this.name) { return this.label }
+      return resolveAttribute.call(this, this.$vuelidateErrorExtractor.i18nAttributes, this.$vuelidateErrorExtractor.attributes, this.name)
     }
   }
 };
@@ -833,16 +933,21 @@ var multiErrorExtractorMixin = {
       if (this.$options.propsData.hasOwnProperty('validator')) { return this.validator }
       return this.formValidator
     },
+
     /**
      * Merge the global attributes and the locally provided ones
-     * @return {object  }
+     * @return {Object.<string,string>}
      */
     mergedAttributes: function mergedAttributes () {
+      if (this.$_VEE_hasI18n && this.$_VEE_hasI18nAttributes) {
+        return Object.assign({}, this.$vuelidateErrorExtractor.i18nAttributes, this.attributes)
+      }
       return Object.assign({}, this.$vuelidateErrorExtractor.attributes, this.attributes)
     },
+
     /**
      * Shallow array of all the errors for the provided validator
-     * @return {Array}
+     * @return {VeeFlatMultiErrorBag}
      */
     errors: function errors () {
       var this$1 = this;
@@ -850,17 +955,28 @@ var multiErrorExtractorMixin = {
       return flattenValidatorObjects(this.preferredValidator).map(function (error) {
         return Object.assign({}, error, {
           params: Object.assign({}, error.params, {
-            attribute: get(this$1.mergedAttributes, error.propName, error.propName)
+            attribute: this$1.getResolvedAttribute(error.fieldName)
           })
         })
       })
     },
+
     /**
      * Returns if the form has any errors
      * @return {boolean}
      */
     hasErrors: function hasErrors () {
       return !!this.activeErrors.length
+    }
+  },
+  methods: {
+    /**
+     * Returns the attribute's value, checking for i18n mode.
+     * @param {string} fieldName - Validation field name.
+     * @return {string}
+     */
+    getResolvedAttribute: function getResolvedAttribute (fieldName) {
+      return resolveAttribute.call(this, this.mergedAttributes, this.mergedAttributes, fieldName)
     }
   }
 };
@@ -1288,18 +1404,26 @@ var index$1 = {
   laravel: laravel
 };
 
+var inDEV = process.env.NODE_ENV === 'development';
+
 function plugin (Vue, opts) {
   if ( opts === void 0 ) opts = {};
 
   var options = {
     i18n: opts.i18n || false,
+    i18nAttributes: opts.i18nAttributes,
     messages: opts.messages || {},
     validationKeys: opts.validationKeys || {},
     attributes: opts.attributes || {},
     name: opts.name || 'formGroup'
   };
-  if (typeof options.i18n !== 'string' && options.i18n !== false) {
-    throw Error(("[vuelidate-error-extractor] options.i18n should be false or a string, " + (options.i18n) + " given."))
+  if (inDEV) {
+    if (typeof options.i18n !== 'string' && options.i18n !== false) {
+      throw Error(("[vuelidate-error-extractor] options.i18n should be false or a string, " + (options.i18n) + " given."))
+    }
+    if (typeof options.i18n === 'string' && Object.keys(options.attributes).length && options.i18nAttributes === undefined) {
+      console.error('[vuelidate-error-extractor] when using "i18n" mode, prefer using "i18nAttributes" option instead of "attributes"');
+    }
   }
   Vue.prototype.$vuelidateErrorExtractor = options;
   if (typeof opts.template !== 'undefined') {
