@@ -83,7 +83,7 @@ export const flattenedValidatorObject = [
     $error: false,
     $invalid: true,
     hasError: true,
-    propName: 'a',
+    fieldName: 'a',
     validationKey: 'required',
     params: {}
   },
@@ -92,7 +92,7 @@ export const flattenedValidatorObject = [
     $error: false,
     $invalid: true,
     hasError: false,
-    propName: 'a',
+    fieldName: 'a',
     validationKey: 'minLength',
     params: { min: 5 }
   },
@@ -101,7 +101,7 @@ export const flattenedValidatorObject = [
     $error: false,
     $invalid: true,
     hasError: true,
-    propName: 'b',
+    fieldName: 'b',
     validationKey: 'required',
     params: {}
   },
@@ -110,7 +110,7 @@ export const flattenedValidatorObject = [
     $error: false,
     $invalid: true,
     hasError: false,
-    propName: 'b',
+    fieldName: 'b',
     validationKey: 'maxLength',
     params: { max: 5 }
   },
@@ -119,7 +119,7 @@ export const flattenedValidatorObject = [
     $error: false,
     $invalid: true,
     hasError: true,
-    propName: 'deep.a',
+    fieldName: 'deep.a',
     validationKey: 'required',
     params: {}
   },
@@ -128,7 +128,7 @@ export const flattenedValidatorObject = [
     $error: true,
     $invalid: true,
     hasError: true,
-    propName: 'deep.b',
+    fieldName: 'deep.b',
     validationKey: 'required',
     params: {}
   }

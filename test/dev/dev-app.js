@@ -3,6 +3,7 @@ import vuelidate from 'vuelidate'
 import VueI18n from 'vue-i18n'
 import vuelidateErrorExtractor, { templates } from '../../src/index'
 import testForm from './testForm.vue'
+import i18nMessages from './localesMessages'
 
 const messages = {
   // required: 'The {attribute} field is required',
@@ -23,6 +24,11 @@ Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
   template: templates.singleErrorExtractor.foundation6,
   i18n: 'validations',
+  i18nAttributes: {
+    __default: 'attributes',
+    first_name: 'attribute_override.first_name'
+  },
+  // not used in i18n mode
   messages,
   attributes: {
     first_name: 'First Name',
@@ -36,26 +42,6 @@ Vue.use(vuelidateErrorExtractor, {
   // validationKeys: configs.laravel
 })
 Vue.use(VueI18n)
-//
-const i18nMessages = {
-  en: {
-    validations: {
-      required: 'The {attribute} field is required!',
-      required_extended: 'The {attribute} field must be filled in!',
-      required_further_extended: 'The {attribute} field must be filled in as its a required field!',
-      minLength: 'The {attribute} needs to be at least {min} characters long',
-      numeric: '{attribute} needs to be numeric.',
-      min: {
-        string: 'The {attribute} field must be at least {min} characters.'
-      }
-    }
-  },
-  bg: {
-    validations: {
-      required: 'Полето {attribute} е задължително!'
-    }
-  }
-}
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({
