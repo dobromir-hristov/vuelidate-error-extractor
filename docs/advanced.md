@@ -1,7 +1,7 @@
 ---
 title: Advanced Examples
 ---
-# Using with Scoped Slots
+## Using with Scoped Slots
 If you really want to cut down on boilerplate, scoped slots are the way to go.
 
 **Vuelidate-error-extractor** supports scoped slots from the beginning, but with version 2, they just got better.
@@ -30,7 +30,7 @@ The default slot scope now gives us access to props like `validator`, `attribute
 * **Attributes** - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.
 * **Events** - this is a shorter version of the `@input="$v.form.field.$touch()"`. You can skip it if you don't need it.
 
-# Nested objects with $each
+## Nested objects with $each
 When you need to validate a nested set of objects, you can use the **$each** config keyword inside Vuelidate validations.
 
 Lets say you have a list of phones and each phone should have a model number.
@@ -77,43 +77,48 @@ Under the hood it loops all the nested rules and it generates a path like `phone
 
 You can go as deep as you want `phones.$each.0.apps.$each.0.profiles.$each.0.name` corresponds to `phones.apps.profiles.name`.
 
-# i18n
+## i18n
 
-**Vuelidate-error-extractor** can be used with **vue-i18n** to provide error message translation.
+**Vuelidate-error-extractor** can be used with [vue-i18n](https://github.com/kazupon/vue-i18n) package to provide error message translations.
 
-To enable the i18n mode, you have to pass a string containing the top structure of your validation messages. 
-E.g.
-If your validations are looking like this:
+To enable the **i18n** mode, you have to pass a string leading to the path, where you define your validation messages in the translation file. 
 
-```js
-const message = {
-  en: {
-    validation:{
-      required: 'The {attribute} field is required',
-      email: 'The {attribte} field contains an invalid email address'
+### Example
+
+Translation file might look like this:
+
+```json
+{
+  "en": {
+    "validation": {
+      "required": "The {attribute} field is required",
+      "email": "The {attribute} field contains an invalid email address"
     }
   },
-  de: {
-    // ...
+  "de": {
+    "validation": {
+       // validation messages in german
+     }
   }
 }
 ```
 
-Then when initializing your plugin you have to set up like this:
+When initializing your plugin you have to set up like this:
 
 ```js
 Vue.use(VuelidateErrorExtractor, {
   template,
-  messages,
-  i18n: 'validation' // Where validation is the key under which all validation messages are contained. Can be deeper nested if needed.
+  i18n: 'validation' // Path to validation messages. Can be deeply.nested.property.
 })
 ```
-Now **vuelidate-error-extractor** will use `$t('validation.required')` to output a required error message for the current language.
+Now **vuelidate-error-extractor** will use the validation messages that match a validation rule, showing the appropriate messages for the current language.
 
 ## Validation keys
-Validation keys is a special hatch that lets you map more complex error messages to vuelidate's simpler tree structure.
+
+Validation keys is used to map deeply nested error messages to vuelidate's flatter validation rule names.
+
 E.g.
-Laravel uses deeper  structures for some of it's validation messages. 
+Laravel uses deeper structures for some of it's validation messages. 
 
 ```php
 [
@@ -126,7 +131,7 @@ Laravel uses deeper  structures for some of it's validation messages.
 ]
 ```
 
-We are forced to use strange validation rule names like `min.string` or easy way around this is to map the differences with the validationKeys option.
+You would be forced to use strange validation rule names like `min.string` to map validator to an error message. Using ValidationKeys, it is just a hash map.
 
 ```js
 const validationKeys = {
@@ -135,7 +140,7 @@ const validationKeys = {
     params: [
       {
         vue: 'min', // Vuelidate param name
-        ext: 'min' // Messages param name
+        ext: 'min' // Parameter inside the message
       }
     ]
   },
@@ -143,8 +148,8 @@ const validationKeys = {
     validationKey: 'same',
     params: [
       {
-        vue: 'eq', // Vuelidate uses eq for other value 
-        ext: 'other' // Laravel uses other
+        vue: 'eq', // Vuelidate uses `eq` for other value 
+        ext: 'other' // Laravel uses `other`
       }
     ]
   }
@@ -163,38 +168,42 @@ This way you can easily remap them without fiddling with the provided translated
 ## Validator Params
 
 This is another escape hatch for those moments where you need to provide a parameter which applies only for the current component.
+
 A really good example is the `same` validation. Laravel implements this via `same` message, where as Vuelidate has a `sameAs` rule. Even if we call ours `same:sameAs('password')` the parameter names don't match as vuelidate uses `eq` and laravel `other`.
+
 To solve our issue, we just provide a small map with the params we want to provide:
 
 ```html
 <form-group 
   :validator="$v.password_confirm" 
   :label="$('auth.password_confirm')" 
-  :validator-params="{ other: $t('auth.password') }">
-    <input type="text" v-model="password_confirm">
+  :validator-params="{ other: $t('auth.password') }"
+>
+  <input type="text" v-model="password_confirm">
 </form-group>
 ```
 
-Now if we have used `validationKeys` as well we get `The :attribute and :other must match.`  transformed to `The Password Confirmation and Password must match.`
+Now if we have used `validationKeys` as well, we get `The :attribute and :other must match.` transformed to `The Password Confirmation and Password must match.`
 
 ## Usage with other plugins
 
-You can of course use **vuelidate-error-extractor** with pretty much any input you want.
+You can of course use **vuelidate-error-extractor** with pretty much any input element.
 
 ### Usage with Multiselect
+
 Lets try with [Multiselect](http://monterail.github.io/vue-multiselect/)
 
 ```html
   <form-group :validator="$v.sports" label="Favourite Sports">
-    <multiselect v-model='sports' :options='sports_array' @input='$v.sports.$touch()'></multiselect>
+    <multiselect v-model='sports' :options='sports_array' @input='$v.sports.$touch()'/>
   </form-group> 
 ```
 
 <p data-height="400" data-theme-id="0" data-slug-hash="PKjxvr" data-default-tab="result" data-user="dobromir" data-embed-version="2" data-pen-title="Vuelidate-error-extractor with Multiselect" class="codepen">See the Pen <a href="https://codepen.io/dobromir/pen/PKjxvr/">Vuelidate-error-extractor with Multiselect</a> by Dobromir (<a href="https://codepen.io/dobromir">@dobromir</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 
-### Usage with quasar
+### Usage with Quasar
 
-You could use it with [Quasar](http://quasar-framework.org/components/input.html) as well, because we support scoped slots, we can make use of them.
+You could use it with [Quasar](http://quasar-framework.org/components/input.html) as well, and with scoped slots, we can provide the needed data.
 
 We can create a new simple component to use with Quasar inputs.
 
@@ -216,7 +225,7 @@ We can create a new simple component to use with Quasar inputs.
 
 Pass scoped props to quasar's q-input
 ```html
-  <form-group>
+  <form-group :validator="$v.form_name">
     <template slot-scope="{ hasErrors, firstErrorMessage, isValid }">
       <q-input 
         v-model="text" 

@@ -24,11 +24,11 @@ Vue.use(vuelidate);
 Vue.use(vuelidateErrorExtractor, { 
   /**
    * Optionally provide the template in the configuration. 
-   * or use Vue.component("FormField", templates.singleErrorExtractor.foundation6)
+   * or register like so Vue.component("FormField", templates.singleErrorExtractor.foundation6)
    */
-  template: templates.singleErrorExtractor.foundation6,
-  messages: { required: "The {attribute} field is required" },
-  attributes: {
+  template: templates.singleErrorExtractor.foundation6, // you can also pass your own custom template
+  messages: { required: "The {attribute} field is required" }, // error messages to use
+  attributes: { // maps form keys to actual field names
     email: "Email",
     first_name: "First name",
     last_name: "Last name"
@@ -40,11 +40,12 @@ Now you can use it in your components as shown below.
 
 ```vue
 <template>
-  <div>
+  <form @submit.prevent="submitForm">
+    <h1>Awesome form</h1>
     <form-group :validator="$v.form.username" label="Username">
       <input type="text" v-model="form.username" @input="$v.form.username.$touch()">
     </form-group>
-  </div>
+  </form>
 </template>
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
@@ -67,7 +68,7 @@ export default {
 </script>
 ```
 
-The error extractor component is registered as a `<form-group>` component by default, but can be changed. See [Initialization Options - name](./installation.md#initialization-options)
+By default, the error extractor component is registered as `<form-group>`, but it can be changed. See [Initialization Options - name](./installation.md#initialization-options) for more info.
 
 ## Exported objects
 
@@ -93,14 +94,15 @@ The error extractor component is registered as a `<form-group>` component by def
 
 When installing Vuelidate-error-extractor there are just a few options required.
 
-| Option         | Type          | Required   | Description                                                                                                                                                                                                    |
-| -------------- | ------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| template       | Vue Component | optional   | **singleErrorExtractor** field template. It registers the component globally for you, or you can do it yourself via `Vue.component('formGroup', template)`. Custom templates should implement the `singleErroExtractorMixin` mixin.                                    |
-| i18n           | String        | optional\* | Pass a path to your validation rules error messages in your translation file. Usage of [vue-i18n](https://github.com/kazupon/vue-i18n) package is assumed. See [Advanced](./advanced.md#i18n) for more info. |
-| messages       | Object        | optional\* | The messages from which to extract each validation rule error message. Optional if using i18n mode, otherwise required.                                                                                                                   |
-| validationKeys | Object        | optional   | Allows remapping validation rule keys and their props. See [Using Validation Keys](./advanced.md#validation-keys)                                                                                                         |
-| name           | String        | optional   | The name under which to register the **Single Error Extractor** template. Defaults to **formGroup**                                                                                                                |
-| attributes     | Object        | optional   | A dictionary of input field names. Used when displaying error messages for specific fields that display the name of the field. See [FormWrapper - Reusable Attributes](./form_wrapper.md#reusable-attributes)                                                                             |
+| Option         | Type          | Required   | Description                                                                                                                                                                                                                       |
+| -------------- | ------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| template       | Vue Component | optional   | **singleErrorExtractor** field template. It registers the component globally for you. You can do it yourself via `Vue.component('formGroup', template)`. Custom templates should implement the `singleErroExtractorMixin` mixin.  |
+| i18n           | String        | optional\* | Path to your validation error messages in your translation file. See [Advanced](./advanced.md#i18n) for more info.                      |
+| messages       | Object        | optional\* | The messages from which to extract each validation rule error message. Optional if using i18n mode, otherwise required.                                                                                                           |
+| validationKeys | Object        | optional   | Allows remapping validation rule keys and their props. See [Using Validation Keys](./advanced.md#validation-keys)                                                                                                                 |
+| name           | String        | optional   | The name under which to register the **Single Error Extractor** template. Defaults to **formGroup**.                                                                                                                              |
+| attributes     | Object        | optional   | A map of input field names. Used when displaying error messages for specific fields that display the name of the field. See [FormWrapper - Reusable Attributes](./form_wrapper.md#reusable-attributes)                     |
+| i18nAttributes | Object        | optional   | A dictionary of input field names. Used when displaying error messages for specific fields that display the name of the field. See [FormWrapper - Reusable Attributes](./form_wrapper.md#reusable-attributes)                     |
 
 ## Direct Download/CDN
 

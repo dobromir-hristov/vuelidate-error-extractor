@@ -7,6 +7,8 @@ title: Custom Templates
 
 If you have a custom template that you want to use (and you most probably do), then you can use the `singleErrorExtractorMixin`. It will give you all you need to display a single field's errors.
 
+Below is an example implementation of such a template, using the provided by the mixin computed properties.
+
 ```vue
 <template>
   <div class="form-group" :class="{ error: hasErrors }">
@@ -16,6 +18,7 @@ If you have a custom template that you want to use (and you most probably do), t
     </div>
   </div>
 </template>
+
 <script>
   import { singleErrorExtractorMixin } from 'vuelidate-error-extractor'
   
@@ -25,18 +28,19 @@ If you have a custom template that you want to use (and you most probably do), t
 </script>
 ```
 
-Now you can import the template and supply it to the initialize method's template option or register it your self. Behind the scenes, the template option does it for you.
+Now you can import the template and supply it to the initialize method's template option or register it yourself.
 
 ```js
-import customFormGroup from './path/to/formGroup.vue'
 import Vue from 'vue'
 import vuelidate from 'vuelidate'
 import vuelidateErrorExtractor from 'vuelidate-error-extractor'
 
+import customFormGroup from './path/to/formGroup.vue'
+
 Vue.use(vuelidate)
 Vue.use(vuelidateErrorExtractor, {
   template: customFormGroup,
-  messages: {},
+  messages: messages,
 })
 ```
 
@@ -59,11 +63,11 @@ getErrorMessage| {String} key, {Object} properties | String | Gets the error mes
 
 Property | Returns | Description
 | --- | --- | --- |
-errors | Object | All validation error objects for the field. Its a dynamic property so its in sync with the form field's state. 
-activeErrors | Object | The currently active error objects.
-activeErrorMessages | Object | The currently active error messages.
-mergedMessages | Object | Merges both the messages prop and the globally defined ones on init.
-firstError | Object | Returns the first error object.
+errors | Object | Collection of validation [error objects](./custom_templates.md#error-object) for the field. Its a dynamic property, so its in sync with the form field's state. 
+activeErrors | Object | Only the active error objects - those that are "dirty".
+activeErrorMessages | Object | Only the active error messages.
+mergedMessages | Object | Collection of messages, from both the local messages prop and the global messages.
+firstError | Object | Returns the first active error object.
 firstErrorMessage | String | Returns the first active error message.
 hasErrors | Boolean | If field has any errors. 
 
@@ -91,7 +95,7 @@ The `error` object has a structure like:
 
 * **validationKey** - Key by which the messages are extracted. Could be deep dot notation - `min.string` resolves in `{ min: { string: 'Field is required' }}`
 
-### Props
+### SingleErrorExtractor Props
 
 Prop | Type | Required | Description
   |  ---| --- | --- | ---|
@@ -103,6 +107,7 @@ Prop | Type | Required | Description
 
 
 ## Multi Error Extractor component
+
 Creating your own multi error component is super easy. You can use our `baseMultiErrorExtractor` to do that.
 
 In fact that is how the Foundation6 multi error template is implemented.
@@ -132,7 +137,9 @@ The scoped slot exposes both the full `error` object as well as the `errorMessag
 
 ### multiErrorExtractorMixin
 
-If you need even more customization, you can use the `multiErrorExtractorMixin` directly. It will provide similar props and computed properties as the `singleErrorExtractorMixin`.
+If you need even more customization, you can use the `multiErrorExtractorMixin`. 
+
+It will provide similar props and computed properties as the `singleErrorExtractorMixin`.
 
 
 ### Methods

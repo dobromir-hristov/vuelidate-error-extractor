@@ -5,7 +5,7 @@ title: Form Wrapper
 # Form Wrapper
 
 The FormWrapper component is used to pass a validator object to all error extractor elements inside it, no matter how deeply nested. 
-This works with both the `Single Error Extractor` and the `Multi Error Extractor`, allowing the user to skip passing the validator object to each form field.
+This works with both the `Single Error Extractor` and the `Multi Error Extractor`, allowing the user to skip passing the validator object to each form field. You can even skip passing the `attribute` property as it can be extracted automatically.
 
 ## Preparation
 You need to register the FormWrapper as a new Vue component. How you name it is up to you.
@@ -16,11 +16,24 @@ import { templates } from 'vuelidate-error-extractor'
 // This will register the component globally
 Vue.component('FormWrapper', templates.FormWrapper)
 ```
-You can also register the FormWrapper component locally just for a component by passing it to the `components` key on the Vue component that needs it.
+
+You can also register the FormWrapper component locally just for a component.
+
+```js
+import { templates } from 'vuelidate-error-extractor'
+
+export default {
+  components: {
+    FormWrapper: templates.FormWrapper
+  }
+}
+```
 
 ### Reusable Attributes
-To get the most benefit, provide an `attributes` option inside the Vuelidate-error-extractor initial setup.
-That way fields with the same name like **email** or **name** will get properly mapped to **E-mail** or **User Name**.
+
+To benefit from automatic `attribute` extraction, define an `attributes` option in your Vuelidate-error-extractor initial setup.
+
+That way fields with the same name like **email** or **name** can get automatically replaced with **E-mail** or **User Name** in your error messages.
 
 ## Usage
 
@@ -84,22 +97,20 @@ export default {
   }
 }
 ```
+
 By adding a `messages` prop, you can override the globally defined messages. 
 
-::: warning
-Does not work in i18n mode for now!
-:::
-
 ### Single Error Extractor
-When using with the `SingleErrorExtractor` component, its required to pass а **name** prop to each error extractor. That is a string representing the field's key in the form.
+The `singleErrorExtractor` requires а **name** prop to be passed when used with the `FormWrapper`. The `name` prop is a string, equal to that field's key inside the form object, essentially the one that we are binding `v-model` to.
 
-That way the `singleErrorExtractor` can look into the `FormWrapper` component and get the proper validations.
- 
-Using the `name` prop, the error message `attribute` is picked from the globally defined upon setup `attributes` object. 
+That way the `singleErrorExtractor` can reach into the `FormWrapper` and get the appropriate validations.
+
+#### Bonus 
+When you add the `name` prop, the `attribute` placeholder inside error messages is extracted from the `attributes` global object. 
 
 ### Multi Error Extractor
 
-When the `FormWrapper` is used with the `MultiErrorExtractor`, the later requires no props what so ever. The extractor becomes a prop-less component. See the example above.
+When the `MultiErrorExtractor` is used inside the `FormWrapper`, it requires no props what so ever. The `validator` prop is injected automatically.
 
 ## How it works
 The `FormWrapper` is a component that has no markup, just a slot that renders everything passed to it. 
