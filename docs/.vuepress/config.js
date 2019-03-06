@@ -50,6 +50,7 @@ module.exports = {
       'custom_templates',
       'advanced',
       'overriding_messages',
+      'attributes',
       'other_frameworks'
     ],
     repo: 'dobromir-hristov/vuelidate-error-extractor',

@@ -26,9 +26,9 @@ If you really want to cut down on boilerplate, scoped slots are the way to go.
 
 The default slot scope now gives us access to props like `validator`, `attributes` and `events`. 
 
-* **Validator** - the validator object that the `form-group` uses. It will pick between the component validator or the injected one from the form-wrapper.
-* **Attributes** - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.
-* **Events** - this is a shorter version of the `@input="$v.form.field.$touch()"`. You can skip it if you don't need it.
+* **validator** - the validator object that the `form-group` uses. It will pick between the component validator or the injected one from the form-wrapper.
+* **attributes** - various attributes that are needed for the input. Classes, name fields etc. This is totally optional but each template has little quirks. Bootstrap4 for example requires classes to indicate validation success or failure.
+* **events** - this is a shorter version of the `@input="$v.form.field.$touch()"`. You can skip it if you don't need it.
 
 ## Nested objects with $each
 When you need to validate a nested set of objects, you can use the **$each** config keyword inside Vuelidate validations.
