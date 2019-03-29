@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.3.1...v2.4.0) (2019-03-29)
+
+
+### Bug Fixes
+
+* revamp the documentation ([4c20c2b](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/4c20c2b))
+
+
+### Features
+
+* allow passing path to translation as attribute in i18n mode ([0a588b1](https://github.com/dobromir-hristov/vuelidate-error-extractor/commit/0a588b1))
+
+
+
 <a name="2.3.1"></a>
 ## [2.3.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.3.0...v2.3.1) (2019-01-28)
 
