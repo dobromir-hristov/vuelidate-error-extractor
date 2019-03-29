@@ -112,12 +112,12 @@ If it cannot find a value inside `i18nAttributes`, it will try to assemble it's 
  
 #### SingleErrorExtractor attribute override
 
-To override the attribute in the singleErrorExtractor, you must pass an already translated string to the `attribute` prop.
+To override the attribute in the singleErrorExtractor, you must pass a path to a translation string to the `attribute` prop.
 
 ```vue
 <form-group 
   :validator="$v.first_name" 
-  :attribute="$t('forms.user.first_name')"
+  attribute="forms.user.first_name"
 >
   <input type="text" v-model="first_name"/>
 </form-group>

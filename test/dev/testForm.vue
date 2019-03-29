@@ -87,7 +87,7 @@
     <form-group
       :validator="$v.nestedObject.address.postal"
       label="Deep Postal"
-      attribute="Postal"
+      attribute="attributes.address.postal"
     >
       <input
         type="text"
