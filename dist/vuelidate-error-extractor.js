@@ -576,7 +576,7 @@ var VuelidateErrorExtractor = (function (exports) {
        */
       resolvedAttribute: function resolvedAttribute () {
         // if an attribute is provided, just return it as its with highest priority
-        if (this.attribute) { return this.attribute }
+        if (this.attribute) { return this.$_VEE_hasI18n ? this.$t(this.attribute) : this.attribute }
         // if there is no name prop, we cant reach into the attributes object, so we use the label instead
         if (!this.name) { return this.label }
         return resolveAttribute.call(this, this.$vuelidateErrorExtractor.i18nAttributes, this.$vuelidateErrorExtractor.attributes, this.name)
