@@ -11,11 +11,13 @@ To do that, you will have to add an `el-form` wrapping component.
 ```vue
 <el-form label-width="120px" size="mini">
   <form-group :validator="$v.sizeForm.name">
-    <template slot-scope="{ firstErrorMessage }">
-      <el-form-item label="Activity name" :error='firstErrorMessage'>
-        <el-input v-model="sizeForm.name"></el-input>
-      </el-form-item>
-    </template>
+    <el-form-item 
+      slot-scope="{ firstErrorMessage }"
+      :error='firstErrorMessage'
+      label="Activity name"
+    >
+      <el-input v-model="sizeForm.name"/>
+    </el-form-item>
   </form-group>
 </el-form>
 ```
@@ -67,11 +69,10 @@ This one is а bit simpler. We just need a simple invisible wrapper.
 ```vue
 <template>
   <div>
-    <slot
-      :attrs="{ errorMessage: firstErrorMessage, errorMessageForce: hasErrors }"
-    />
+    <slot :attrs="{ errorMessage: firstErrorMessage, errorMessageForce: hasErrors }" />
   </div>
 </template>
+
 <script>
   import { singleErrorExtractorMixin } from 'vuelidate-error-extractor'
   export default {
@@ -82,18 +83,17 @@ This one is а bit simpler. We just need a simple invisible wrapper.
 </script>
 ```
 
-Then we use it like so
+Then we use it like so:
 
 ```vue
 <form-group :validator="$v.name">
-  <template slot-scope="{ attrs }">
-      <f7-input 
-        type="text" 
-        @input="name = $event.target.value" 
-        placeholder="Enter number" 
-        v-bind="attrs"
-      />
-  </template>
+  <f7-input 
+    v-model="name"
+    slot-scope="{ attrs }"
+    v-bind="attrs"
+    type="text" 
+    placeholder="Enter number" 
+  />
 </form-group>
 ```
 
@@ -107,10 +107,7 @@ We will pass our activeErrorMessages computed property to `v-text-field` via a s
 <template>
   <div>
     <slot
-      :attrs="{ 
-          errorMessages: activeErrorMessages,
-          success: isValid
-       }"
+      :attrs="{ errorMessages: activeErrorMessages, success: isValid }"
       :hasErrors="hasErrors"
     />
   </div>
@@ -126,15 +123,14 @@ export default {
 Now we can use it like so: 
 
 ```vue
-<form-group  name="email">
-  <template slot-scope="{ attrs }">
-    <v-text-field
-      v-bind="attrs"
-      v-model="form.email"
-      label="Email with wrapper"
-      @input="$v.form.email.$touch()"
-    />
-  </template>
+<form-group :validator="$v.form.email">
+  <v-text-field
+    slot-scope="{ attrs }"
+    v-bind="attrs"
+    v-model="form.email"
+    label="Email with wrapper"
+    @input="$v.form.email.$touch()"
+  />
 </form-group>
 ```
 
@@ -267,7 +263,7 @@ Vue Material uses a very simple wrapper around its inputs to give them error sta
 ```vue
 <template>
   <md-field :class="{ 'md-invalid': hasErrors }">
-    <label> {{label}} </label>
+    <label> {{ label }} </label>
     <slot/>
     <span class="md-error" v-if="hasErrors">{{ firstErrorMessage }}</span>
   </md-field>
@@ -327,20 +323,18 @@ Usage is simple
 
 ```vue
 <form-group :validator="$v.form.email" label="Email with wrapper">
-  <template slot-scope="{ attrs, listeners }">
-    <b-form-input
-      v-bind="attrs"
-      v-on="listeners"
-      v-model="form.email"
-    />
-  </template>  
+  <b-form-input
+    slot-scope="{ attrs, listeners }"
+    v-bind="attrs"
+    v-on="listeners"
+    v-model="form.email"
+  />
 </form-group>
 ```
 
 ### Live Bootstrap Vue Example
 
 <iframe src="https://codesandbox.io/embed/2pww743mrr?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-
 
 ## Usage with Buefy
 
@@ -352,8 +346,9 @@ Buefy exposes the `b-field` component, which has `type` and `message` props. We 
     :label="label"
     :custom-class="customClass"
     :type="type"
-    :message="firstErrorMessage">
-     <slot/>
+    :message="firstErrorMessage"
+  >
+    <slot/>
   </b-field>
 </template>
 <script>
@@ -362,17 +357,17 @@ export default {
   extends: singleErrorExtractorMixin,
   computed: {
     type() {
-      return this.hasErrors ? "is-danger" : this.isValid ? "is-success" : null;
+      return this.hasErrors ? "is-danger" :
+        this.isValid ? "is-success" :
+        null
     },
     customClass() {
-      return this.hasErrors
-        ? "has-text-danger"
-        : this.isValid
-          ? "has-text-success"
-          : null;
+      return this.hasErrors ? "has-text-danger" :
+        this.isValid ? "has-text-success" :
+        null
     }
   }
-};
+}
 </script>
 ```
 
@@ -380,12 +375,13 @@ And we use like normal
 
 ```vue
  <form-group
-      :validator="$v.form.email"
-      label="Email with wrapper">
-    <b-input 
-      v-model="form.email"
-      @input="$v.form.email.$touch()"
-    />
+  :validator="$v.form.email"
+  label="Email with wrapper"
+>
+  <b-input 
+    v-model="form.email"
+    @input="$v.form.email.$touch()"
+  />
 </form-group>
 ```
 
@@ -400,11 +396,11 @@ Vuesax just has one input the `vs-input` that accepts `vs-danger` and `vs-succes
 ```vue
 <template>
   <vs-input 
+      v-model="model"
+      :vs-label="label"
       :vs-danger="hasError" 
       :vs-success="isValid"  
-      :vs-label="label"
       :vs-danger-text="firstErrorMessage" 
-      v-model="model"
   />
 </template>
 <script>

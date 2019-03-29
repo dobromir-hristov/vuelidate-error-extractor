@@ -1,4 +1,4 @@
-import { get, getValidationObject, getAttribute } from './utils'
+import { get, getValidationObject, resolveAttribute } from './utils'
 import baseErrorsMixin from './base-errors-mixin'
 
 export default {
@@ -92,7 +92,11 @@ export default {
      * @return {string}
      */
     resolvedAttribute () {
-      return getAttribute(this.$vuelidateErrorExtractor.attributes, this.attribute, this.label, this.name)
+      // if an attribute is provided, just return it as its with highest priority
+      if (this.attribute) return this.attribute
+      // if there is no name prop, we cant reach into the attributes object, so we use the label instead
+      if (!this.name) return this.label
+      return resolveAttribute.call(this, this.$vuelidateErrorExtractor.i18nAttributes, this.$vuelidateErrorExtractor.attributes, this.name)
     }
   }
 }

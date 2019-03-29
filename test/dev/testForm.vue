@@ -1,13 +1,63 @@
 <template>
   <div>
+    <form-wrapper :validator="$v.nestedObject">
+      <multi-error-extractor/>
+    </form-wrapper>
+    <h3>Plain FormField</h3>
+    <form-group
+      :validator="$v.test"
+      label="Test"
+      name="test"
+    >
+      <input
+        type="text"
+        v-model="test"
+        @input="$v.test.$touch()"
+      >
+    </form-group>
+    <h3>Form Field with Just Form wrapper</h3>
+    <form-wrapper :validator="$v.nestedObject">
+      <form-group
+        name="first_name"
+        label="First name"
+      >
+        <template slot-scope="{ validator, hasErrors, attributes, events }">
+          <input
+            v-bind="attributes"
+            v-on="events"
+            type="text"
+            v-model="nestedObject.first_name"
+          >
+        </template>
+      </form-group>
+    </form-wrapper>
+    <h3> Form Field With Wrapper And Message override on it</h3>
     <form-wrapper
       :validator="$v.nestedObject"
       :messages="messages"
     >
-      <multi-error-extractor/>
       <form-group
         name="first_name"
         label="First name"
+      >
+        <template slot-scope="{ validator, hasErrors, attributes, events }">
+          <input
+            v-bind="attributes"
+            v-on="events"
+            type="text"
+            v-model="nestedObject.first_name"
+          >
+        </template>
+      </form-group>
+    </form-wrapper>
+    <h3>Form Field With Wrapper and Local Messages Override</h3>
+    <form-wrapper
+      :validator="$v.nestedObject"
+      :messages="messages"
+    >
+      <form-group
+        label="First Name"
+        name="first_name"
         :messages="{ required: 'validations.required_further_extended'}"
       >
         <template slot-scope="{ validator, hasErrors, attributes, events }">
@@ -19,30 +69,12 @@
           >
         </template>
       </form-group>
+    </form-wrapper>
+    <h3>Top level Form Field with Wrapper and Validator override</h3>
+    <form-wrapper :validator="$v.nestedObject">
       <form-group
-        label="Test"
-        attribute="Test Field"
-      >
-        <input
-          type="text"
-          v-model="test"
-          @input="$v.test.$touch()"
-        >
-      </form-group>
-      <form-group
-        label="First Name"
-        name="first_name"
-      >
-        <input
-          type="text"
-          v-model="nestedObject.first_name"
-          @input="$v.nestedObject.first_name.$touch()"
-        >
-      </form-group>
-      <form-group
-        :validator="$v.nestedObject.last_name"
+        name="last_name"
         label="Nested Last Name"
-        attribute="Last name"
       >
         <input
           type="text"
@@ -50,28 +82,24 @@
           @input="$v.nestedObject.last_name.$touch()"
         >
       </form-group>
-      <form-group
-        label="Deep City"
-        attribute="Deep City Field"
-        name="address.city"
+    </form-wrapper>
+    <h3>Deep nested FormField without Wrapper</h3>
+    <form-group
+      :validator="$v.nestedObject.address.postal"
+      label="Deep Postal"
+      attribute="Postal"
+    >
+      <input
+        type="text"
+        v-model="nestedObject.address.postal"
+        @input="$v.nestedObject.address.postal.$touch()"
       >
-        <input
-          type="text"
-          v-model="nestedObject.address.city"
-          @input="$v.nestedObject.address.city.$touch()"
-        >
-      </form-group>
-      <form-group
-        :validator="$v.nestedObject.address.postal"
-        label="Deep Postal"
-        attribute="Postal"
-      >
-        <input
-          type="text"
-          v-model="nestedObject.address.postal"
-          @input="$v.nestedObject.address.postal.$touch()"
-        >
-      </form-group>
+    </form-group>
+    <h3>Form field within Each</h3>
+    <form-wrapper
+      :validator="$v.nestedObject"
+      :messages="messages"
+    >
       <form-group
         name="phones.$each.0.model"
         label="First Phone models"
@@ -85,12 +113,13 @@
           >
         </template>
       </form-group>
-      <button
-        class="button"
-        @click="$v.nestedObject.$touch()"
-      >Touch
-      </button>
     </form-wrapper>
+    <button
+      class="button"
+      @click="$v.$touch()"
+    >
+      Touch
+    </button>
   </div>
 </template>
 <script>

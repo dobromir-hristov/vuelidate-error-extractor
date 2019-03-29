@@ -6,6 +6,7 @@ title: Multi Error Extractor
 The Multi Error Extractor is a component that displays all the errors of a form.
 
 It can receive a validator object either from a direct prop or via a `FormWrapper`, see [Using a Form Wrapper](form_wrapper.md). 
+
 An `attributes` prop cam be passed to identify each field's name in the form. Passing a local `attributes` prop will override the global `attributes`.
 
 The component does not come with any special styling or markup. We do however provide optional prebuilt templates for Foundation6 and Bootstrap3.
@@ -23,12 +24,19 @@ Vue.component('form-errors', template.multiErrorExtractor.foundation6)
 
 ## Usage
 
-This is the basic usage of a `multi-error-extractor` component. It should get passed a validator and an attributes object.
-Attributes will map each error field by name to its `{attribute}` placeholder in the validation messages.
+This is the basic usage of a `multi-error-extractor` component. By default, it expects a validator object to be passed.
 
-You can skip the `attributes` param and rely on the globally defined attributes on initialization. Make sure that either the local or global attributes are defined.
+```html
+  <form-summary :validator="$v.form"/>
+```
+
+An optional `attributes` prop can be passed, to map each error field by name to its `{attribute}` placeholder in the validation messages.
+
+You can skip the `attributes` param and rely on the globally defined attributes on initialization. Check the [Attributes Page](./attributes.md) for more info. Make sure that you either pass a local `attributes` or have it defined globally.
  
-You can also provide a messages object that will override the globally defined messages. That allows for custom error messages, perfect when you want a specific validation message that is not applicable anywhere else. Check [Overriding Messages](./overriding_messages.md#using-messages-prop) for more examples.
+You can also provide a `messages` prop, that is an object of error messages. It will override the globally defined messages with the same keys. 
+
+That allows for custom error messages, perfect when you want a specific validation message that is not applicable anywhere else. Check [Overriding Messages](./overriding_messages.md#using-messages-prop) for more examples.
 
 
 ```vue

@@ -58,39 +58,52 @@ export function getValidationObject (validationKey, key, params = {}) {
 }
 
 /**
- * Retrieves a validations attribute from the provided attributes object
- * @param {object} attributes
- * @param {string} attribute
- * @param {string} label
- * @param {string} [name = '']
- * @return {string}
+ * The flat
+ * @typedef VeeFlatMultiError
+ * @property {string} fieldName - The name of the field validated. Can be dot.path based.
+ * @property {string} validationKey - Name of the validation rule
+ * @property {boolean} hasError - Whether it has an error or not
+ * @property {object} params - The object holding merged params from Vuelidate + custom provided ones
+ * @property {boolean} $dirty - Whether its dirty. Vuelidate.$dirty
+ * @property {boolean} $error - Whether there is an error or not. Vuelidate.$error
+ * @property {boolean} $invalid - Whether the field is invalid. Vuelidate.$invalid
  */
-export function getAttribute (attributes, attribute, label, name = '') {
-  // if an attribute is provided, just return it as its with highest priority
-  if (attribute) return attribute
-  // if there is no name prop, we cant reach into the attributes object, so we use the label instead
-  if (!name) return label
-  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
-  const normalizedName = name.replace(/\$each\.\d\./g, '')
-  return attributes[normalizedName] || normalizedName
-}
 
-export function flattenValidatorObjects (validator, propName) {
+/**
+ * A collection of VeeFlatMultiError objects
+ * @typedef {VeeFlatMultiError[]} VeeFlatMultiErrorBag
+ */
+
+/**
+ * Flattens a deep Vuelidate Validator object to a normalized flat structure
+ * @param {object} validator - Vuelidate Validator object
+ * @param {string} [fieldName] - Name of validated field. Builds a dot.path when used on deep objects. Passed by recursive call to same function.
+ * @return {VeeFlatMultiErrorBag}
+ */
+export function flattenValidatorObjects (validator, fieldName) {
+  // loop the validator objects
   return Object.entries(validator)
+  // leave those that dont have $ in their name with exception of $each
     .filter(([key, value]) => !key.startsWith('$') || key === '$each')
     .reduce((errors, [key, value]) => {
-      // its probably a deeply nested object
+      // if its an object, its probably a deeply nested object
       if (typeof value === 'object') {
         const nestedValidatorName =
-          (key === '$each' || !isNaN(parseInt(key))) ? propName
-            : propName ? `${propName}.${key}`
+          // Key can be "$each", a "string" or a "number" from inside "$each".
+          // If "key" is "$each" or a string (from a nested object like "address.postal_code"), use the passed fieldName as its a recursive call from previous call.
+          (key === '$each' || !isNaN(parseInt(key))) ? fieldName
+            // if fieldName is available, build it like `model.brand` from `model.$each.0.brand`.
+            : fieldName ? `${fieldName}.${key}`
+            // fallback to the "key" if "fieldName" is not available
             : key
+        // recursively call the flatten again on the same error object, looking deep into it.
         return errors.concat(flattenValidatorObjects(value, nestedValidatorName))
       } // else its the validated prop
       const params = Object.assign({}, validator.$params[key])
+      // delete type as it is coming for Vuelidate and may interfere with user custom attributes
       delete params.type
       errors.push({
-        propName,
+        fieldName: fieldName,
         validationKey: key,
         hasError: !value,
         params,
@@ -116,4 +129,64 @@ export function getErrorString (messages, key, params) {
     return key
   }
   return template(msg, params)
+}
+
+/**
+ * Strip the "$each.0" from field names
+ * @type {RegExp}
+ */
+const NORMALIZE_ATTR_REGEX = /\$each\.\d\./g
+
+/**
+ * Retrieves a validations attribute from the provided attributes object
+ * @param {object} attributes - Map of attribute name as key to attribute value
+ * @param {string} fieldName - The attribute key. Can be dot.notation.
+ * @return {string}
+ */
+export function getAttribute (attributes, fieldName) {
+  // strip out the $each and fetch the attribute from the attributes object. Return the name if it does exist on the object
+  const normalizedName = fieldName.replace(NORMALIZE_ATTR_REGEX, '')
+  return get(attributes, normalizedName, normalizedName)
+}
+
+/**
+ * Retrieves the translated attribute value by its key.
+ * If key is not present in the provided attributes parameter,
+ * we build it using the $_VEE_i18nDefaultAttribute key.
+ * @param {object} attributes - Map of attribute name as keys and paths to translations as values
+ * @param {string} fieldName - Attribute name, can be name or dot notation path to key
+ * @return {string}
+ */
+export function getI18nAttribute (attributes, fieldName) {
+  // strip out the $each from the name
+  const normalizedName = fieldName.replace(NORMALIZE_ATTR_REGEX, '')
+  // fetches the attribute key from the i18nAttributes property. Can be dot.notation based.
+  const attributeKey = get(attributes, normalizedName)
+  // if there is such a key in the passed attributes param, we translate with it directly
+  if (attributeKey) {
+    return this.$t(attributeKey)
+  } else {
+    // We dont have the key defined and no __default attribute, so we just return the key so its not empty
+    if (!this.$_VEE_i18nDefaultAttribute) {
+      return normalizedName
+    }
+    // use the defaultAttribute to build the path to the attribute translation
+    return this.$t(`${this.$_VEE_i18nDefaultAttribute}.${normalizedName}`)
+  }
+}
+
+/**
+ * Resolves the attribute depending if in i18n mode or not
+ * @param {Object.<string, string>} i18nAttributes
+ * @param {Object.<string, string>} attributes
+ * @param {string} name - Validated field name. Dot.path based
+ * @return {string}
+ */
+export function resolveAttribute (i18nAttributes, attributes, name) {
+  // if its in 18n mode and has i18n attributes defined, extract them
+  if (this.$_VEE_hasI18n && this.$_VEE_hasI18nAttributes) {
+    return getI18nAttribute.call(this, i18nAttributes, name)
+  } else {
+    return getAttribute(attributes, name)
+  }
 }

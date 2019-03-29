@@ -78,6 +78,29 @@ export default {
      */
     activeErrorMessages () {
       return this.activeErrors.map(error => this.getErrorMessage(error.validationKey, error.params))
+    },
+    /**
+     * Returns a boolean whether plugin is in i18n mode
+     * @return {boolean}
+     */
+    $_VEE_hasI18n () {
+      return !!this.$vuelidateErrorExtractor.i18n
+    },
+    /**
+     * Returns a boolean whether i18nAttributes are available
+     * @return {boolean}
+     */
+    $_VEE_hasI18nAttributes () {
+      return !!this.$vuelidateErrorExtractor.i18nAttributes
+    },
+    /**
+     * Returns the __default attribute from the i18nAttributes property
+     * @return {string}
+     */
+    $_VEE_i18nDefaultAttribute () {
+      return this.$_VEE_hasI18nAttributes
+        ? this.$vuelidateErrorExtractor.i18nAttributes['__default']
+        : ''
     }
   },
   methods: {
@@ -89,7 +112,9 @@ export default {
      * @return {string}
      */
     getErrorMessage (key, params) {
-      return this.$vuelidateErrorExtractor.i18n ? this.getI18nMessage(key, params) : this.getPlainMessage(key, params)
+      return this.$_VEE_hasI18n
+        ? this.getI18nMessage(key, params)
+        : this.getPlainMessage(key, params)
     },
     /**
      * Returns the translated error message

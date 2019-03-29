@@ -14,7 +14,8 @@
     ]
   ],
   "plugins": [
-    "babel-plugin-espower"
+    "babel-plugin-espower",
+    "transform-object-rest-spread"
   ],
   "env": {
     "test": {
