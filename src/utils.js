@@ -161,7 +161,7 @@ export function getI18nAttribute (attributes, fieldName) {
   // strip out the $each from the name
   const normalizedName = fieldName.replace(NORMALIZE_ATTR_REGEX, '')
   // fetches the attribute key from the i18nAttributes property. Can be dot.notation based.
-  const attributeKey = get(attributes, normalizedName)
+  /*const attributeKey = get(attributes, normalizedName)
   // if there is such a key in the passed attributes param, we translate with it directly
   if (attributeKey) {
     return this.$t(attributeKey)
@@ -169,12 +169,12 @@ export function getI18nAttribute (attributes, fieldName) {
     // We dont have the key defined and no __default attribute, so we just return the key so its not empty
     if (!this.$_VEE_i18nDefaultAttribute) {
       return normalizedName
-    }
+    } */
     // use the defaultAttribute to build the path to the attribute translation
-    return this.$t(`${this.$_VEE_i18nDefaultAttribute}.${normalizedName}`)
-  }
+    return this.$t(`${this.$vuelidateErrorExtractor.i18nAttributes}.${normalizedName}`)
+	/* this.$t(((this.$vuelidateErrorExtractor.i18nAttributes)+ "." + normalizedName)) */
+  //}
 }
-
 /**
  * Resolves the attribute depending if in i18n mode or not
  * @param {Object.<string, string>} i18nAttributes

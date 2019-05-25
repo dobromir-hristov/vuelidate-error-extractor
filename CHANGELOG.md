@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.1"></a>
+## [2.4.1](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.4.0...v2.4.1) (2019-05-25)
+
+
+
 <a name="2.4.0"></a>
 # [2.4.0](https://github.com/dobromir-hristov/vuelidate-error-extractor/compare/v2.3.1...v2.4.0) (2019-03-29)
 
