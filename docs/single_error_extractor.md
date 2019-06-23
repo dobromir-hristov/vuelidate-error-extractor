@@ -31,7 +31,7 @@ This is the basic usage of the provided `form-group` component. It should be pas
 
 ### Custom Attribute
 
-If you decide to skip the label, the `{attriute}` param in error messaged will become empty. If you want to have a different attribute than the Label, pass an `attribute` prop. 
+If you decide to skip the label, the `{attribute}` param in error messaged will become empty. If you want to have a different attribute than the Label, pass an `attribute` prop. 
 
 ```vue
 <form-group 
