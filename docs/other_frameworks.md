@@ -292,7 +292,7 @@ Usage is straight forward
 
 ## Usage with BootstrapVue
 
-Bootstrap Vue offers the `b-form-group` component with `invalid-feedback` and `state` props. It expects an error message and a boolean state, so we pass the `firstErrorMessage` and the `isValid`.
+BootstrapVue offers the `b-form-group` component with `invalid-feedback` and `state` props. It expects an error message and a boolean state, so we pass the `firstErrorMessage` and the `isValid`.
 
 Added bonus is the scoped slot with `attrs` and `listeners` props. You can skip those, but they can reduce boilerplate in the future.
 
@@ -322,17 +322,17 @@ export default {
 Usage is simple
 
 ```vue
-<form-group :validator="$v.form.email" label="Email with wrapper">
+<form-element :validator="$v.form.email" label="Email with wrapper">
   <b-form-input
     slot-scope="{ attrs, listeners }"
     v-bind="attrs"
     v-on="listeners"
     v-model="form.email"
   />
-</form-group>
+</form-element>
 ```
 
-### Live Bootstrap Vue Example
+### Live BootstrapVue Example
 
 <iframe src="https://codesandbox.io/embed/2pww743mrr?autoresize=1&module=%2Fsrc%2Fcomponents%2FExampleForm.vue" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
