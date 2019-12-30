@@ -2,7 +2,7 @@ const replace = require('rollup-plugin-replace')
 const buble = require('rollup-plugin-buble')
 const banner = require('./banner')
 const pack = require('../package.json')
-const VuePlugin = require('rollup-plugin-vue').default
+const VuePlugin = require('rollup-plugin-vue')
 const node = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 
