@@ -29,6 +29,11 @@ exports[`baseMultiErrorExtractor Displays a list of errors in the dom using the 
           Field City is required
         </div>
       </div>
+      <div>
+        <div>
+          Field Postal is required
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -60,6 +65,11 @@ exports[`baseMultiErrorExtractor displays a list of errors in the dom using loca
     <div>
       <div>
         Field City is required
+      </div>
+    </div>
+    <div>
+      <div>
+        Field Postal is required
       </div>
     </div>
   </div>

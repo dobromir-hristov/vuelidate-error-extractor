@@ -82,21 +82,23 @@ describe('baseMultiErrorExtractor', () => {
   })
 
   /* Skipping this test because vue-test-utils renders it wrong for some reason. */
-  it('Displays a list of errors in the dom using the injected validator', () => {
+  it('Displays a list of errors in the dom using the injected validator', async () => {
     wrapper = createWrapper()
     wrapper.vm.$v.form.$touch()
+    await wrapper.vm.$nextTick()
     expect(wrapper.element).toMatchSnapshot()
-    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(5)
+    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(6)
   })
 
-  it('displays a list of errors in the dom using local validator', () => {
+  it('displays a list of errors in the dom using local validator', async () => {
     wrapper = createWrapper({
       componentOpts: {
         template: '<div><multi-errors :validator="$v.form"/></div>'
       }
     })
     wrapper.vm.$v.form.$touch()
+    await wrapper.vm.$nextTick()
     expect(wrapper.element).toMatchSnapshot()
-    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(5)
+    expect(wrapper.find(baseMultiErrorExtractor).vm.activeErrorMessages).toHaveLength(6)
   })
 })
