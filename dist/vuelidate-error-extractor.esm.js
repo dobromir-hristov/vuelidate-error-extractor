@@ -1,5 +1,5 @@
 /*!
- * vuelidate-error-extractor v2.4.0 
+ * vuelidate-error-extractor v2.4.1 
  * (c) 2019 Dobromir Hristov
  * Released under the MIT License.
  */
@@ -469,9 +469,94 @@ var script = {
   }
 };
 
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
 /* script */
-            var __vue_script__ = script;
-            
+var __vue_script__ = script;
+
 /* template */
 var __vue_render__ = function() {
   var _vm = this;
@@ -567,36 +652,13 @@ __vue_render__._withStripped = true;
   var __vue_module_identifier__ = undefined;
   /* functional template */
   var __vue_is_functional_template__ = false;
-  /* component normalizer */
-  function __vue_normalize__(
-    template, style, script$$1,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\foundation6.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var foundation6 = __vue_normalize__(
+  var foundation6 = normalizeComponent_1(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -622,8 +684,8 @@ var script$1 = {
 };
 
 /* script */
-            var __vue_script__$1 = script$1;
-            
+var __vue_script__$1 = script$1;
+
 /* template */
 var __vue_render__$1 = function() {
   var _vm = this;
@@ -737,36 +799,13 @@ __vue_render__$1._withStripped = true;
   var __vue_module_identifier__$1 = undefined;
   /* functional template */
   var __vue_is_functional_template__$1 = false;
-  /* component normalizer */
-  function __vue_normalize__$1(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap3.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var bootstrap3 = __vue_normalize__$1(
+  var bootstrap3 = normalizeComponent_1(
     { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
     __vue_inject_styles__$1,
     __vue_script__$1,
@@ -793,8 +832,8 @@ var script$2 = {
 };
 
 /* script */
-            var __vue_script__$2 = script$2;
-            
+var __vue_script__$2 = script$2;
+
 /* template */
 var __vue_render__$2 = function() {
   var _vm = this;
@@ -863,36 +902,13 @@ __vue_render__$2._withStripped = true;
   var __vue_module_identifier__$2 = undefined;
   /* functional template */
   var __vue_is_functional_template__$2 = false;
-  /* component normalizer */
-  function __vue_normalize__$2(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\single-error-extractor\\bootstrap4.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var bootstrap4 = __vue_normalize__$2(
+  var bootstrap4 = normalizeComponent_1(
     { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
     __vue_inject_styles__$2,
     __vue_script__$2,
@@ -983,8 +999,8 @@ var script$3 = {
 };
 
 /* script */
-            var __vue_script__$3 = script$3;
-            
+var __vue_script__$3 = script$3;
+
 /* template */
 var __vue_render__$3 = function() {
   var _vm = this;
@@ -1004,7 +1020,8 @@ var __vue_render__$3 = function() {
         ],
         2
       )
-    })
+    }),
+    0
   )
 };
 var __vue_staticRenderFns__$3 = [];
@@ -1018,36 +1035,13 @@ __vue_render__$3._withStripped = true;
   var __vue_module_identifier__$3 = undefined;
   /* functional template */
   var __vue_is_functional_template__$3 = false;
-  /* component normalizer */
-  function __vue_normalize__$3(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\baseMultiErrorExtractor.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var baseMultiErrorExtractor = __vue_normalize__$3(
+  var baseMultiErrorExtractor = normalizeComponent_1(
     { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
     __vue_inject_styles__$3,
     __vue_script__$3,
@@ -1068,8 +1062,8 @@ var script$4 = {
 };
 
 /* script */
-            var __vue_script__$4 = script$4;
-            
+var __vue_script__$4 = script$4;
+
 /* template */
 var __vue_render__$4 = function() {
   var _vm = this;
@@ -1111,36 +1105,13 @@ __vue_render__$4._withStripped = true;
   var __vue_module_identifier__$4 = undefined;
   /* functional template */
   var __vue_is_functional_template__$4 = false;
-  /* component normalizer */
-  function __vue_normalize__$4(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap3.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var bootstrap3$1 = __vue_normalize__$4(
+  var bootstrap3$1 = normalizeComponent_1(
     { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
     __vue_inject_styles__$4,
     __vue_script__$4,
@@ -1161,8 +1132,8 @@ var script$5 = {
 };
 
 /* script */
-            var __vue_script__$5 = script$5;
-            
+var __vue_script__$5 = script$5;
+
 /* template */
 var __vue_render__$5 = function() {
   var _vm = this;
@@ -1204,36 +1175,13 @@ __vue_render__$5._withStripped = true;
   var __vue_module_identifier__$5 = undefined;
   /* functional template */
   var __vue_is_functional_template__$5 = false;
-  /* component normalizer */
-  function __vue_normalize__$5(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\bootstrap4.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var bootstrap4$1 = __vue_normalize__$5(
+  var bootstrap4$1 = normalizeComponent_1(
     { render: __vue_render__$5, staticRenderFns: __vue_staticRenderFns__$5 },
     __vue_inject_styles__$5,
     __vue_script__$5,
@@ -1254,8 +1202,8 @@ var script$6 = {
 };
 
 /* script */
-            var __vue_script__$6 = script$6;
-            
+var __vue_script__$6 = script$6;
+
 /* template */
 var __vue_render__$6 = function() {
   var _vm = this;
@@ -1297,36 +1245,13 @@ __vue_render__$6._withStripped = true;
   var __vue_module_identifier__$6 = undefined;
   /* functional template */
   var __vue_is_functional_template__$6 = false;
-  /* component normalizer */
-  function __vue_normalize__$6(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "D:\\web\\public-projects\\vuelidate-error-extractor\\src\\templates\\multi-error-extractor\\foundation6.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var foundation6$1 = __vue_normalize__$6(
+  var foundation6$1 = normalizeComponent_1(
     { render: __vue_render__$6, staticRenderFns: __vue_staticRenderFns__$6 },
     __vue_inject_styles__$6,
     __vue_script__$6,
@@ -1425,7 +1350,7 @@ function plugin (Vue, opts) {
   }
 }
 
-var version = '2.4.0';
+var version = '2.4.1';
 
 export default plugin;
 export { singleErrorExtractorMixin, multiErrorExtractorMixin, index$1 as configs, index as templates, version };
