@@ -437,3 +437,72 @@ Use it like so:
   v-model="$v.form.name"
 />
 ```
+
+## Usage with Ant Design Vue
+
+Ant Design Vue exposes the `a-form-item` component, which has `validate-status` and `help` props. We supply a type of `error` and the `firstErrorMessage` to these respectively.
+
+```vue
+<template>
+  <a-form-item
+    :validate-status="validateStatus"
+    :help="firstErrorMessage"
+    has-feedback
+    v-bind="$props"
+  >
+    <slot 
+      :attrs="{ state: isValid }" 
+      :listeners="{ input: () => preferredValidator.$touch() }"
+    />
+  </a-form-item>
+</template>
+
+<script>
+import { singleErrorExtractorMixin } from 'vuelidate-error-extractor';
+
+const validationStatus = {
+  ERROR: 'error',
+  SUCCESS: 'success',
+};
+
+export default {
+  extends: singleErrorExtractorMixin,
+  computed: {
+    validateStatus() {
+      if (this.hasErrors) {
+        return validationStatus.ERROR;
+      }
+
+      if (this.isValid) {
+        return validationStatus.SUCCESS;
+      }
+
+      return null;
+    },
+  },
+  mounted() {
+    this.preferredValidator.$touch();
+  },
+};
+</script>
+```
+
+And we use like normal
+
+```vue
+<form-group
+  :validator="$v.form.email"
+  :attribute="Email with wrapper"
+>
+  <a-input
+    v-model="form.email"
+    slot-scope="{ attrs, listeners }"
+    v-bind="attrs"
+    v-on="listeners"
+  />
+</form-group>
+```
+
+### Live Ant Design Vue example
+
+<iframe src="https://codesandbox.io/s/vuelidate-error-extractor-ant-design-vue-0ouk9" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
