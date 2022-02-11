@@ -7,7 +7,7 @@ The Multi Error Extractor is a component that displays all the errors of a form.
 
 It can receive a validator object either from a direct prop or via a `FormWrapper`, see [Using a Form Wrapper](form_wrapper.md). 
 
-An `attributes` prop cam be passed to identify each field's name in the form. Passing a local `attributes` prop will override the global `attributes`.
+An `attributes` prop can be passed to identify each field's name in the form. Passing a local `attributes` prop will override the global `attributes`.
 
 The component does not come with any special styling or markup. We do however provide optional prebuilt templates for Foundation6 and Bootstrap3.
 
